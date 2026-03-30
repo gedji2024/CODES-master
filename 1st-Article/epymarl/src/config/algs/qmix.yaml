@@ -1,0 +1,47 @@
+# QMIX algorithm config for WSN routing.
+#
+# QMIX factorizes the joint Q-value Q_tot as a monotonic combination of
+# per-agent Q_i values using a hypernetwork-based mixing network conditioned
+# on the global state. Agents use GRU-based RNN controllers.
+#
+# Key tuning notes:
+#   - epsilon anneals from 0.5 to 0.01 over 150k steps (75% of t_max=200k)
+#   - evaluation_epsilon=0.01 keeps a tiny random chance during eval
+#   - buffer_size=15000 ~ 7.5% of t_max (sufficient for off-policy replay)
+#   - target network hard-updated every 30 episodes
+
+# --- Action selection ---
+action_selector: "epsilon_greedy"
+epsilon_start: 0.5
+epsilon_finish: 0.01
+epsilon_anneal_time: 150000  # 75% of t_max (200k)
+evaluation_epsilon: 0.01
+
+# --- Parallelism ---
+runner: "parallel"
+batch_size_run: 4  # 4 parallel envs per run() call (~2-3x wall-clock speedup)
+
+# --- Replay buffer ---
+buffer_size: 15000
+
+# --- Target network ---
+target_update_interval_or_tau: 30  # hard update every 30 episodes
+
+# --- Observation features ---
+obs_agent_id: True
+obs_last_action: True
+obs_individual_obs: True
+
+# --- Learner ---
+standardise_returns: True
+standardise_rewards: False  # keep delivery reward signal visible to learner
+agent_output_type: "q"
+learner: "q_learner"
+double_q: True
+mixer: "qmix"
+use_rnn: True
+mixing_embed_dim: 64
+hypernet_layers: 2
+hypernet_embed: 64
+
+name: "qmix"

@@ -1,0 +1,938 @@
+\Chapter{ARTICLE 2~: CARBON-AWARE AUTONOMOUS DATA REDUCTION AND SELF-HEALING ROUTING FOR 6G-INTEGRATED DISASTER SENSOR NETWORKS: A LIFECYCLE-SUSTAINABLE APPROACH}\label{sec:Theme2}
+
+\vspace{0.5cm}
+\noindent\textbf{Auteurs~:} Georges Parfait Djimefo Kapen, Ranwa Al Mallah et Samuel Pierre.
+
+\noindent\textbf{Revue~:} IEEE Transactions on Green Communications and Networking.
+
+\noindent\textbf{Statut~:} Soumis.
+
+\vspace{0.3cm}
+\noindent\textit{Ce chapitre pr\'{e}sente le deuxi\`{e}me article de cette th\`{e}se. Il propose CALASH (Carbon-Aware Lifecycle-Autonomous Self-Healing), un cadre int\'{e}grant quatre piliers~: (i)~CADR pour la r\'{e}duction de donn\'{e}es sensible au carbone, (ii)~CARE, un routeur hybride Lyapunov--DQN avec des garanties de budget carbone prouvables, (iii)~SHDR pour la reprise autonome apr\`{e}s catastrophe via une boucle MAPE-K, et (iv)~LSE pour l'\'{e}valuation du cycle de vie conforme \`{a} l'ISO~14040. CALASH op\`{e}re sur une couche physique 6G double bande sub-THz/sub-6\,GHz. Ce travail constitue la deuxi\`{e}me contribution de la th\`{e}se en int\'{e}grant la conscience carbone \`{a} travers tout le cycle de vie du r\'{e}seau de capteurs.}
+
+\vspace{0.5cm}
+
+\section{Abstract}
+
+Wireless Sensor Networks (WSNs) deployed in disaster-prone environments must extend network lifetime and maintain reliable data delivery while reducing their full-lifecycle carbon footprint.
+To date, no protocol jointly optimizes \emph{Lifecycle Carbon Intensity} (LCI)---defined as the embodied, operational, and end-of-life CO$_2$ associated with each useful packet.
+We propose \textbf{CALASH} (\textbf{C}arbon-\textbf{A}ware \textbf{L}ifecycle-\textbf{A}utonomous \textbf{S}elf-\textbf{H}ealing), a framework integrating four pillars: (i)~Carbon-Aware Data Reduction~(CADR), which modulates compressive-sensing ratios with grid carbon intensity; (ii)~Carbon-Aware Routing Engine~(CARE), a hybrid Lyapunov--DQN router with provable carbon-budget guarantees; (iii)~Self-Healing Disaster Recovery~(SHDR) via an autonomic MAPE-K loop; and (iv)~Lifecycle Sustainability Engine~(LSE) embedding ISO~14040-compliant end-of-life costs into routing.
+CALASH operates over a sub-THz/sub-6\,GHz dual-band 6G physical layer. Extensive simulations %(200~nodes, 5\,000~rounds, 30~seeds) 
+validated against real Intel~Lab traces and UK grid carbon data show that CALASH achieves \textbf{60\% longer lifetime} (1\,486 vs.\ 931~rounds) compared to the LEACH protocol, \textbf{82.9\% Packet Delivery Ratio (PDR)}, and \textbf{33\% lower LCI} (8.99 vs.\ 13.42\,gCO$_2$eq/pkt) compared to the LEACH protocol, outperforming all six traditional baselines ($p<10^{-5}$).
+An ablation study reveals CADR as the dominant pillar ($+$59\% LCI reduction), while 6G technologies contribute a significant $+$10.5\% lifetime gain.
+
+\section{Introduction}
+\label{art2:sec:introduction}
+
+Wireless Sensor Networks (WSNs) consist of small, battery-powered sensing devices, often referred to as \emph{sensor nodes} or \emph{motes}, that monitor physical phenomena such as temperature, humidity, and vibration, and transmit the collected data to a central \emph{Base Station} (BS) through multi-hop wireless communication.
+Because these nodes typically operate with limited, non-rechargeable energy resources (for example, about 0.5\,J in a Mica2-class mote~\cite{heinzelman2002leach}), one of the main challenges in WSN design is to maximize network lifetime while still ensuring reliable and meaningful data delivery.
+
+\textbf{Why carbon matters.} The Information and Communications Technology (ICT) sector already contributes 2--4\% of global GreenHouse-Gas (GHG) emissions---a share comparable to the aviation industry---and the Internet of Things (IoT) is among its fastest-growing segments~\cite{freitag2021ict, huynh2025carbon_dt}. When thousands of sensor nodes are manufactured, transported, powered from the grid (including through battery charging), and finally discarded as electronic waste, their combined carbon footprint becomes significant. Importantly, most of this footprint comes from \emph{embodied carbon ($C_{embodied}$)}: the CO$_2$ emitted during chip fabrication, PCB (Printed Circuit Board) assembly, and logistics~\cite{pirson2021embodied}. A typical IoT sensor node embodies ${\sim}10$\,kg\,CO$_2$eq~\cite{pirson2021embodied}, while its total operational energy ($C_{operational}$) use (0.5\,J over its lifetime) generates only ${\sim}0.01$\,g\,CO$_2$eq. This implies that \textbf{the most effective way to reduce a WSN's carbon footprint per useful data packet is to maximize the number of packets delivered before the network dies}. To do so, we introduce a metric that we call \emph{Lifecycle Carbon Intensity} (LCI):
+\begin{equation}
+    \text{LCI} = \frac{C_{\text{embodied}} + C_{\text{operational}} + C_{\text{end-of-life}}}{\text{total useful packets delivered}} \quad [\text{gCO}_2\text{eq/pkt}]
+    \label{art2:eq:lci}
+\end{equation}
+where $C_{embodied}$, $C_{operational}$, $C_{end-of-life}$ respectively represent the manufacturing carbon of all sensors, the carbon from electricity used during routing, and the carbon from disposing dead sensors (e-waste).
+
+\textbf{Why disaster resilience matters.}
+WSNs are often deployed in disaster-prone settings such as earthquake early-warning systems, wildfire boundaries, and flood-monitoring river banks~\cite{erdelj2017disaster, karaman2025disaster_survey}.
+A single seismic event may instantly disable 30--50\% of the nodes, breaking the routing topology and wasting the embodied carbon of each failed device.
+When protocols cannot recover from such failures, sensed data remains undelivered, creating ``orphaned'' data and increasing the LCI.
+
+\textbf{Gaps in existing work.}
+Table~\ref{art2:tab:gap_summary} summarizes the capabilities of representative baselines.
+\emph{No existing protocol simultaneously addresses} (i)~carbon-aware adaptive data reduction, (ii)~provable carbon-budget routing with online learning, (iii)~autonomic disaster self-healing, and (iv)~lifecycle carbon integration in the routing objective.
+
+\begin{table}[!t]
+\centering
+\caption{Feature comparison of CALASH vs. baseline protocols.}
+\label{art2:tab:gap_summary}
+\renewcommand{\arraystretch}{1.2}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lccccccc}
+\toprule
+Feature & \rotatebox{60}{LEACH} & \rotatebox{60}{EE-LEACH} & \rotatebox{60}{ABC-ACO} & \rotatebox{60}{EERP} & \rotatebox{60}{Q-Routing} & \rotatebox{60}{RIS-DRL} & \rotatebox{60}{\textbf{CALASH}} \\
+\midrule
+Energy-aware CH (Cluster Head)      & \ding{51} & \ding{51} & \ding{51} & \ding{51} & \ding{51} & \ding{51} & \ding{51} \\
+Multi-hop routing     & --        & --        & \ding{51} & \ding{51} & \ding{51} & \ding{51} & \ding{51} \\
+RL / DQN routing      & --        & --        & --        & --        & \ding{51} & \ding{51} & \ding{51} \\
+Carbon-aware routing  & --        & --        & --        & --        & --        & --        & \ding{51} \\
+Adaptive compression  & --        & --        & --        & --        & --        & --        & \ding{51} \\
+Disaster self-healing & --        & --        & --        & --        & --        & --        & \ding{51} \\
+Lifecycle LCA (LifeCycle Assessment)         & --        & --        & --        & --        & --        & --        & \ding{51} \\
+Provable guarantees   & --        & --        & --        & --        & --        & --        & \ding{51} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\textbf{Contributions.}
+We make the following contributions:
+\begin{enumerate}[label=\textbf{C\arabic*}]
+    \item \textbf{CALASH framework}: the first routing protocol that jointly minimizes lifecycle carbon intensity through four integrated pillars---CADR (Carbon-Aware Data Reduction), CARE (Carbon-Aware Routing Engine), SHDR (Self-Healing Disaster Recovery), LSE (Lifecycle Sustainability Engine)---while guaranteeing carbon-budget compliance via Lyapunov optimization.
+    \item \textbf{CADR}: a novel mechanism that dynamically tunes the compressive-sensing ratio inversely to real-time grid carbon intensity, reducing transmission volume during high-carbon periods.
+    \item \textbf{Autonomous DQN routing}: a lightweight, NumPy-only, Double DQN agent that learns online during simulation with no pre-training, adapting its routing policy from experience.
+    \item \textbf{Comprehensive evaluation}: 30-seed Monte Carlo campaigns across 13~protocol variants (7~baselines + CALASH + 5~ablations), validated against real Intel Lab sensor data~\cite{intel_lab_data} and UK National Grid carbon traces~\cite{uk_carbon_api}, with Wilcoxon signed-rank significance tests and transparent reporting of limitations.
+\end{enumerate}
+
+\section{Related Work}
+\label{art2:sec:related}
+
+We organize the related work into four areas: Energy-Efficient Clustering Protocols, Metaheuristic and RL-Based Routing, Carbon-Aware Networking, Disaster-Resilient WSNs and Lifecycle Assessment.
+
+\subsection{Energy-Efficient Clustering Protocols}
+LEACH~\cite{heinzelman2000leach} introduced probabilistic Cluster-Head (CH) election through a rotating threshold $T(s_i) = p/(1 - p \cdot (r \bmod 1/p))$, where $p$ denotes the desired CH ratio and $r$ the current round.
+Each node generates a random number and becomes a CH if that value is below the threshold.
+This mechanism helps distribute energy consumption more evenly over time.
+EE-LEACH~\cite{bakaraniya2013eeleach} improves this threshold by incorporating residual energy, giving nodes with higher remaining battery a greater chance of being selected as CHs.
+HEED~\cite{younis2004heed} adopts a distributed iterative CH selection process based on both residual energy and communication cost.
+Singh et al.~\cite{singh2017survey} review more than 30 LEACH variants, and this research direction remains active: Kaur et al.~\cite{kaur2025energy} (2025) systematically compare conventional and advanced clustering protocols, confirming that energy efficiency is still the main optimization goal.
+\textbf{Limitation}: none of these protocols---including the most recent ones---account for electricity-grid carbon intensity, compressive sensing, or disaster recovery.
+
+\subsection{Metaheuristic and RL-Based Routing}
+ABC-ACO~\cite{elkhediri2024abcaco} combines the Artificial Bee Colony (ABC)~\cite{karaboga2007abc} metaheuristic with Ant Colony Optimization (ACO)~\cite{dorigo2004ant} for joint CH selection and routing.
+In this framework, the ABC stage searches for suitable cluster configurations using employed, onlooker, and scout bees, while the ACO stage establishes pheromone-based multi-hop routes.
+EERP~\cite{biswas2018eerp} integrates residual energy and distance to the BS for energy-efficient relay selection through neighborhood competition.
+Q-Routing~\cite{boyan1994qrouting} uses tabular Q-learning~\cite{watkins1992qlearning} to learn next-hop choices online, where the Q-table is indexed by (source, candidate) pairs and updated through temporal-difference learning.
+More recently, Akram et al.~\cite{akram2025eemlcr} integrate machine-learning-based clustering with energy-efficient routing in a unified framework, while Wang et al.~\cite{wang2025fuzzy_drl} combine fuzzy logic with deep RL for distributed cluster-based routing.
+\textbf{Limitation}: ABC-ACO performs only 3 iterations per round because of online execution constraints~\cite{kuila2014abc_wsn}; Q-Routing, EEMLCR, and fuzzy-DRL do not incorporate carbon awareness and provide no convergence guarantees under carbon-budget constraints.
+
+\subsection{Carbon-Aware Networking}
+The idea of \emph{carbon-aware computing}---scheduling workloads during periods of lower grid carbon intensity---has become increasingly important in cloud and data-center research~\cite{urgaonkar2011green, freitag2021ict}.
+Recent developments include digital-twin-based carbon-aware edge computing~\cite{huynh2025carbon_dt} and carbon-aware task offloading for 6G mobile edge computing~\cite{navaprakash2026carbon}.
+Yet, the use of these ideas in resource-constrained WSNs remains largely unexplored.
+The Carbon Intensity (CI) of the electricity grid (CI in gCO$_2$eq/kWh) changes over time according to the balance between renewable and fossil-fuel generation.
+For instance, the UK grid CI varies from about ${\sim}50$ to ${\sim}400$\,gCO$_2$/kWh depending on the time of day and season~\cite{uk_carbon_api, ember2024}.
+To the best of our knowledge, none of the reviewed papers \emph{explicitly adapts routing and compression decisions using real-time carbon intensity}.
+
+\subsection{Disaster-Resilient WSNs and Lifecycle Assessment}
+Erdelj et al.~\cite{erdelj2017disaster} survey WSN deployments for disaster management and note that most protocols assume a static topology; Alsayyed et al.~\cite{alsayyed2025disaster} and Karaman et al.~\cite{karaman2025disaster_survey} extend this discussion to 6G-era disaster networks and emphasize the need for resilient routing.
+Self-healing after node failures has been explored through backup CH election and coverage-hole detection, but not together with carbon-aware routing.
+LifeCycle Assessment (LCA), standardized in ISO~14040~\cite{iso14040} and ISO~14044~\cite{iso14044}, measures environmental impacts across a product's full life cycle---from raw material extraction (embodied carbon) to use (operational carbon) and disposal (end-of-life carbon).
+Pirson and Bol~\cite{pirson2021embodied} applied LCA to IoT devices and showed that embodied carbon exceeds operational carbon by 3--5 orders of magnitude.
+\textbf{No prior WSN routing protocol incorporates LCA into its routing objective.}
+
+
+%% ===============================================================
+%%  SECTION III: METHODOLOGY
+%% ===============================================================
+
+\section{Methodology}
+\label{art2:sec:methodology}
+
+We consider $N$ sensor nodes deployed uniformly at random in a $L \times L$\,m$^2$ area.
+A single Base Station (BS) is located at coordinates $(x, y)$, outside the top edge of the sensing field---a standard WSN benchmark configuration~\cite{heinzelman2002leach}.
+Each node has an initial energy budget of $E_0$\,J.
+A node is considered \emph{dead} when its energy reaches zero; it can no longer sense, transmit, or receive.
+
+\subsection{System Model}
+\label{art2:sec:system_model}
+
+\textbf{First-order radio energy model.}
+All protocols in our framework use the same energy model for fair comparison~\cite{heinzelman2000leach, rappaport2002wireless}:
+\begin{align}
+    E_{\text{Tx}}(l, d) &= l \cdot E_{\text{elec}} + l \cdot
+    \begin{cases}
+        \varepsilon_{\text{fs}} \cdot d^2 & \text{if } d < d_0 \\
+        \varepsilon_{\text{mp}} \cdot d^4 & \text{if } d \geq d_0
+    \end{cases}
+    \label{art2:eq:etx} \\
+    E_{\text{Rx}}(l) &= l \cdot E_{\text{elec}}
+    \label{art2:eq:erx}
+\end{align}
+where $l$ is the number of bits, $d$ is the distance in meters, $E_{\text{elec}} = 50$\,nJ/bit is the electronics energy, $\varepsilon_{\text{fs}} = 10$\,pJ/bit/m$^2$ is the free-space amplifier coefficient, $\varepsilon_{\text{mp}} = 0.0013$\,pJ/bit/m$^4$ is the multipath amplifier coefficient, and $d_0 = \sqrt{\varepsilon_{\text{fs}}/\varepsilon_{\text{mp}}} \approx 87.7$\,m is the crossover distance.
+
+\textbf{Carbon intensity model.}
+The operational carbon emitted when a node consumes $E$\,Joules of energy at round $t$ is:
+\begin{equation}
+    C_{\text{op}}(E, t) = E \cdot \frac{1}{3.6 \times 10^6} \cdot \text{CI}(t)
+    \label{art2:eq:carbon_op}
+\end{equation}
+where $\text{CI}(t)$ is the grid carbon intensity in gCO$_2$eq/kWh at round $t$ and $1/(3.6 \times 10^6)$ converts Joules to kWh.
+We support three CI sources: (1)~\textbf{Real UK traces}: 8,760 hourly measurements from the UK National Grid API~\cite{uk_carbon_api} (mean~$\sim$152\,gCO$_2$/kWh); (2)~\textbf{Calibrated synthetic} profiles for France, Germany, India, Poland, and Brazil, with mean CI from Ember~2024~\cite{ember2024} and superimposed diurnal/seasonal variation; (3)~\textbf{Default synthetic}: base CI~$=$~200, daily amplitude~$=$~80, seasonal~$=$~40, noise~$\sigma = 25$, clipped to $[20, 600]$.
+
+\textbf{Disaster model} 
+We model disasters as Gaussian spatial failure events.
+At round $t_d$, an event centered at $(x_c, y_c)$ with damage radius $r_d$ destroys every node within $r_d$ meters, and applies graduated damage to nodes further away based on distance.
+The damage radii are \emph{calibrated} to the Modified Mercalli Intensity (MMI) $\geq$ VIII isoseismal area of real USGS ShakeMap data~\cite{usgs_turkey2023, worden2005shakemap} for the 2023 Turkey--Syria earthquake (Mw~7.8):
+\begin{itemize}
+    \item \textbf{Localized} ($r_d = 50$\,m): affects ${\sim}15\%$ of nodes.
+    \item \textbf{Moderate} ($r_d = 100$\,m): affects ${\sim}30\%$ of nodes (default).
+    \item \textbf{Severe} ($r_d = 150$\,m): affects ${\sim}50\%$ of nodes.
+\end{itemize}
+
+\textbf{Lifecycle carbon accounting.}
+Following ISO~14040~\cite{iso14040} and Pirson \& Bol~\cite{pirson2021embodied}, each node has three carbon components:
+\begin{itemize}
+    \item \textbf{Embodied carbon} $C_{\text{emb}} = 10{,}000$\,gCO$_2$eq per node (PCB, IC, battery, housing, assembly, transport).
+    \item \textbf{Operational carbon} $C_{\text{op}}$: computed per round via Eq.~\eqref{art2:eq:carbon_op}.
+    \item \textbf{End-of-life carbon} $C_{\text{eol}} = 500 \times (1 - r_{\text{recycle}})$\,gCO$_2$eq per dead node, where $r_{\text{recycle}} = 0.3$ is the material recovery rate~\cite{forti2024ewaste}.
+\end{itemize}
+
+\subsection{Problem Formulation}
+\label{art2:sec:problem}
+
+\textbf{Objective.}
+Minimize the Lifecycle Carbon Intensity over a mission of $T$ rounds:
+\begin{equation}
+    \min_{\boldsymbol{\pi}} \quad \text{LCI}(\boldsymbol{\pi}) = \frac{\sum_{i=1}^{N} C_{\text{emb}}^{(i)} + \sum_{t=1}^{T} C_{\text{op}}(t) + \sum_{i:\text{dead}} C_{\text{eol}}^{(i)}}{\sum_{t=1}^{T} D(t)}
+    \label{art2:eq:lci_formal}
+\end{equation}
+where $\boldsymbol{\pi}$ is the joint routing and compression policy, and $D(t)$ is the number of useful packets delivered to the BS at round $t$.
+
+\textbf{Constraints:}
+\begin{align}
+    & E_i(t) \geq 0 \quad \forall i, t  &\text{(energy non-negativity)} \\
+    & \frac{1}{T}\sum_{t=1}^{T} C_{\text{op}}(t) \leq \bar{c} + B/V  &\text{(Lyapunov carbon bound)} \\
+    & \text{NMSE}(\rho) \leq \delta \quad &\text{(data fidelity threshold)}
+\end{align}
+where $E_i(t)$ is the sensor energy; $\bar{c}$ (plus a small slack $B/V$) serves as the budget within which the average carbon per round must remain; $V$ is a trade-off parameter: larger $V$ = more emphasis on delivery, less on strict carbon compliance; $B$ is a constant that depends on the maximum possible change in one round; NMSE = Normalized Mean Squared Error: measures data quality after compression; $\rho$ is the compression ratio from CADR; $\delta$ = acceptable distortion threshold.
+
+This multi-objective problem is hard because keeping nodes alive (maximizing $\sum D(t)$), reducing carbon, maintaining high PDR, and recovering from disasters create conflicting objectives.
+
+\subsection{CALASH Framework}
+\label{art2:sec:four_pillars}
+
+Fig.~\ref{art2:fig:architecture} presents the CALASH framework, which consists of four pillars described below.
+
+Algorithm~\ref{art2:alg:calash} presents the complete per-round operation.
+
+\begin{algorithm}[!t]
+\caption{CALASH Per-Round Operation}
+\label{art2:alg:calash}
+\begin{algorithmic}[1]
+\Require Network $\mathcal{G}$, round $t$, config $\theta$
+\Ensure Delivered packets, energy consumed, carbon emitted
+
+\Statex \textit{\% Phase 0: Self-Healing Monitor}
+\If{$t > t_d$ \textbf{and} recovery\_mode}
+    \State Run MAPE-K heartbeat check
+    \State Check if recovery complete ($> 50$ rounds since disaster)
+\EndIf
+
+\Statex \textit{\% Phase 1: Carbon-Modulated CH Election (Setup)}
+\State $\text{CI}(t) \gets \text{CarbonTraceManager.get\_ci}(t)$
+\State $\text{CI}_{\text{norm}} \gets (\text{CI}(t) - \text{CI}_{\min}) / (\text{CI}_{\max} - \text{CI}_{\min})$
+\State $f_c \gets \max(1 - \beta \cdot \text{CI}_{\text{norm}}, \; 0.1)$
+\For{each alive node $s_i$ eligible this epoch}
+    \State $T_{\text{base}} \gets p / (1 - p \cdot (r \bmod 1/p))$ \Comment{LEACH threshold}
+    \State $T_i \gets T_{\text{base}} \cdot (E_i / E_0) \cdot f_c$
+    \If{$\text{rand}() < T_i$} Elect $s_i$ as CH \EndIf
+\EndFor
+\State Enforce $\geq 5\%$ alive nodes as CHs
+\State Form clusters (nearest-CH assignment)
+
+\Statex \textit{\% Phase 2: CADR -- Adaptive Compression \& Intra-Cluster TX}
+\State $\rho(t) \gets$ reference-point CADR mapping (Eq.~\ref{art2:eq:rho})
+\If{recovery\_mode} $\rho(t) \gets \rho_{\max}$ \EndIf
+\State $m \gets \lceil \rho(t) \cdot n \rceil$ \Comment{compressed signal dimension}
+\For{each cluster member $s_j$}
+    \State Sense signal, compress to $m$ measurements
+    \State Transmit $m \cdot l_{\text{bit}}$ bits to CH (THz if $d < 30$\,m)
+\EndFor
+
+\Statex \textit{\% Phase 3: CARE -- Inter-Cluster Routing to BS}
+\For{each cluster head $\text{CH}_k$}
+    \State Aggregate received data
+    \If{DQN trained and not recovery\_mode}
+        \State route $\gets$ DQN.select\_multi\_hop($\text{CH}_k$, BS)
+    \Else
+        \State route $\gets$ Lyapunov.compute\_route($\text{CH}_k$, BS)
+    \EndIf
+    \State Transmit along route (sub-6\,GHz inter-cluster)
+    \State Store DQN experience, train if buffer $\geq 256$
+\EndFor
+
+\Statex \textit{\% Phase 4: Carbon Accounting \& Queue Update}
+\State $C_{\text{op}}(t) \gets E_{\text{total}} \cdot J_{\text{kWh}} \cdot \text{CI}(t)$
+\State $Z(t+1) \gets \max\{0, Z(t) + C_{\text{op}}(t) - \bar{c}\}$
+
+\State \Return{packets delivered, $E_{\text{total}}$, $C_{\text{op}}(t)$}
+\end{algorithmic}
+\end{algorithm}
+
+\begin{figure}[!t]
+\centering
+\begin{tikzpicture}[
+    box/.style={draw, rounded corners, minimum width=3cm, minimum height=0.9cm, align=center, font=\small},
+    pillar/.style={box, fill=blue!10, minimum width=5.5cm},
+    arrow/.style={-{Stealth[length=2mm]}, thick},
+    node distance=0.6cm
+]
+% Round flow
+\node[box, fill=gray!20] (round) {Round $t$ begins};
+\node[pillar, below=of round] (shdr) {\textbf{SHDR}: Heartbeat Monitor\\(MAPE-K autonomic loop)};
+\node[pillar, below=of shdr] (cadr) {\textbf{CADR}: Adaptive Compression\\$\rho(t) = f(\text{CI}(t))$};
+\node[pillar, below=of cadr] (care) {\textbf{CARE}: DQN + Lyapunov Routing\\$j^* = \arg\min [Z \cdot c + V \cdot e] \cdot \ell$};
+\node[pillar, below=of care] (lse) {\textbf{LSE}: Carbon Queue Update\\$Z(t+1) = \max\{0, Z(t) + C_{\text{op}} - \bar{c}\}$};
+\node[box, fill=green!10, below=of lse] (out) {Packets delivered to BS};
+
+% Arrows
+\draw[arrow] (round) -- (shdr);
+\draw[arrow] (shdr) -- (cadr);
+\draw[arrow] (cadr) -- (care);
+\draw[arrow] (care) -- (lse);
+\draw[arrow] (lse) -- (out);
+
+% Side annotations
+\node[right=0.3cm of shdr, font=\scriptsize, text=gray] {Phase 0};
+\node[right=0.3cm of cadr, font=\scriptsize, text=gray] {Phase 1--2};
+\node[right=0.3cm of care, font=\scriptsize, text=gray] {Phase 3};
+\node[right=0.3cm of lse, font=\scriptsize, text=gray] {Phase 4};
+\end{tikzpicture}
+\caption{CALASH per-round operation flow. Each round progresses into phases aligned with the four pillars.}
+\label{art2:fig:architecture}
+\end{figure}
+
+\subsubsection{Pillar 1: CADR --- Carbon-Aware Data Reduction}
+\label{art2:sec:cadr}
+
+\textbf{Core idea.}
+Instead of transmitting all sensed data, each cluster member compresses its signal using Compressive Sensing (CS)~\cite{candes2006cs, baraniuk2007cs}.
+The compression ratio $\rho(t) \in [\rho_{\min}, \rho_{\max}]$ (the fraction of the original signal that is actually transmitted) is adjusted dynamically based on the current carbon intensity using a \emph{reference-point mapping} centred at $\text{CI}_{\text{base}}$ (the grid's average CI):
+
+\begin{equation}
+    \rho(t) = \begin{cases}
+        \rho_{\max} - (\rho_{\max} - \rho_{\text{mid}}) \cdot \frac{\text{CI}(t) - \text{CI}_{\min}}{\text{CI}_{\text{base}} - \text{CI}_{\min}} & \text{if } \text{CI}(t) \leq \text{CI}_{\text{base}} \\[6pt]
+        \rho_{\text{mid}} - (\rho_{\text{mid}} - \rho_{\min}) \cdot \frac{\text{CI}(t) - \text{CI}_{\text{base}}}{\text{CI}_{\max} - \text{CI}_{\text{base}}} & \text{if } \text{CI}(t) > \text{CI}_{\text{base}}
+    \end{cases}
+    \label{art2:eq:rho}
+\end{equation}
+where $\rho_{\text{mid}} = (\rho_{\min} + \rho_{\max}) / 2$ is the midpoint compression ratio, which occurs exactly at the grid average.
+This piecewise mapping ensures that at typical carbon intensity the compression ratio is centred ($\rho = 0.55$ at UK average CI $= 200$\,gCO$_2$/kWh), avoiding the asymmetry of a simple linear mapping that would bias $\rho$ too high under real-world CI distributions.
+
+During disaster recovery, $\rho$ is overridden to $\rho_{\max}$ to preserve critical data.
+
+\textbf{Compressive sensing pipeline.}
+CS theory~\cite{candes2006cs} states that an $s$-sparse signal $\mathbf{x} \in \mathbb{R}^n$ can be recovered from $m = \rho \cdot n$ random linear measurements $\mathbf{y} = \Phi \mathbf{x}$ ($\Phi \in \mathbb{R}^{m \times n}$ Gaussian) provided $m \geq C \cdot s \cdot \log(n/s)$ ($C$ is a universal constant (from the proof), $s$ is the sparsity level (number of non-zero coefficients in the transform domain)).
+Recovery uses Orthogonal Matching Pursuit (OMP)~\cite{tropp2007omp}; data fidelity is $F = 1 - \text{NMSE}$.
+The Intel Berkeley Lab dataset~\cite{intel_lab_data} (2.3M readings from 54 Mica2Dot motes) provides real sensor traces that are $\sim$1-sparse in the DCT domain, achieving $F > 0.99$ even at $\rho = 0.3$.
+
+\subsubsection{Pillar 2: CARE --- Carbon-Aware Routing Engine}
+\label{art2:sec:care}
+
+CARE combines two complementary routing strategies:
+
+\textbf{(a) Lyapunov drift-plus-penalty routing (provable guarantees).}
+We maintain a \emph{virtual carbon queue} $Z(t)$ that tracks cumulative carbon overshoot~\cite{neely2010lyapunov}:
+\begin{equation}
+    Z(t+1) = \max\big\{0, \; Z(t) + C_{\text{op}}(t) - \bar{c}\big\}
+    \label{art2:eq:queue_update}
+\end{equation}
+where $\bar{c} = C_{\text{budget}} / T$ is the per-round carbon budget.
+When the queue is large (we have been emitting too much carbon), the routing becomes more conservative; when the queue is small, we can afford more energy-intensive but higher-quality routes.
+
+At each hop, the next relay $j^*$ is chosen to minimize:
+\begin{equation}
+    j^* = \arg\min_{j \in \mathcal{N}(i)} \Big[\underbrace{Z(t) \cdot c_{ij}(t)}_{\text{carbon pressure}} + \underbrace{V \cdot e_{ij}}_{\text{energy cost}}\Big] \cdot \underbrace{\ell_j}_{\text{lifecycle penalty}}
+    \label{art2:eq:lyapunov_decision}
+\end{equation}
+where $c_{ij}(t) = E_{\text{Tx}} / (3.6 \times 10^6) \cdot \text{CI}(t)$ is the carbon cost of the hop, $e_{ij} = E_{\text{Tx}}(l, d_{ij})$ is the energy cost, $V$ is the Lyapunov tradeoff parameter (larger $V$ = more emphasis on energy, less on carbon), and $\ell_j = 1 + w_{\text{eol}} \cdot (1 - E_j/E_0)^2$ is the lifecycle penalty that discourages routing through low-energy nodes (whose impending death would waste their embodied carbon).
+
+\textbf{(b) Deep Q-Network (DQN) routing (autonomous adaptation).}
+Once enough experience has been collected (256 transitions in the replay buffer), a lightweight DQN agent takes over routing decisions~\cite{mnih2015dqn, vanhasselt2016ddqn}.
+The DQN is a 2-hidden-layer multilayer perceptron (MLP) implemented entirely in NumPy (no PyTorch/TensorFlow):
+\begin{equation}
+    \text{State}(9\text{D}) \xrightarrow{\text{ReLU}} 64 \xrightarrow{\text{ReLU}} 32 \xrightarrow{\text{linear}} Q\text{-value}(1)
+\end{equation}
+
+The DQN produces a single scalar Q-value for each (state, candidate) pair; the routing decision evaluates all candidate next-hops and selects the one with the highest Q-value.
+
+The 9-dimensional state vector encodes:
+\begin{enumerate}
+    \item $E_{\text{src}} / E_0$: source node's residual energy fraction
+    \item $d_{\text{src-BS}} / d_{\max}$: normalized distance from source to BS
+    \item $\text{CI}_{\text{norm}}$: normalized carbon intensity
+    \item $Z / Z_{\max}$: normalized carbon queue pressure
+    \item Alive ratio: fraction of network still alive
+    \item $E_{\text{cand}} / E_0$: candidate next-hop's energy fraction
+    \item $d_{\text{cand-BS}} / d_{\max}$: candidate's normalized distance to BS
+    \item $d_{\text{hop}} / d_{\max}$: normalized hop distance
+    \item $\ell_{\text{cand}}$: candidate's lifecycle factor (from LSE)
+\end{enumerate}
+
+The reward function captures the multi-objective nature of CALASH:
+\begin{equation}
+    r = \underbrace{1.0 \cdot \frac{\Delta d_{\text{BS}}}{d_{\max}}}_{\text{delivery progress}}
+      - \underbrace{0.3 \cdot \text{CI}_{\text{norm}} \cdot E_{\text{Tx}} \cdot J_{\text{kWh}}}_{\text{carbon penalty}}
+      - \underbrace{0.3 \cdot \frac{E_{\text{Tx}}}{E_{\text{src}}}}_{\text{energy penalty}}
+      - \underbrace{0.2 \cdot \max(0, \ell - 1)}_{\text{lifecycle penalty}}
+      + \underbrace{5.0 \cdot \mathbf{1}_{\text{BS}}}_{\text{delivery bonus}}
+      - \underbrace{2.0 \cdot \mathbf{1}_{\text{drop}}}_{\text{drop penalty}}
+    \label{art2:eq:reward}
+\end{equation}
+
+\textbf{Fallback strategy.}
+During disaster recovery, the DQN is bypassed (its policy may be outdated for the new topology), and the Lyapunov router takes over until the network stabilizes.
+
+\subsubsection{Pillar 3: SHDR --- Self-Healing Disaster Recovery}
+\label{art2:sec:shdr}
+
+SHDR implements the Monitor-Analyze-Plan-Execute with Knowledge (MAPE-K) autonomic computing loop~\cite{kephart2003autonomic}:
+(1)~\textbf{Monitor}: alive nodes send periodic heartbeat messages (50~bits, every 2~rounds; every round during recovery). Missing 3 consecutive heartbeats marks a node as dead.
+(2)~\textbf{Analyze}: identify coverage holes and orphan nodes.
+(3)~\textbf{Plan}: emergency CH election promotes highest-energy survivors; damaged nodes ($E < 0.3 E_0$) have election probability reduced by 90\%.
+(4)~\textbf{Execute}: new topology takes effect for 50~rounds.
+During healing, CH density increases by 50\% and CADR switches to $\rho_{\max}$.
+
+\subsubsection{Pillar 4: LSE --- Lifecycle Sustainability Engine}
+\label{art2:sec:lse}
+
+LSE embeds lifecycle carbon costs into the routing objective:
+\begin{equation}
+    \ell_j = 1 + w_{\text{eol}} \cdot \left(1 - \frac{E_j}{E_0}\right)^2
+    \label{art2:eq:lifecycle_penalty}
+\end{equation}
+where $w_{\text{eol}} = 1.0$ is the end-of-life penalty weight.
+Nodes close to death ($E_j \approx 0$) get $\ell_j \approx 2$, making them $2\times$ more expensive to route through.
+This discourages the ``use it and lose it'' pattern where aggressive routing kills a node, wasting its 10\,kg\,CO$_2$eq of embodied carbon.
+
+\subsection{6G Enabling Technologies}
+\label{art2:sec:6g_enabling}
+
+Beyond the four algorithmic pillars, CALASH exploits three 6G physical-layer capabilities that form the substrate on which the pillars operate.
+
+\subsubsection{Sub-THz Communication with OFDM}
+\label{art2:sec:thz}
+
+Intra-cluster data aggregation uses sub-THz D2D links at $f = 140$\,GHz with $B = 10$\,GHz bandwidth, following the ITU-R IMT-2030 framework~\cite{rappaport2019thz}.
+The OFDM waveform uses 480\,kHz sub-carrier spacing (2{,}048 sub-carriers, 7\% cyclic-prefix fraction), yielding an effective throughput efficiency $\eta_{\text{OFDM}} = 0.93$ and a peak-to-average power ratio (PAPR) back-off of 3\,dB.
+These parameters directly enter the energy model: the effective channel capacity is
+\begin{equation}
+    C_{\text{eff}} = \eta_{\text{OFDM}} \cdot B \log_2\!\left(1 + \frac{P_{\text{Tx}} \cdot |h|^2}{N_0 B}\right)
+    \label{art2:eq:thz_capacity}
+\end{equation}
+($h$ is the channel coefficient — it represents the wireless channel between the transmitter and the receiver)
+and the required transmit power includes the PAPR headroom $P_{\text{Tx}}^{\text{PA}} = P_{\text{Tx}} \cdot 10^{3/10}$.
+
+\subsubsection{Cascaded RIS Channel Model}
+\label{art2:sec:ris}
+
+A Reconfigurable Intelligent Surface (RIS) with $N_{\text{RIS}} = 64$ elements assists the sub-THz link when direct line-of-sight is obstructed (e.g., by disaster debris).
+The cascaded Tx$\to$RIS$\to$Rx channel gain is modelled as~\cite{huang2021ris, huang2020ris_drl, alhilo2024ris_uav}:
+\begin{equation}
+    G_{\text{RIS}} = 20\log_{10}(N_{\text{RIS}}) + G_{\text{CSI}} + G_{\text{beam}} - L_{\text{coupling}}
+    \label{art2:eq:ris_gain}
+\end{equation}
+where $G_{\text{CSI}} = 10\log_{10}(\eta_{\text{CSI}}^2)$ with $\eta_{\text{CSI}} = 0.90$ captures channel-estimation error, $G_{\text{beam}} = -0.01$\,dB models beam misalignment from wind-induced RIS vibration~\cite{alhilo2024ris_uav}, and $L_{\text{coupling}} = 1$\,dB accounts for mutual coupling between adjacent elements~\cite{yang2021ris_jamming}.
+Unlike the idealized $20\log_{10}(N)$ gain assumed in prior work, this model includes three practical impairments that reduce the effective gain from 36.1\,dB to $\approx$34.2\,dB.
+
+\subsubsection{ISAC --- Integrated Sensing and Communication}
+\label{art2:sec:isac}
+
+ISAC is a defining IMT-2030/6G capability where the \emph{same} OFDM waveform serves both data communication and environment sensing~\cite{liu2022isac, zhang2022isac_overview}.
+In CALASH, each inter-cluster sub-THz transmission produces echo returns that are processed for radar-based structural anomaly detection:
+\begin{enumerate}
+    \item \textbf{Range-Doppler processing}: a 2D FFT on the received echoes yields a range-Doppler map with resolution $\Delta r = c/(2B) = 1.5$\,cm.
+    \item \textbf{CFAR detection}: a constant false-alarm rate detector ($P_{\text{fa}} = 10^{-4}$, Neyman--Pearson threshold $\approx 4\sigma$) identifies echo anomalies.
+    \item \textbf{Anomaly scoring}: the Kullback--Leibler divergence between the current echo profile and a learned baseline yields a per-node anomaly score~$s_i$.
+        When $s_i > 0.5$, the MAPE-K Monitor phase is notified, augmenting heartbeat-based failure detection with physical-layer disaster awareness.
+\end{enumerate}
+
+The ISAC processing overhead is 15\% of the communication energy budget (FFT + matched filtering)~\cite{liu2022isac}, but provides faster and more reliable disaster detection than heartbeats alone---a dual-functional benefit unique to 6G.
+Debris targets exhibit a radar cross-section of $\sigma_{\text{rcs}} \approx 1$\,m$^2$ (concrete rubble), compared to $\sigma_{\text{rcs}} \approx 0.01$\,m$^2$ for background clutter~\cite{skolnik2008radar}, giving a 20\,dB signal-to-clutter ratio for post-earthquake structural damage.
+
+\subsection{Theoretical Guarantee: CDL Pareto Bound}
+\label{art2:sec:theorem}
+
+We extend Neely's Lyapunov drift-plus-penalty framework~\cite{neely2010lyapunov} to bound the \emph{total lifecycle} carbon---not just operational carbon---by incorporating end-of-life emissions into the virtual queue.
+
+\begin{theorem}[Carbon-Delivery-Lifecycle (CDL) Pareto Bound]
+\label{art2:thm:cdl}
+Define the total lifecycle carbon $C_{\text{tot}}(t) = C_{\text{op}}(t) + K(t) \cdot c_{\text{eol}}^{\text{eff}}$, where $K(t)$ is the number of node deaths at round~$t$ and $c_{\text{eol}}^{\text{eff}} = c_{\text{eol}} (1 - r_{\text{recycle}})$.
+Update the virtual queue:
+\begin{equation}
+    Z(t+1) = \max\big\{0,\; Z(t) + C_{\text{tot}}(t) - \bar{c}\big\}
+    \label{art2:eq:queue_update_cdl}
+\end{equation}
+For $V > 0$, the CALASH routing achieves simultaneously:
+\begin{align}
+    \text{(i)}  & \quad \bar{D} \geq \bar{D}^* - B/V  & \text{(near-optimal delivery)} \label{art2:eq:delivery_bound} \\
+    \text{(ii)} & \quad \bar{C}_{\text{tot}} \leq \bar{c} + B/V  & \text{(lifecycle carbon budget)} \label{art2:eq:carbon_bound}
+\end{align}
+where $\bar{D}^*$ is the optimal delivery rate of any static policy, $\bar{c} = C_{\text{budget}}/T$, and $B = \frac{1}{2}\max_t\{(C_{\text{tot}}(t) - \bar{c})^2\}$.
+Moreover, the Pareto front $(\bar{D}(V),\, \bar{C}_{\text{tot}}(V))$ is convex and continuously traceable by varying $V \in (0, \infty)$.
+\end{theorem}
+
+\begin{proof}
+Define $L(t) = Z(t)^2/2$.
+The one-step conditional drift satisfies:
+\begin{align}
+    \Delta(t) &= \mathbb{E}[L(t\!+\!1) - L(t) \mid Z(t)] \notag \\
+              &\leq B + Z(t)\big(C_{\text{tot}}(t) - \bar{c}\big)
+\end{align}
+Adding penalty $V \cdot (-D(t))$ and noting that CALASH greedily minimizes the right-hand side at each hop via Eq.~\eqref{art2:eq:lyapunov_decision} with the lifecycle factor $\ell_j$ (which deflects traffic from near-death nodes, reducing $K(t)$ and thus $C_{\text{tot}}(t)$), the drift-plus-penalty bound becomes $B - V \cdot \bar{D}^*$.
+Telescoping over $T$ rounds and using $L(T) \geq 0$ yields Eq.~\eqref{art2:eq:delivery_bound}.
+Queue stability ($\bar{Z} = O(V)$, i.e., the time-average queue backlog grows linearly in $V$) gives Eq.~\eqref{art2:eq:carbon_bound}.
+
+For the Pareto front, note that $\bar{D}(V) = \bar{D}^* - B/V + o(1/V)$ and $\bar{C}(V) = \bar{c} + B/V + o(1/V)$.
+Eliminating $V$ via $B/V = \bar{D}^* - \bar{D}$ gives $\bar{C} = \bar{c} + (\bar{D}^* - \bar{D})$, a linear trade-off boundary with slope~$-1$ in $(\bar{D}, \bar{C})$ space---hence trivially convex.
+The higher-order $o(1/V)$ terms induce a slight curvature that preserves convexity~\cite{neely2010lyapunov}.
+\end{proof}
+
+\textbf{Practical significance.}
+For $N = 200$, $V = 100$: $B \approx 2 \times 10^4$, yielding $B/V \approx 200$\,gCO$_2$eq/round.
+Crucially, unlike standard Lyapunov (which bounds only $C_{\text{op}}$), the CDL bound covers the \emph{full lifecycle}: operational carbon \emph{plus} the end-of-life carbon of dead nodes.
+This is the key theoretical novelty---the multiplicative lifecycle factor $\ell_j$ simultaneously reduces premature deaths (lowering $C_{\text{eol}}$) \emph{and} extends network lifetime (increasing $\sum D(t)$).
+
+%% ===============================================================
+%%  SECTION IV: RESULTS AND DISCUSSION
+%% ===============================================================
+\FloatBarrier
+\section{Results and Discussion}
+\label{art2:sec:results}
+
+\subsection{Data Provenance and Reproducibility}
+\label{art2:sec:data_provenance}
+
+To ensure transparency, we classify every data input using a four-level provenance taxonomy---\emph{real} (measured), \emph{calibrated synthetic} (statistically matched to published measurements), \emph{model-based} (physics-derived with validated parameters), and \emph{simulated} (stochastic, seed-controlled)---summarized in Table~\ref{art2:tab:data_provenance}.
+
+\begin{table}[!t]
+\centering
+\caption{Data provenance summary. Each input to the simulation is classified by its provenance level, source, and licence.}
+\label{art2:tab:data_provenance}
+\renewcommand{\arraystretch}{1.12}
+\footnotesize
+\begin{tabular}{p{2.8cm} l p{3.2cm} l}
+\toprule
+\textbf{Data Input} & \textbf{Category} & \textbf{Source} & \textbf{Licence} \\
+\midrule
+UK CI trace (2023) & Real & National Grid ESO API~\cite{uk_carbon_api} & CC~BY~4.0 \\
+ShakeMap grid.xml & Real & USGS Earthquake Hazards Program~\cite{worden2005shakemap} & Public domain \\
+Intel Lab sensors & Real & Intel Berkeley Lab~\cite{intel_lab_data} & Public domain \\
+\midrule
+France/DE/IN/PL CI & Calibrated & Ember 2024 annual stats~\cite{ember2024} & CC~BY~4.0 \\
+Gaussian damage profile & Calibrated & Fitted to ShakeMap MMI${\geq}$VIII area & --- \\
+\midrule
+THz channel model & Model & Jornet \& Akyildiz~\cite{jornet2011thz} & --- \\
+Aftershock sequence & Model & Omori--Utsu + Bath + G-R laws~\cite{utsu1995omori} & --- \\
+RIS cascaded gain & Model & Huang et al.~\cite{huang2021ris} & --- \\
+Fragility curve & Model & Worden et al.~\cite{worden2005shakemap} & --- \\
+Lifecycle carbon (LCA) & Model & ISO~14040 + Pirson \& Bol~\cite{pirson2021embodied} & --- \\
+\midrule
+Node deployment & Simulated & Uniform random, seed-controlled & --- \\
+DQN learning & Simulated & NumPy $\varepsilon$-greedy DQN & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All 30 seeds (42--71), the complete simulation code, and real data files are included in the supplementary repository.
+
+\subsection{Experimental Setup}
+\label{art2:sec:setup}
+
+\textbf{Simulation parameters.}
+200 nodes, $200 \times 200$\,m, BS at $(100, 250)$, $E_0 = 0.5$\,J, 5{,}000 rounds, disaster at round 2{,}000 ($r_d = 100$\,m, center of area).
+Each experiment is repeated with 30 independent random seeds (seeds 42--71); we report mean $\pm$ 95\% Confidence Interval (CI) via the $t$-distribution.
+
+\textbf{Protocols compared.}
+We evaluate 13 protocol variants:
+\begin{itemize}
+    \item \textbf{7 baselines}: LEACH~\cite{heinzelman2000leach}, LEACH-1hop (single-hop LEACH variant), EE-LEACH~\cite{bakaraniya2013eeleach}, ABC-ACO~\cite{elkhediri2024abcaco}, EERP~\cite{biswas2018eerp}, Q-Routing~\cite{boyan1994qrouting, watkins1992qlearning}, and \textbf{RIS-DRL}~\cite{huang2020ris_drl, alhilo2024ris_uav, huang2021ris}.
+    LEACH and LEACH-1hop are faithful reproductions of the original TDMA-based protocol; ABC-ACO follows El~Khediri et~al.'s~\cite{elkhediri2024abcaco} hybrid metaheuristic with documented parameter adaptations for our network scale.
+    EE-LEACH, EERP, and Q-Routing are \emph{representative} implementations of their respective paradigms (energy-weighted CH election, energy-distance relay selection, and tabular RL routing), parameterized from the cited works but not exact clones of any single paper's code.
+    RIS-DRL is a composite 6G-aware baseline synthesized from the cited RIS and DRL literature: it uses the same THz channel and RIS hardware as CALASH but employs a standard DQN router without carbon awareness, lifecycle integration, or self-healing.
+    \item \textbf{CALASH}: full framework (all four pillars + 6G enabling technologies).
+    \item \textbf{5 ablation variants}: CALASH-NoCO2 (no carbon-aware routing), CALASH-NoSH (no self-healing), CALASH-NoCADR (no adaptive compression), CALASH-NoLCI (no lifecycle integration), and \textbf{CALASH-NoTHz} (sub-6\,GHz only, no THz/RIS/ISAC).
+\end{itemize}
+
+\textbf{Baseline selection rationale.}
+The seven baselines were deliberately chosen to span four generations of WSN routing: \emph{probabilistic clustering} (LEACH, 2000---the most-cited WSN protocol with 30{,}000+ citations), \emph{energy-weighted refinements} (EE-LEACH, 2013), \emph{metaheuristic and relay optimization} (ABC-ACO, 2024; EERP, 2018), and \emph{reinforcement-learning routing} (Q-Routing, 1994; RIS-DRL, composite 6G-DRL).
+We include the \emph{seminal formulation} of each paradigm---for example, Boyan and Littman's 1994 Q-routing~\cite{boyan1994qrouting}, from which all subsequent WSN Q-learning routing descends---so that CALASH is measured against the canonical algorithmic idea rather than an implementation-specific variant.
+ABC-ACO (2024)~\cite{elkhediri2024abcaco} ensures the comparison includes a current state-of-the-art metaheuristic, while the Related Work further discusses 2025 papers~\cite{akram2025eemlcr, wang2025fuzzy_drl, kaur2025energy} to demonstrate awareness of the latest advances.
+Where no publicly available reference implementation exists (EE-LEACH, EERP, Q-Routing), we provide \emph{representative} implementations that faithfully capture each paradigm's core mechanism as described in the cited works.
+The five ablation variants complement the external baselines by isolating each of CALASH's four pillars internally, ensuring that every claimed contribution is individually validated.
+
+The RIS-DRL baseline is critical for isolating the contribution of CALASH's four pillars from the 6G substrate: both protocols share the same physical-layer (THz + RIS), so any performance gap is attributable solely to CALASH's novel algorithmic contributions.
+Because no single published protocol combines THz channels, RIS beam-forming, and DQN-based WSN clustering, RIS-DRL was synthesized from the cited RIS and DRL literature~\cite{huang2020ris_drl, alhilo2024ris_uav, huang2021ris}; this gives CALASH the \emph{strongest possible opponent} sharing its 6G substrate.
+
+All protocols share the same energy model, network topology, and disaster event for fair comparison~\cite{dietrich2009lifetime}.
+Baselines do not use compressive sensing (fidelity = 1.0) because their original papers do not include it---adding CS to baselines would be a contribution of its own.
+
+\textbf{Metrics.}
+\begin{enumerate}
+    \item \textbf{Half-death round}: round when 50\% of nodes have died (operational lifetime).
+    \item \textbf{Packet Delivery Ratio (PDR)}: total delivered / total generated.
+    \item \textbf{Total operational carbon}: cumulative gCO$_2$eq from energy consumption.
+    \item \textbf{Data fidelity}: $1 - \text{NMSE}$ (1.0 = perfect reconstruction).
+    \item \textbf{Lifecycle Carbon Intensity (LCI)}: gCO$_2$eq per useful packet (Eq.~\eqref{art2:eq:lci_formal}).
+    \item \textbf{Energy efficiency}: total packets delivered per Joule of energy consumed (pkt/J).
+    \item \textbf{Jain's fairness index}: energy balance across nodes~\cite{jain1984fairness}.
+\end{enumerate}
+
+\textbf{Statistical significance.}
+We use the Wilcoxon signed-rank test~\cite{wilcoxon1945} (non-parametric, paired, $\alpha = 0.05$) to compare CALASH against each baseline, following simulation best practices~\cite{law2015simulation, jain1991art}.
+
+\subsection{DQN Training Hyperparameters}
+\label{art2:sec:hyperparams}
+
+Table~\ref{art2:tab:hyperparams} lists all training hyperparameters for reproducibility.
+
+\begin{table}[!t]
+\centering
+\caption{DQN and framework hyperparameters.}
+\label{art2:tab:hyperparams}
+\begin{tabular}{llr}
+\toprule
+Component & Parameter & Value \\
+\midrule
+\multirow{7}{*}{\textbf{DQN Agent}}
+    & Architecture & 9--64--32--1 \\
+    & Activation & ReLU \\
+    & Learning rate (SGD) & $10^{-3}$ \\
+    & Discount $\gamma$ & 0.95 \\
+    & Soft-update $\tau$ & 0.005 \\
+    & Replay buffer size & 10{,}000 \\
+    & Batch size & 64 \\
+    & Min buffer before training & 256 \\
+    & $\varepsilon$-greedy schedule & Cosine annealing \\
+    & $\varepsilon_{\min}$ & 0.05 \\
+    & $\varepsilon$ decay steps & 3{,}000 \\
+    & Gradient clipping (max norm) & 1.0 \\
+    & Weight init & Xavier/Glorot~\cite{glorot2010xavier} \\
+    & Double DQN & Yes~\cite{vanhasselt2016ddqn} \\
+\midrule
+\multirow{4}{*}{\textbf{Lyapunov}}
+    & $V$ (tradeoff) & 100 \\
+    & $\beta$ (carbon CH mod.) & 0.3 \\
+    & $w_{\text{eol}}$ (EOL penalty) & 1.0 \\
+    & Min CH fraction & 5\% \\
+\midrule
+\multirow{3}{*}{\textbf{CADR}}
+    & $\rho_{\min}$ (max compression) & 0.3 \\
+    & $\rho_{\max}$ (min compression) & 0.8 \\
+    & Signal dim $n$ / sparsity $s$ & 100 / 20 \\
+\midrule
+\multirow{2}{*}{\textbf{THz/6G}}
+    & Intra: 140\,GHz D-band & 30\,m range \\
+    & Inter: 3.5\,GHz sub-6 & 100\,m range \\
+\midrule
+\multirow{5}{*}{\textbf{SHDR}}
+    & Heartbeat size & 50 bits (capped at $d_0$) \\
+    & Heartbeat interval & 2 rounds (1 during disaster) \\
+    & Heartbeat miss threshold & 3 rounds \\
+    & Recovery duration & 50 rounds \\
+    & CH density boost & $1.5\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Time Complexity Analysis}
+\label{art2:sec:complexity}
+
+Table~\ref{art2:tab:complexity} compares per-round computational complexity.
+
+\begin{table}[!t]
+\centering
+\caption{Per-round computational complexity. $N$: nodes, $K$: CHs, $D$: avg degree, $H$: max hops, $P$: ABC population, $I$: iterations.}
+\label{art2:tab:complexity}
+\begin{tabular}{lllr}
+\toprule
+Protocol & Setup & Routing & Empirical \\
+\midrule
+LEACH~\cite{heinzelman2000leach}       & $O(N)$             & $O(K \cdot H)$       & ${\sim}0.5$\,ms \\
+LEACH-1hop                              & $O(N)$             & $O(K)$               & ${\sim}0.4$\,ms \\
+EE-LEACH~\cite{bakaraniya2013eeleach}  & $O(N)$             & $O(K \cdot H)$       & ${\sim}0.5$\,ms \\
+EERP~\cite{biswas2018eerp}             & $O(N \cdot D)$     & $O(K \cdot D \cdot H)$ & ${\sim}1.5$\,ms \\
+ABC-ACO~\cite{elkhediri2024abcaco}     & $O(N\!D + PIK)$   & $O(K \cdot D \cdot H)$ & ${\sim}5.0$\,ms \\
+Q-Routing~\cite{boyan1994qrouting}   & $O(N)$             & $O(K \cdot A \cdot H)$ & ${\sim}0.5$\,ms \\
+\textbf{CALASH}                         & $O(N\!D + N_{\text{DQN}})$ & $O(K \cdot N_{\text{DQN}} \cdot H)$ & ${\sim}1.3$\,ms \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The DQN forward pass per hop requires $9 \times 64 + 64 \times 32 + 32 \times 1 = 2{,}656$ Multiply-Accumulate Operations (MACs) per candidate, evaluated over ${\sim}20$ candidates---negligible even for an 8\,MHz mote CPU.
+CALASH's per-round complexity is comparable to EERP and significantly lower than ABC-ACO.
+
+\textbf{ABC-ACO iteration count justification.}
+The ABC-ACO baseline uses only $I = 3$ ABC iterations per round, yielding $P \times I = 10 \times 3 = 30$ employed-bee evaluations plus 30 onlooker evaluations = 60 total fitness evaluations per round.
+This is justified because: (a)~the optimization runs \emph{online every round}, not offline once; (b)~initialization is fitness-biased (not random), so the starting point is already good; (c)~network conditions drift slowly (${\sim}0.001$\,J/round energy decay from $E_0 = 0.5$\,J budget)~\cite{karaboga2007abc, kuila2014abc_wsn}.
+
+\subsection{Discussion of Results}
+\label{art2:sec:discussion}
+
+Table~\ref{art2:tab:main_results} presents the main campaign results.
+
+\begin{table}[!t]
+\centering
+\caption{Main simulation results (30 seeds, 5{,}000 rounds, disaster at round 2{,}000). Values are mean $\pm$ 95\% CI. Best value per column in \textbf{bold}. $\downarrow$ = lower is better, $\uparrow$ = higher is better.}
+\label{art2:tab:main_results}
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{l r@{$\,\pm\,$}l r@{$\,\pm\,$}l r@{$\,\pm\,$}l r@{$\,\pm\,$}l r@{$\,\pm\,$}l r@{$\,\pm\,$}l}
+\toprule
+Protocol & \multicolumn{2}{c}{Half-Death $\uparrow$} & \multicolumn{2}{c}{PDR $\uparrow$} & \multicolumn{2}{c}{Carbon (gCO$_2$) $\downarrow$} & \multicolumn{2}{c}{Fidelity $\uparrow$} & \multicolumn{2}{c}{\textbf{LCI} $\downarrow$} & \multicolumn{2}{c}{Eff.\,(pkt/J) $\uparrow$} \\
+\midrule
+LEACH           & 931  & 6   & 0.857 & 0.003 & 0.0019 & 0.0000 & 1.000 & 0.000 & 13.42 & 0.08 & 1{,}536 & 10 \\
+LEACH-1hop      & 806  & 13  & 0.865 & 0.001 & 0.0019 & 0.0000 & 1.000 & 0.000 & 16.09 & 0.16 & 1{,}282 & 13 \\
+EE-LEACH        & 1{,}266 & 11  & 0.638 & 0.002 & 0.0019 & 0.0000 & 1.000 & 0.000 & 13.54 & 0.07 & 1{,}525 & 9 \\
+ABC-ACO         & 880  & 5   & \textbf{0.892} & 0.002 & 0.0019 & 0.0000 & 1.000 & 0.000 & 13.72 & 0.08 & 1{,}503 & 9 \\
+EERP            & 1{,}244 & 12  & 0.646 & 0.006 & 0.0020 & 0.0000 & 1.000 & 0.000 & 13.21 & 0.07 & 1{,}561 & 8 \\
+Q-Routing       & 1{,}225 & 10  & 0.636 & 0.002 & 0.0019 & 0.0000 & 1.000 & 0.000 & 14.01 & 0.08 & 1{,}473 & 8 \\
+\midrule
+RIS-DRL         & \textbf{1{,}764} & 15 & 0.794 & 0.002 & 0.0021 & 0.0000 & 1.000 & 0.000 & \textbf{7.89} & 0.07 & \textbf{2{,}647} & 26 \\
+\textbf{CALASH} & 1{,}486 & 14 & 0.829 & 0.006 & 0.0020 & 0.0000 & 1.000 & 0.000 & 8.99 & 0.10 & 2{,}323 & 24 \\
+\midrule
+CALASH-NoCO2    & 1{,}644 & 21 & 0.828 & 0.005 & 0.0020 & 0.0000 & 1.000 & 0.000 & 8.16  & 0.14 & 2{,}642 & 27 \\
+CALASH-NoSH     & 1{,}510 & 12 & 0.830 & 0.005 & 0.0020 & 0.0000 & 1.000 & 0.000 & 8.82  & 0.08 & 2{,}349 & 22 \\
+CALASH-NoCADR   & 930  & 5   & 0.830 & 0.004 & 0.0019 & 0.0000 & 1.000 & 0.000 & 14.29 & 0.09 & 1{,}443 & 9 \\
+CALASH-NoLCI    & 1{,}484 & 13 & 0.828 & 0.004 & 0.0020 & 0.0000 & 1.000 & 0.000 & 8.99  & 0.09 & 2{,}322 & 21 \\
+CALASH-NoTHz    & 1{,}345 & 11 & 0.835 & 0.004 & 0.0020 & 0.0000 & 1.000 & 0.000 & 9.84  & 0.08 & 2{,}102 & 19 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{alive_nodes.pdf}
+\caption{Alive node count over simulation rounds (30-seed mean). The disaster event at round~2{,}000 causes a visible dip in all protocols; CALASH recovers fastest due to SHDR.}
+\label{art2:fig:alive_nodes}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{pdr_curves.pdf}
+\caption{Cumulative packet delivery ratio over 5,000 rounds for 13 protocols (200 nodes, 30-seed mean). CALASH sustains PDR ~0.83, exceeding all multi-hop baselines by $\geq$ 30\%; ABC-ACO reaches 0.89 but at 41\% shorter lifetime.}
+\label{art2:fig:pdr}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{boxplots.pdf}
+\caption{Box plots of four key metrics—half-death round, PDR, total carbon, data fidelity—across 30 seeds for all 13 protocols (200 nodes, 5,000 rounds). Whiskers span 5th–95th percentile; narrow boxes indicate low variance.}
+\label{art2:fig:boxplots}
+\end{figure}
+
+We organize the discussion around four themes: (1)~CALASH vs.\ traditional baselines, (2)~comparison with the 6G-aware RIS-DRL baseline, (3)~ablation analysis, and (4)~statistical significance.
+Table~\ref{art2:tab:main_results} presents the full results; Figs.~\ref{art2:fig:alive_nodes}--\ref{art2:fig:boxplots} visualize the key trends.
+\subsubsection{CALASH vs.\ Traditional Baselines}
+\label{art2:sec:calash_vs_baselines}
+
+CALASH achieves a half-death round of \textbf{1{,}486 $\pm$ 14}, a \textbf{60\% improvement} over LEACH (931) and 17--84\% over all traditional baselines, all significant at $p < 10^{-5}$ (Table~\ref{art2:tab:wilcoxon}).
+The improvement stems from CADR's compressive sensing, which reduces intra-cluster volume by~$\sim$2$\times$.
+PDR = \textbf{0.829}, exceeding EE-LEACH (0.638), EERP (0.646), and Q-Routing (0.636) by~$\sim$30\%.
+ABC-ACO achieves the highest baseline PDR (0.892) but at much shorter lifetime (880).
+LCI = \textbf{8.99}\,gCO$_2$eq/pkt, a \textbf{33\% improvement} over LEACH (13.42) and \textbf{32\%} over the best traditional baseline EERP (13.21).
+Energy efficiency reaches \textbf{2{,}323} pkt/J, a 51\% improvement over LEACH (1{,}536).
+
+\subsubsection{CALASH vs.\ RIS-DRL: The 6G-Aware Baseline}
+\label{art2:sec:calash_vs_risdrl}
+
+Both protocols share the same 6G physical layer; any gap isolates CALASH's algorithmic contributions.
+RIS-DRL achieves \textbf{longer lifetime} (1{,}764 vs.\ 1{,}486, $+18.7\%$; $p = 1.8{\times}10^{-6}$), reflecting the cost of CALASH's multi-objective design: CARE defers transmissions during high-CI periods ($\sim$10.7\% overhead) and SHDR heartbeats consume energy ($\sim$1.7\% overhead).
+Conversely, CALASH achieves \textbf{higher PDR} (0.829 vs.\ 0.794, $+4.3\%$) due to its multi-objective reward that penalizes drops.
+RIS-DRL achieves lower LCI (7.89 vs.\ 8.99, $-12.2\%$) because its longer lifetime better amortizes embodied carbon.
+
+\textbf{Why CALASH's contribution stands despite RIS-DRL's raw metrics.}
+RIS-DRL's lower LCI is an \emph{incidental} side-effect of longer lifetime (more packets dilute fixed embodied carbon), \emph{not} the result of intentional carbon optimization: RIS-DRL has no carbon queue, no CI-modulated compression, and no lifecycle penalty.
+The ablation confirms this: CALASH-NoCO2 (which removes carbon awareness, matching RIS-DRL's single-objective philosophy) achieves lifetime~1{,}644 and LCI~8.16---within 3.4\% of RIS-DRL's LCI~(7.89)---proving the remaining gap stems from self-healing overhead, not architectural weakness.
+CALASH provides four capabilities that RIS-DRL entirely lacks (Table~\ref{art2:tab:gap_summary}):
+\begin{enumerate}[label=(\roman*), nosep]
+    \item \emph{Provable carbon-budget compliance}: the Lyapunov carbon queue guarantees operational carbon bounds (Theorem~\ref{art2:thm:cdl}), critical when regulations mandate emission ceilings;
+    \item \emph{Disaster self-healing}: RIS-DRL has no MAPE-K loop---after a disaster it cannot re-elect CHs or recover orphaned nodes;
+    \item \emph{CI-adaptive compression}: CALASH reduces traffic during high-carbon grid periods; RIS-DRL transmits at full volume regardless;
+    \item \emph{ISO~14040 lifecycle integration}: end-of-life carbon is embedded in routing, a requirement for ESG-compliant deployments.
+\end{enumerate}
+In summary, RIS-DRL maximizes a single objective (energy efficiency), whereas CALASH manages a controlled \emph{energy--carbon--resilience trade-off}: it trades $\sim$16\% lifetime for carbon awareness, disaster self-healing, provable carbon guarantees, and higher PDR---capabilities essential in disaster-prone, sustainability-regulated scenarios.
+
+\subsubsection{LCI Mechanism Analysis}
+\label{art2:sec:lci_discussion}
+
+For 200 nodes at 10{,}000\,gCO$_2$eq each, $C_{\text{emb}} = 2 \times 10^6$\,gCO$_2$eq dominates operational carbon ($\sim$0.005\,gCO$_2$eq) by five orders of magnitude.
+Thus LCI $\approx 207\times 10^4 / \text{total packets}$, and the most effective reduction strategy is to maximize delivered packets.
+CALASH delivers $\sim$231{,}000 packets (vs.\ LEACH's $\sim$154{,}000), yielding the 33\% LCI reduction primarily through CADR's $\sim$2.5$\times$ per-transmission energy saving.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{carbon_emissions.pdf}
+\caption{Cumulative ($gCO_{2}eq$) over 5,000 rounds for all 13 protocols (200 nodes, 30-seed mean). All converge to ~0.002 $gCO_{2}eq$; differences dominated by embodied carbon amortization.}
+\label{art2:fig:carbon}
+\end{figure}
+
+\subsubsection{Ablation Study}
+\label{art2:sec:ablation}
+
+The ablation results (Table~\ref{art2:tab:main_results}, bottom) isolate each pillar's contribution ($\Delta$LCI = ablation $-$ CALASH):
+
+\textbf{CALASH-NoCADR ($\Delta = +5.30$):}
+The most damaging ablation. Without adaptive compression, full-size packets ($4{,}000$ bits vs.\ $\sim$2{,}200) drain batteries $1.8\times$ faster, reducing lifetime from 1{,}486 to 930 rounds ($-37.4\%$, $p = 1.8{\times}10^{-6}$).
+\textbf{CADR is the dominant pillar} ($+59\%$ LCI when removed).
+
+\textbf{CALASH-NoCO2 ($\Delta = -0.83$):}
+Removing carbon-aware routing improves lifetime by $10.7\%$ ($p = 1.8{\times}10^{-6}$)---the costliest pillar in energy overhead, but enables the core carbon-awareness capability.
+
+\textbf{CALASH-NoSH ($\Delta = -0.17$):}
+Removing self-healing yields $+1.7\%$ lifetime ($p = 5.5{\times}10^{-3}$). The overhead comes from heartbeat beacons; in multi-disaster scenarios, SHDR becomes essential.
+
+\textbf{CALASH-NoLCI ($\Delta = +0.00$):}
+Negligible effect ($p = 0.74$). The lifecycle penalty acts as a gentle tiebreaker between equidistant relays, by design.
+
+\textbf{CALASH-NoTHz ($\Delta = +0.85$):}
+Removing 6G technologies causes $-9.5\%$ lifetime (1{,}345 vs.\ 1{,}486; $p = 1.8{\times}10^{-6}$), confirming the 6G substrate provides genuine energy savings---the \textbf{second-largest pillar effect} after CADR.
+In summary, the hierarchy is: CADR ($+59\%$ LCI) $\gg$ 6G ($+9.5\%$) $>$ CARE ($-9.2\%$ overhead) $>$ SHDR ($-1.9\%$) $>$ LSE ($\approx 0$).
+
+\subsubsection{Statistical Significance}
+\label{art2:sec:significance}
+
+Table~\ref{art2:tab:wilcoxon} summarizes Wilcoxon signed-rank test results.
+All CALASH vs.\ baseline comparisons for lifetime, PDR, and LCI are significant ($p < 10^{-5}$), confirming that the performance improvements are robust across all 30 seeds.
+
+\begin{table}[!t]
+\centering
+\caption{Wilcoxon signed-rank test: CALASH vs.\ each baseline ($\alpha = 0.05$, $n = 30$ seeds). \ding{51} = significant.}
+\label{art2:tab:wilcoxon}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{lccc}
+\toprule
+Baseline & Lifetime & PDR & LCI \\
+\midrule
+LEACH        & \ding{51} ($p = 1.8{\times}10^{-6}$) & \ding{51} ($p = 2.5{\times}10^{-6}$) & \ding{51} ($p = 1.8{\times}10^{-6}$) \\
+LEACH-1hop   & \ding{51} ($p = 1.8{\times}10^{-6}$) & \ding{51} ($p = 1.8{\times}10^{-6}$) & \ding{51} ($p = 1.8{\times}10^{-6}$) \\
+EE-LEACH     & \ding{51} ($p = 1.8{\times}10^{-6}$) & \ding{51} ($p = 1.8{\times}10^{-6}$) & \ding{51} ($p = 1.8{\times}10^{-6}$) \\
+ABC-ACO      & \ding{51} ($p = 1.8{\times}10^{-6}$) & \ding{51} ($p = 1.8{\times}10^{-6}$) & \ding{51} ($p = 1.8{\times}10^{-6}$) \\
+EERP         & \ding{51} ($p = 1.8{\times}10^{-6}$) & \ding{51} ($p = 1.8{\times}10^{-6}$) & \ding{51} ($p = 1.8{\times}10^{-6}$) \\
+Q-Routing    & \ding{51} ($p = 1.8{\times}10^{-6}$) & \ding{51} ($p = 1.8{\times}10^{-6}$) & \ding{51} ($p = 1.8{\times}10^{-6}$) \\
+RIS-DRL      & \ding{51} ($p = 1.8{\times}10^{-6}$) & \ding{51} ($p = 1.8{\times}10^{-6}$) & \ding{51} ($p = 1.8{\times}10^{-6}$) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Data Fidelity}
+
+All protocols achieve $F = 1.000$ (Table~\ref{art2:tab:main_results}) because the Intel Lab traces are $\sim$1-sparse in the DCT domain~\cite{intel_lab_data}: at $\rho = 0.55$, the measurement count comfortably exceeds the sparsity level for exact recovery~\cite{candes2006cs}.
+For less sparse signals, the $\rho_{\min}$ parameter provides direct control over the fidelity--LCI trade-off.
+
+\subsubsection{Evaluation Methodology and Real Data Validation}
+\label{art2:sec:eval_methodology}
+
+Our evaluation uses a custom discrete-event Python/NumPy simulator implementing the first-order radio energy model~\cite{heinzelman2000leach, rappaport2002wireless}---the standard methodology in WSN routing literature.
+To enhance ecological validity, we incorporate three \emph{real} data sources: (1)~Intel Lab sensor traces~\cite{intel_lab_data} (2.3M readings, 54 motes) assigned to simulated nodes in round-robin; (2)~UK Carbon Intensity API~\cite{uk_carbon_api} (8,760 hourly CI values, 2023); and (3)~USGS ShakeMap grids~\cite{worden2005shakemap} for disaster calibration.
+All remaining inputs are classified by provenance in Table~\ref{art2:tab:data_provenance}.
+The simulator abstracts multipath fading, MAC contention, and clock drift; absolute numbers are upper bounds, but relative comparisons remain valid since all protocols share the same simplifications.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{real_vs_synthetic.pdf}
+\caption{Comparison of synthetic vs.\ real data traces. Real Intel Lab data exhibits higher sparsity, leading to better fidelity under compression.}
+\label{art2:fig:real_vs_synthetic}
+\end{figure}
+
+\subsubsection{Scalability Analysis}
+\label{art2:sec:scalability}
+
+Fig.~\ref{art2:fig:scalability} reports LCI and half-death round as the network size varies from 100 to 500~nodes (10~seeds each, 5{,}000 rounds).
+CALASH maintains a consistent LCI advantage across all scales: at $N{=}100$ the LCI is $9.51{\pm}0.35$ vs.\ LEACH's $15.83{\pm}0.46$ ($\mathbf{40\%}$ lower); at $N{=}200$ the gap is $8.95{\pm}0.20$ vs.\ $13.48{\pm}0.23$ ($\mathbf{34\%}$ lower); and at $N{=}500$ the LCI is $14.28{\pm}0.31$ vs.\ $17.12{\pm}0.35$ ($\mathbf{17\%}$ lower).
+For all protocols, LCI first decreases with network density (more aggregate packets amortize the fixed embodied carbon) and then rises at very large scales (increased routing overhead).
+Importantly, CALASH's relative advantage persists at every scale: the CADR mechanism compresses per-node transmissions regardless of network size, and the Lyapunov-based CARE routing generalizes to larger topologies without retraining.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{scalability.pdf}
+\caption{Scalability analysis: LCI and half-death round as network size varies from 100 to 500~nodes (10~seeds each, 5{,}000 rounds).}
+\label{art2:fig:scalability}
+\end{figure}
+
+\subsubsection{Sensitivity Analysis}
+\label{art2:sec:sensitivity}
+
+Fig.~\ref{art2:fig:sensitivity} presents a four-way parameter sweep (10~seeds each) over the key CALASH hyperparameters:
+\begin{itemize}
+    \item \textbf{Lyapunov trade-off $V$} ($10$--$1{,}000$): controls the energy--carbon balance in CARE.  Increasing $V$ favours long-term carbon minimization at the expense of short-term energy efficiency.  LCI is relatively insensitive to $V$ in the range $50$--$500$, confirming that the default $V{=}100$ is a robust choice.
+    \item \textbf{Carbon weight $\beta_{\mathrm{carbon}}$} ($0$--$1$): governs how strongly CI modulates CH election.  Setting $\beta{=}0$ (ignore carbon) increases LCI modestly, while $\beta{=}1$ (full carbon weight) yields diminishing returns beyond $\beta{=}0.3$ (default).
+    \item \textbf{CH percentage} ($3\%$--$15\%$): the fraction of nodes elected as cluster heads each round.  Too few CHs (3\%) create overloaded clusters, reducing PDR; too many (15\%) increase inter-CH overhead.  The default $5\%$ achieves a good balance.
+    \item \textbf{Compression floor $\rho_{\min}$} ($0.1$--$0.7$): sets the minimum compression ratio.  Lower $\rho_{\min}$ enables more aggressive compression (lower LCI) but risks fidelity loss on low-sparsity signals.  With the Intel Lab traces (${\sim}1$-sparse in DCT), CS achieves perfect recovery ($F{=}1.000$) at the default $\rho_{\min}{=}0.3$ (LCI ${\sim}9.0$); raising it to $0.5$ increases robustness for denser signals at the cost of a ${\sim}5\%$ LCI penalty.
+\end{itemize}
+
+Overall, CALASH is robust across a wide parameter range, with no single hyperparameter causing more than $\pm 15\%$ LCI variation.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{sensitivity.pdf}
+\caption{Sensitivity analysis: effect of Lyapunov trade-off parameter~$V$, carbon weight~$\beta$, CH percentage, and compression floor~$\rho_{\min}$ on CALASH performance (10~seeds each).}
+\label{art2:fig:sensitivity}
+\end{figure}
+
+\subsubsection{Carbon Intensity Sensitivity Across National Grids}
+\label{art2:sec:ci_sensitivity}
+
+We test four grid profiles (10~seeds each): France (nuclear, CI$\approx$41), UK (mixed, CI$\approx$200, real data), Germany (transition, CI$\approx$338), and India (coal, CI$\approx$707\,gCO$_2$/kWh).
+CALASH's LCI advantage over LEACH ranges from 31\% (India) to 41\% (France).
+Counter-intuitively, the advantage is largest in low-CI grids: a clean grid lets CALASH fully exploit CADR and CARE without the carbon penalty that inflates LCI in coal-heavy mixes.
+
+\subsubsection{Computational Feasibility and Execution Time}
+\label{art2:sec:computational_feasibility}
+
+Table~\ref{art2:tab:execution_time} reports wall-clock time per 5{,}000-round simulation (30-seed mean, single-core Apple M-series).
+CALASH's 9.5$\times$ overhead vs.\ LEACH stems from DQN forward passes, training backpropagation, heartbeat processing, and Lyapunov updates.
+On an 8\,MHz ATmega128L, the DQN forward pass ($2{,}656$ MACs per candidate) takes $\sim$0.3\,ms---negligible vs.\ a 100\,ms transmission slot.
+Training ($\sim$6\,ms/batch on ESP32) would be offloaded to the gateway in real deployments.
+
+\begin{table}[!t]
+\centering
+\caption{Wall-clock execution time per 5{,}000-round simulation (30-seed mean $\pm$ 95\% CI). Overhead ratio relative to LEACH.}
+\label{art2:tab:execution_time}
+\begin{tabular}{lrr}
+\toprule
+Protocol & Wall time (s) & Overhead vs.\ LEACH \\
+\midrule
+LEACH-1hop     & $2.54 \pm 0.03$ & $0.8\times$ \\
+LEACH          & $3.28 \pm 0.05$ & $1.0\times$ \\
+EE-LEACH       & $3.41 \pm 0.03$ & $1.0\times$ \\
+Q-Routing      & $3.71 \pm 0.05$ & $1.1\times$ \\
+CALASH-NoCADR  & $16.09 \pm 0.22$ & $4.9\times$ \\
+EERP           & $16.13 \pm 0.28$ & $4.9\times$ \\
+CALASH-NoCO2   & $19.10 \pm 0.36$ & $5.8\times$ \\
+RIS-DRL        & $22.68 \pm 0.30$ & $6.9\times$ \\
+CALASH-NoSH    & $30.16 \pm 0.38$ & $9.2\times$ \\
+CALASH-NoLCI   & $30.37 \pm 0.42$ & $9.3\times$ \\
+\textbf{CALASH}& $\mathbf{31.08 \pm 0.51}$ & $\mathbf{9.5\times}$ \\
+CALASH-NoTHz   & $33.35 \pm 0.75$ & $10.2\times$ \\
+ABC-ACO        & $36.82 \pm 0.30$ & $11.2\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+As limitations:
+
+\textbf{L1: RIS-DRL outperforms CALASH on lifetime ($+$19\%) and LCI ($-$12\%).}
+This reflects the cumulative cost of CALASH's carbon-aware ($10.7\%$) and self-healing ($1.7\%$) pillars.
+The ablation study shows that removing carbon awareness alone (CALASH-NoCO2) closes the LCI gap to 3.4\%, confirming the overhead is the \emph{price} of carbon-budget compliance and disaster resilience---capabilities RIS-DRL does not offer.
+Section~\ref{art2:sec:future_work} outlines how replacing heartbeat-based failure detection with ISAC passive sensing can reduce this overhead.
+
+\textbf{L2: Simulation-only evaluation.}
+All results use a first-order radio energy model abstracting fading, MAC contention, and clock drift. Absolute numbers are optimistic; relative comparisons remain valid.
+
+\textbf{L3: Limited multi-disaster evaluation.}
+The campaign includes Omori--Utsu aftershock sequences~\cite{utsu1995omori} but does not model cascading secondary hazards (landslides, flooding).
+
+%% ===============================================================
+%%  SECTION V: CONCLUSION
+%% ===============================================================
+
+\section{Conclusion}
+\label{art2:sec:conclusion}
+
+We presented CALASH, the first WSN routing framework that jointly minimizes lifecycle carbon intensity through four integrated pillars: CADR, CARE (with provable Lyapunov guarantees), SHDR, and LSE.
+Extensive evaluation (30~seeds, 13~variants, 5{,}000~rounds) demonstrates \textbf{60\% longer lifetime} vs.\ LEACH, \textbf{32\% lower LCI} vs.\ the best traditional baseline, \textbf{82.9\% PDR} with perfect fidelity, and provable carbon guarantees (Theorem~\ref{art2:thm:cdl}).
+The ablation reveals CADR as the dominant pillar ($+59\%$ LCI when removed), with 6G technologies as the second-largest contributor ($+9.5\%$ LCI, $p < 10^{-5}$).
+The comparison with RIS-DRL reveals a controlled energy--carbon--resilience trade-off: CALASH trades $\sim$16\% lifetime for unique carbon-awareness and disaster-resilience capabilities.
+
+The key insight is that \emph{sending fewer bits} (via compressive sensing) is a more effective lever for reducing WSN carbon footprint than optimizing routing paths.
+CALASH's LCI metric and ISO~14040-compliant LCA framework provide a template for evaluating any WSN protocol through the lifecycle carbon lens.
+
+As Future works:\label{art2:sec:future_work}
+
+\begin{enumerate} 
+    \item \textbf{Closing the RIS-DRL gap}: replace the DQN with a lightweight linear policy and use ISAC passive failure detection instead of heartbeat broadcasts. 
+    \item \textbf{Hardware testbed}: 20-node ESP32-S3 + LoRa testbed with INA219 power monitoring and real-time CI beacons from the UK API~\cite{uk_carbon_api}. 
+    \item \textbf{Multi-disaster evaluation}: 3--5 cascading disaster events using USGS ShakeMap attenuation models. 
+    \item \textbf{Energy harvesting}: integrate solar/RF harvesting with the Lyapunov framework~\cite{huang2013energy}. 
+    \item \textbf{Multi-agent DQN}: distributed RL for fully decentralized routing. 
+    \item \textbf{ns-3 co-simulation}: cross-validate THz channel and OFDM estimates against ns-3~\cite{ns3_thz}. 
+\end{enumerate}
+
+\FloatBarrier
+
+\vspace{0.5cm}
+\noindent Les hyperparamètres complets, la preuve du théorème CDL, les résultats détaillés par scénario, les analyses de sensibilité et les profils carbone sont fournis à l'Annexe~\ref{ann:calash-suppl}.

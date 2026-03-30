@@ -1,0 +1,153 @@
+% Dans l'introduction, on présente le problème étudié et les buts
+% poursuivis. L'introduction permet de faire connaître le cadre de la
+% recherche et d'en préciser le domaine d'application. Elle fournit
+% les précisions nécessaires en ce qui concerne le contexte de
+% réalisation de la recherche, l'approche envisagée, l'évolution de
+% la réalisation. En fait, l'introduction présente au lecteur ce
+% qu'il doit savoir pour comprendre la recherche et en connaître la
+% portée.
+\Chapter{INTRODUCTION}\label{sec:Introduction}
+
+%%
+%%  CONTEXTE ET MISE EN SITUATION
+%%
+\section{Contexte et mise en situation}\label{sec:Contexte}
+
+Les catastrophes naturelles --- séismes, inondations, glissements de terrain, feux de forêt, ouragans --- constituent l'une des menaces les plus graves pour les populations et les infrastructures à l'échelle mondiale. Selon le rapport 2020 du Bureau des Nations Unies pour la réduction des risques de catastrophes (UNDRR), plus de 7\,348 événements catastrophiques majeurs ont été enregistrés entre 2000 et 2019, affectant 4.2 milliards de personnes, causant 1.23 million de décès et engendrant des pertes économiques estimées à 2\,970 milliards de dollars américains \cite{undrr2020}. Plus récemment, en 2023, 398 catastrophes naturelles ont été recensées, avec 95\,000 décès et des pertes d'environ 380 milliards de dollars \cite{burgueno_salas_global_nodate}. Cette tendance alarmante est exacerbée par le changement climatique, qui augmente la fréquence et l'intensité des phénomènes météorologiques extrêmes. Dans ce contexte, la surveillance en temps réel des zones à risque est devenue un impératif stratégique pour la détection précoce des signes avant-coureurs, la coordination efficace des secours et la réduction des pertes humaines et matérielles.
+
+Le Sixième Rapport d'Évaluation du Groupe d'experts intergouvernemental sur l'évolution du climat (GIEC/IPCC AR6) confirme cette tendance~: sous un scénario de réchauffement de 1.5°C, les précipitations extrêmes augmenteront de 10.5\% en intensité et de 30\% en fréquence \cite{IPCC2021AR6}. Le Cadre de Sendai pour la réduction des risques de catastrophes 2015--2030 \cite{UNDRR2015Sendai}, adopté par 187 pays, identifie quatre priorités d'action dont la compréhension des risques de catastrophe et le renforcement de la gouvernance. L'indicateur mondial C-2 du Cadre de Sendai --- le nombre de personnes couvertes par des systèmes d'alerte précoce multi-aléas --- souligne l'urgence de déployer des infrastructures de surveillance fiables, en particulier dans les pays en développement où 90\% des décès liés aux catastrophes surviennent.
+
+Les réseaux de capteurs sans fil (WSN --- \emph{Wireless Sensor Networks}), composés de centaines à des milliers de n\oe{}uds capteurs miniaturisés, alimentés par batterie et communicant par liaisons radio multi-sauts vers une station de base (BS), offrent une solution prometteuse pour cette surveillance \cite{al_qundus_wireless_2020}. Leur capacité à collecter des données environnementales (température, humidité, vibrations, niveaux d'eau) avec une intervention humaine minimale, à maintenir leur connectivité même après la destruction partielle d'infrastructures, et à couvrir des zones géographiquement étendues en fait des instruments de choix pour le suivi des catastrophes. Cependant, leur déploiement dans des environnements hostiles et inaccessibles impose des contraintes sévères~: batteries non rechargeables de capacité limitée ($\sim$0.5\,J par n\oe{}ud dans les simulations standard de type Heinzelman \cite{heinzelman2000leach}), bande passante restreinte, puissance de calcul élémentaire (microcontrôleurs ARM Cortex-M0/M4 avec $\sim$16--256\,KB de RAM), et vulnérabilité aux destructions physiques causées par les catastrophes elles-mêmes \cite{yarali_wireless_2020}.
+
+Des déploiements réels ont démontré la viabilité mais aussi les limites de ces réseaux en conditions extrêmes. Aslan et al.\ \cite{Aslan2012ForestFireWSN} ont déployé un réseau de capteurs de température et d'humidité pour la détection précoce de feux de forêt en Turquie, observant un taux de survie des n\oe{}uds de seulement 68\% après six mois en raison des conditions climatiques hostiles. Abu-Ghazaleh et al.\ \cite{AbuGhazaleh2007WSNSurvivability} ont étudié la survivabilité des WSN sous destruction partielle, montrant qu'une perte de 30\% des n\oe{}uds peut réduire la connectivité de 60\% si les n\oe{}uds critiques (goulots d'étranglement de routage) sont ciblés. Ces observations motivent les choix de conception de cette thèse~: la conscience topologique via les GNN (pour identifier et protéger les n\oe{}uds critiques), la résilience aux destructions massives (auto-guérison MAPE-K dans CALASH) et la vérification systématique des décisions (bouclier CASTER-ZT).
+
+L'avènement des réseaux de sixième génération (6G), attendu commercialement autour de 2030, promet de transformer radicalement ces réseaux de capteurs en plateformes de détection natives en intelligence artificielle (AI). Les technologies habilitantes du 6G --- communication sub-térahertz (sub-THz) offrant des débits multi-gigabits, surfaces intelligentes reconfigurables (RIS) permettant le contrôle passif de l'environnement de propagation, et détection--communication intégrée (ISAC) utilisant la même forme d'onde pour communiquer et percevoir --- ouvrent de nouvelles possibilités pour les réseaux de surveillance des catastrophes \cite{saad2020vision6g}. En parallèle, l'architecture O-RAN (Open Radio Access Network) standardise le déploiement d'applications intelligentes (xApps) sur des contrôleurs à budget de latence contraint (10\,ms pour le near-RT RIC), créant un cadre propice à l'intégration d'algorithmes d'apprentissage automatique directement dans la boucle de contrôle du réseau.
+
+Malgré ces avancées technologiques majeures, trois défis fondamentaux demeurent non résolus dans la littérature et constituent le c\oe{}ur de cette thèse. Ces défis, identifiés à travers une analyse approfondie de l'état de l'art (Chapitre~\ref{sec:RevLitt}), forment une progression logique~: (1) l'efficacité énergétique du routage comme condition préalable à toute opération durable, (2) la minimisation de l'empreinte carbone du cycle de vie comme extension naturelle de l'optimisation énergétique vers la durabilité environnementale, et (3) la sécurité des politiques de routage apprises par intelligence artificielle comme couche de protection indispensable pour tout déploiement autonome en environnement critique.
+
+
+%%
+%%  JUSTIFICATION ECONOMIQUE ET SOCIETALE
+%%
+\section{Justification économique, sociétale et réglementaire}\label{sec:intro-justification}
+
+Les contributions de cette thèse répondent à des besoins concrets. Les pertes économiques annuelles dues aux catastrophes naturelles dépassent 380 milliards de dollars \cite{burgueno_salas_global_nodate}, et chaque dollar investi dans les systèmes d'alerte précoce génère un retour de 4 à 10 dollars en pertes évitées \cite{UNDRR2015Sendai}. L'empreinte carbone de la recherche en IA est par ailleurs devenue une préoccupation~: la frugalité de la pile proposée ($\sim$27K paramètres, $\sim$144 heures GPU) représente un ordre de grandeur de réduction par rapport aux approches plus lourdes \cite{strubell2019energy}. Sur le plan normatif, trois cadres motivent directement ces travaux~: le Cadre de Sendai 2015--2030 \cite{UNDRR2015Sendai} (renforcement des systèmes d'alerte précoce), ISO~14040 \cite{iso14040} (ACV intégrée dans CALASH) et NIST SP~800-207 \cite{rose2020nist} (paradigme zéro-confiance transposé par CASTER-ZT). Enfin, la légèreté computationnelle de la pile ($<$ 27K paramètres, déployable sur des microcontrôleurs à quelques dollars) la rend accessible pour les déploiements dans les pays à revenu faible et intermédiaire, où 95\% des décès liés aux catastrophes surviennent \cite{IPCC2021AR6}.
+
+
+%%
+%%  ELEMENTS DE LA PROBLEMATIQUE
+%%
+\section{Éléments de la problématique}\label{sec:Problematique}
+
+\subsection{Défi 1~: Efficacité énergétique du routage dans les WSN de surveillance des catastrophes}
+
+Le routage constitue le principal facteur déterminant la durée de vie d'un WSN, car la transmission de données consomme la majeure partie de l'énergie disponible. L'énergie de transmission croît avec le carré (voire la puissance quatrième au-delà de la distance critique $d_0 \approx 87.7$\,m) de la distance, rendant le routage multi-sauts indispensable. Les protocoles classiques de routage hiérarchique --- LEACH \cite{heinzelman2000leach} et ses variantes (EE-LEACH \cite{kumar2012eeleach}, LEACH-C \cite{heinzelman2002leach}, HEED \cite{younis2004heed}, EERP \cite{sha2013eerp}) --- reposent sur des heuristiques statiques pour l'élection des chefs de grappe (CH) et n'exploitent pas l'information topologique du réseau. Les approches métaheuristiques (ABC \cite{karaboga2005abc}, PSO \cite{kennedy1995pso}) améliorent les performances mais souffrent de temps de convergence élevés ($O(n^2)$ à $O(n^3)$ par itération) et ne fournissent aucune garantie d'optimalité en environnement non stationnaire.
+
+Plus récemment, l'apprentissage par renforcement multi-agent (MARL) --- notamment QMIX \cite{rashid2018qmix} et QTRAN \cite{son2019qtran} dans le paradigme d'entraînement centralisé et d'exécution décentralisée (CTDE) --- a démontré des résultats prometteurs en modélisant chaque n\oe{}ud comme un agent coopératif. Toutefois, trois lacunes critiques persistent~:
+
+\begin{enumerate}
+    \item \textbf{Explosion mémoire}~: chaque agent MARL basé sur un réseau récurrent (GRU/LSTM) requiert $\sim$39\,000 paramètres, engendrant une consommation mémoire de 3.2 à 13.8\,GB à l'entraînement --- incompatible avec les contraintes des microcontrôleurs de classe capteur (ARM Cortex-M0/M4, $\sim$16--256\,KB de RAM).
+    \item \textbf{Ignorance de la topologie}~: QMIX et QTRAN traitent les agents de manière homogène sans exploiter la structure spatiale du réseau (adjacence, centralité, goulots d'étranglement), alors que cette information topologique est cruciale pour un routage efficace dans des réseaux où les catastrophes modifient dynamiquement la connectivité.
+    \item \textbf{Absence de fusion de politiques}~: QMIX et QTRAN présentent des forces complémentaires --- QMIX excelle dans les tâches nécessitant une coordination étroite (garantie de monotonie $\partial Q_\text{tot}/\partial Q_i \geq 0$), tandis que QTRAN gère mieux les interactions non monotones via des transformations affines --- mais aucun cadre ne propose de fusionner dynamiquement ces expertises en fonction du contexte topologique.
+\end{enumerate}
+
+Il manque donc un cadre qui \emph{fusionne} les expertises complémentaires de plusieurs politiques MARL dans une enveloppe suffisamment compacte ($<$ 2\,000 paramètres) pour l'embarqué, tout en exploitant la structure de graphe du réseau via un encodeur de réseau de neurones de graphes (GNN).
+
+
+\subsection{Défi 2~: Empreinte carbone du cycle de vie des WSN}
+
+Le secteur des technologies de l'information et de la communication (TIC) contribue à 2--4\% des émissions mondiales de gaz à effet de serre, une part comparable à l'industrie aéronautique, et l'Internet des objets (IoT) en est l'un des segments à plus forte croissance \cite{freitag2021ict}. L'analyse du cycle de vie (ACV) conforme à ISO~14040 \cite{iso14040} révèle un paradoxe saisissant~: un n\oe{}ud capteur IoT typique incarne environ 10\,000\,gCO$_2$eq lors de sa fabrication \cite{pirson2021embodied}, tandis que son énergie opérationnelle totale sur toute sa durée de vie ($\sim$0.5\,J) ne génère que $\sim$0.01\,gCO$_2$eq. Cela signifie que \textbf{le carbone incorporé domine d'environ six ordres de grandeur le carbone opérationnel ($10\,000/0{,}01 = 10^6$)} pour les dispositifs IoT à faible consommation.
+
+Cette observation a des implications profondes pour la conception de protocoles de routage~:
+
+\begin{itemize}
+    \item \textbf{Paradoxe du routage écoénergétique}~: réduire la consommation d'énergie opérationnelle d'un capteur de 50\% ne réduit son empreinte carbone totale que de $\sim$0.005\,gCO$_2$eq --- un gain négligeable face aux 10\,000\,gCO$_2$eq incorporés. Le véritable levier pour réduire l'empreinte carbone par paquet est de \emph{maximiser le nombre de paquets utiles livrés avant la mort du réseau} pour amortir le carbone incorporé sur davantage de paquets.
+    \item \textbf{Impact des catastrophes}~: la destruction prématurée de n\oe{}uds par une catastrophe gaspille intégralement le carbone incorporé de chaque dispositif défaillant, rendant la résilience aux catastrophes indissociable de la durabilité carbone.
+    \item \textbf{Intensité carbone variable}~: l'intensité carbone du réseau électrique varie considérablement (de $\sim$50 à $\sim$500\,gCO$_2$/kWh selon le mix énergétique, l'heure et la saison), offrant une opportunité de modulation temporelle de la consommation.
+\end{itemize}
+
+Malgré ces constats, aucun protocole de routage existant ne prend en compte cette empreinte carbone \emph{du cycle de vie} complet --- incorporant le carbone de fabrication, d'opération et de fin de vie --- dans ses décisions de routage. De plus, aucun travail ne module dynamiquement le ratio de réduction de données (par détection comprimée) en fonction de l'intensité carbone du réseau électrique en temps réel.
+
+
+\subsection{Défi 3~: Sécurité des politiques de routage apprises par intelligence artificielle}
+
+L'intégration croissante de l'intelligence artificielle dans la boucle de contrôle des réseaux de capteurs crée une nouvelle surface d'attaque. À mesure que les décisions de routage, de récupération et de gestion des ressources sont déléguées à des politiques apprises par apprentissage par renforcement (RL) et réseaux de neurones de graphes (GNN), trois vulnérabilités critiques émergent~:
+
+\begin{enumerate}
+    \item \textbf{Politiques voyous (\emph{rogue policies})}~: un adversaire qui compromet le modèle déployé peut injecter une politique malveillante qui mal-route systématiquement les paquets, accélère l'épuisement des batteries de n\oe{}uds stratégiques ou exfiltre des données, tout en paraissant nominale aux vérifications de signature et aux métriques globales.
+    \item \textbf{Hallucinations de modèle}~: hors de la distribution d'entraînement --- situation fréquente après une catastrophe qui modifie radicalement la topologie --- les réseaux de neurones peuvent émettre des actuations de haute confiance qui sont factuellement incorrectes. Sans mécanisme de détection, ces hallucinations sont indiscernables d'actuations légitimes.
+    \item \textbf{Granularité binaire des mécanismes existants}~: les cadres d'apprentissage par renforcement sûr existants --- CPO (Constrained Policy Optimization) \cite{achiam2017cpo} et le blindage réactif (\emph{shielding}) \cite{alshiekh2018shielding} --- ne fournissent que des décisions binaires (autoriser ou bloquer). Cette granularité est inadaptée aux WSN de surveillance des catastrophes, où le blocage systématique des actions dégrade la connectivité du réseau et peut compromettre la mission de surveillance.
+\end{enumerate}
+
+Il n'existe dans la littérature aucun cadre de contrôle de décision conforme au paradigme \emph{zéro-confiance} (\emph{zero-trust}) --- tel que formalisé par le NIST SP 800-207 \cite{rose2020nist} --- qui vérifie chaque actuation de politique en temps réel avec des \emph{décisions graduées} (autoriser, réduire la portée, différer, escalader, bloquer) et des \emph{garanties formelles} de sécurité.
+
+
+%%
+%%  QUESTIONS DE RECHERCHE
+%%
+\section{Questions de recherche}\label{sec:Questions}
+
+Face aux trois défis identifiés, cette thèse s'articule autour d'une question de recherche principale et de trois questions spécifiques~:
+
+\medskip
+\noindent\textbf{Question principale~:} \emph{Comment concevoir une pile complète de protocoles de routage intelligent --- écoénergétique, durable en carbone et sécurisée --- pour les réseaux de capteurs de surveillance des catastrophes natifs en intelligence artificielle et intégrés aux technologies 6G~?}
+
+\medskip
+Cette question se décline en trois questions spécifiques, chacune traitée par un article de recherche~:
+
+\begin{description}
+    \item[Q1 --- Efficacité énergétique (Article~1)]~: \emph{Est-il possible d'atteindre un routage multi-sauts quasi-optimal (PDR $\geq$ 98\%) dans les WSN de surveillance des catastrophes en fusionnant des politiques MARL expertes complémentaires via un encodeur GNN, tout en respectant les contraintes mémoire ($<$ 1\,024\,MB) et de calcul ($<$ 2\,000 paramètres entraînables) des plateformes embarquées~?}
+
+    \item[Q2 --- Durabilité carbone (Article~2)]~: \emph{Peut-on réduire significativement l'intensité carbone du cycle de vie (LCI) d'un WSN de surveillance des catastrophes en intégrant conjointement la réduction de données sensible au carbone, le routage avec garanties formelles de budget carbone, l'auto-guérison autonomique après catastrophe et la comptabilité du cycle de vie, le tout sur une couche physique 6G~?}
+
+    \item[Q3 --- Sécurité zéro-confiance (Article~3)]~: \emph{Peut-on garantir la détection des politiques de routage compromises ou produisant des sorties erronées (hallucinations) avec zéro faux positif tout en maintenant un score de récupération élevé, en couplant un encodeur GNN, un évaluateur de confiance-risque neuronal et un bouclier déterministe à décisions graduées, le tout dans le budget de latence de 10\,ms du near-RT RIC O-RAN~?}
+\end{description}
+
+
+%%
+%%  OBJECTIFS DE RECHERCHE
+%%
+\section{Objectifs de recherche}\label{sec:Objectifs}
+
+\subsection{Objectif général}
+
+L'objectif général de cette thèse est de \textbf{concevoir, implémenter et évaluer une pile complète de protocoles de routage intelligent} --- écoénergétique, durable en carbone et sécurisée --- \textbf{pour les réseaux de capteurs de surveillance des catastrophes intégrés aux technologies 6G}, en répondant aux trois questions de recherche formulées à la section~\ref{sec:Questions}.
+
+\subsection{Objectifs spécifiques}
+
+Cet objectif général se décline en trois objectifs spécifiques, chacun traité par un article de recherche~:
+
+\begin{enumerate}
+    \item \textbf{OS1 --- Fusion légère de politiques MARL pour le routage écoénergétique (Article~1 --- GAPF)~:}
+    \begin{itemize}
+        \item Concevoir un encodeur GCN à 2 couches qui encode la topologie du WSN en un plongement compact ($d = 16$) exploitable pour la sélection de politique.
+        \item Développer un contrôleur CAS (\emph{Contextual Algorithm Selection}) qui sélectionne dynamiquement l'expert MARL optimal (QMIX ou QTRAN) en fonction du contexte topologique, avec $<$ 2\,000 paramètres entraînables.
+        \item Concevoir un réseau d'attention monotone Q$\cdot$K pour la scalarisation des récompenses multi-objectifs, garantissant qu'une amélioration Pareto-dominante se traduit toujours par un signal scalaire supérieur.
+        \item Atteindre un PDR $\geq$ 98\% avec une consommation d'énergie 2--3$\times$ inférieure et une empreinte mémoire $<$ 1\,024\,MB.
+    \end{itemize}
+
+    \item \textbf{OS2 --- Routage conscient du carbone du cycle de vie avec auto-guérison (Article~2 --- CALASH)~:}
+    \begin{itemize}
+        \item Définir et formaliser la métrique LCI (\emph{Lifecycle Carbon Intensity}) conforme à ISO~14040 pour les WSN.
+        \item Concevoir quatre piliers intégrés (CADR, CARE, SHDR, LSE) minimisant conjointement le LCI.
+        \item Prouver des garanties de budget carbone via l'optimisation de Lyapunov (borne de Pareto CDL).
+        \item Intégrer les technologies 6G (sub-THz, RIS, ISAC) dans la couche physique du protocole.
+        \item Démontrer une amélioration $\geq$ 30\% du LCI par rapport aux protocoles de référence.
+    \end{itemize}
+
+    \item \textbf{OS3 --- Contrôle de décision zéro-confiance pour les réseaux natifs en AI (Article~3 --- CASTER-ZT)~:}
+    \begin{itemize}
+        \item Concevoir un encodeur GraphSAGE couplé à un évaluateur neuronal double-hypothèse de confiance-risque et un mécanisme d'incertitude épistémique par MC-Dropout.
+        \item Développer un bouclier déterministe à décisions graduées (5 niveaux) avec 14 paramètres scalaires non apprenables.
+        \item Formuler et prouver dix propositions formelles (conservatisme monotone, exclusion d'actuation non autorisée, couverture conforme, etc.).
+        \item Garantir une détection $\geq$ 70\% des politiques voyous avec un taux de faux positifs de zéro, tout en respectant le budget de latence de 10\,ms du near-RT RIC O-RAN.
+    \end{itemize}
+\end{enumerate}
+
+
+%%
+%%  PLAN DE LA THESE
+%%
+\section{Plan de la thèse}\label{sec:Plan}
+
+Cette thèse par articles est organisée en huit chapitres. Le Chapitre~\ref{sec:RevLitt} présente la revue de littérature couvrant le routage WSN, le MARL et les GNN, la durabilité carbone, la sécurité des systèmes autonomes et les technologies 6G, puis identifie trois lacunes majeures. Le Chapitre~\ref{sec:Demarche} explicite la démarche méthodologique, le cadre expérimental commun et les liens entre les trois articles. Les Chapitres~\ref{sec:Theme1}, \ref{sec:Theme2} et~\ref{sec:Theme3} présentent respectivement les articles GAPF (fusion légère de politiques MARL via GNN), CALASH (routage conscient du carbone du cycle de vie avec auto-guérison 6G) et CASTER-ZT (contrôle de décision zéro-confiance gradué). Le Chapitre~\ref{sec:Discussion} effectue une analyse transversale des résultats et discute les implications combinées. Enfin, le Chapitre~\ref{sec:Conclusion} synthétise les contributions, reconnaît les limitations et identifie les directions futures.

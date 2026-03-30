@@ -1,0 +1,45 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+build/
+dist/
+results/data/*.txt
+results/data/*.csv
+results/data/*.json
+*.log
+*.log.err
+.pytest_cache/
+*.coverage
+coverage.xml
+
+# Virtual environments
+/.venv/
+/.env/
+env/
+venv/
+myenv/
+
+# Ignore all experiment results folders (do not push)
+results/
+**/results/
+
+# Data files and model checkpoints (too large for git)
+*.npy
+*.pth
+*.pth.tar
+*.ckpt
+**/darts_logs/
+**/models/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Sensitive files
+password_pypi.txt
+Technical_Tools/PyPI-Recovery-Codes-*.txt
+
+# Generated reports
+Results_Graphics/feasibility_p95_vs_budgets.md

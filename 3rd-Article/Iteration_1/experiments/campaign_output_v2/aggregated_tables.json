@@ -1,0 +1,3544 @@
+{
+  "CASTER_ZT_CLEAN_NONE": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 10.0,
+    "scope_std": 14.58,
+    "scope_ci95": [
+      3.75,
+      16.25
+    ],
+    "allow_mean": 90.0,
+    "allow_std": 14.58,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.7208,
+    "latency_std": 0.0129,
+    "total_filter": 10.0,
+    "n_runs": 20
+  },
+  "CASTER_ZT_TELEMETRY_POISONING_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 10.0,
+    "scope_std": 14.58,
+    "scope_ci95": [
+      3.75,
+      16.25
+    ],
+    "allow_mean": 90.0,
+    "allow_std": 14.58,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.8615,
+    "latency_std": 0.0127,
+    "total_filter": 10.0,
+    "n_runs": 20
+  },
+  "CASTER_ZT_TELEMETRY_POISONING_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 10.0,
+    "scope_std": 14.58,
+    "scope_ci95": [
+      3.75,
+      16.25
+    ],
+    "allow_mean": 90.0,
+    "allow_std": 14.58,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.9412,
+    "latency_std": 0.0062,
+    "total_filter": 10.0,
+    "n_runs": 20
+  },
+  "CASTER_ZT_IDENTITY_CREDENTIAL_ABUSE_MEDIUM": {
+    "block_mean": 0.08,
+    "block_std": 0.34,
+    "block_ci95": [
+      0.0,
+      0.231
+    ],
+    "scope_mean": 64.94,
+    "scope_std": 8.35,
+    "scope_ci95": [
+      61.0606,
+      68.2169
+    ],
+    "allow_mean": 31.41,
+    "allow_std": 9.14,
+    "rogue_detect_mean": 0.8063,
+    "rogue_detect_std": 0.0836,
+    "rogue_detect_ci95": [
+      0.7667,
+      0.8396
+    ],
+    "rogue_block_mean": 0.0427,
+    "rogue_block_std": 0.0305,
+    "rogue_block_ci95": [
+      0.0312,
+      0.0583
+    ],
+    "false_block_mean": 0.0029,
+    "false_block_std": 0.0128,
+    "false_block_ci95": [
+      0.0,
+      0.0088
+    ],
+    "omega_mean": 0.8098,
+    "omega_std": 0.0537,
+    "omega_ci95": [
+      0.783,
+      0.8309
+    ],
+    "enforce_mean": 0.2114,
+    "enforce_std": 0.0482,
+    "latency_mean": 2.2082,
+    "latency_std": 0.1895,
+    "total_filter": 65.02,
+    "n_runs": 20
+  },
+  "CASTER_ZT_IDENTITY_CREDENTIAL_ABUSE_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 58.23,
+    "scope_std": 5.81,
+    "scope_ci95": [
+      55.5937,
+      60.7433
+    ],
+    "allow_mean": 38.6,
+    "allow_std": 5.73,
+    "rogue_detect_mean": 0.7424,
+    "rogue_detect_std": 0.0532,
+    "rogue_detect_ci95": [
+      0.7173,
+      0.7639
+    ],
+    "rogue_block_mean": 0.0403,
+    "rogue_block_std": 0.024,
+    "rogue_block_ci95": [
+      0.0299,
+      0.0511
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.7331,
+    "omega_std": 0.0384,
+    "omega_ci95": [
+      0.7141,
+      0.748
+    ],
+    "enforce_mean": 0.2274,
+    "enforce_std": 0.0297,
+    "latency_mean": 3.0666,
+    "latency_std": 0.1874,
+    "total_filter": 58.23,
+    "n_runs": 20
+  },
+  "CASTER_ZT_COMBINED_MEDIUM": {
+    "block_mean": 0.08,
+    "block_std": 0.35,
+    "block_ci95": [
+      0.0,
+      0.2385
+    ],
+    "scope_mean": 67.03,
+    "scope_std": 9.39,
+    "scope_ci95": [
+      62.1387,
+      70.593
+    ],
+    "allow_mean": 29.8,
+    "allow_std": 9.15,
+    "rogue_detect_mean": 0.801,
+    "rogue_detect_std": 0.0696,
+    "rogue_detect_ci95": [
+      0.7646,
+      0.8271
+    ],
+    "rogue_block_mean": 0.0385,
+    "rogue_block_std": 0.0311,
+    "rogue_block_ci95": [
+      0.025,
+      0.0521
+    ],
+    "false_block_mean": 0.0033,
+    "false_block_std": 0.0145,
+    "false_block_ci95": [
+      0.0,
+      0.01
+    ],
+    "omega_mean": 0.8096,
+    "omega_std": 0.032,
+    "omega_ci95": [
+      0.7949,
+      0.8229
+    ],
+    "enforce_mean": 0.2147,
+    "enforce_std": 0.0377,
+    "latency_mean": 2.3643,
+    "latency_std": 0.0973,
+    "total_filter": 67.11,
+    "n_runs": 20
+  },
+  "CASTER_ZT_COMBINED_HIGH": {
+    "block_mean": 0.17,
+    "block_std": 0.55,
+    "block_ci95": [
+      0.0,
+      0.5215
+    ],
+    "scope_mean": 67.47,
+    "scope_std": 7.14,
+    "scope_ci95": [
+      64.143,
+      70.4513
+    ],
+    "allow_mean": 28.56,
+    "allow_std": 7.05,
+    "rogue_detect_mean": 0.7847,
+    "rogue_detect_std": 0.0622,
+    "rogue_detect_ci95": [
+      0.7542,
+      0.809
+    ],
+    "rogue_block_mean": 0.0486,
+    "rogue_block_std": 0.0242,
+    "rogue_block_ci95": [
+      0.0382,
+      0.0597
+    ],
+    "false_block_mean": 0.0036,
+    "false_block_std": 0.0156,
+    "false_block_ci95": [
+      0.0,
+      0.0107
+    ],
+    "omega_mean": 0.7581,
+    "omega_std": 0.0483,
+    "omega_ci95": [
+      0.7347,
+      0.7773
+    ],
+    "enforce_mean": 0.2051,
+    "enforce_std": 0.0368,
+    "latency_mean": 3.1785,
+    "latency_std": 0.1132,
+    "total_filter": 67.65,
+    "n_runs": 20
+  },
+  "TRUST_IMPLICIT_CLEAN_NONE": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.6424,
+    "latency_std": 0.0195,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "TRUST_IMPLICIT_TELEMETRY_POISONING_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.8574,
+    "latency_std": 0.0749,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "TRUST_IMPLICIT_TELEMETRY_POISONING_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.8686,
+    "latency_std": 0.0333,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "TRUST_IMPLICIT_IDENTITY_CREDENTIAL_ABUSE_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.3323,
+    "omega_std": 0.0248,
+    "omega_ci95": [
+      0.3216,
+      0.3434
+    ],
+    "enforce_mean": 0.5048,
+    "enforce_std": 0.0088,
+    "latency_mean": 0.7649,
+    "latency_std": 0.0886,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "TRUST_IMPLICIT_IDENTITY_CREDENTIAL_ABUSE_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.2012,
+    "omega_std": 0.03,
+    "omega_ci95": [
+      0.1878,
+      0.2141
+    ],
+    "enforce_mean": 0.4863,
+    "enforce_std": 0.0098,
+    "latency_mean": 0.7314,
+    "latency_std": 0.0099,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "TRUST_IMPLICIT_COMBINED_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.3212,
+    "omega_std": 0.032,
+    "omega_ci95": [
+      0.3075,
+      0.3358
+    ],
+    "enforce_mean": 0.5087,
+    "enforce_std": 0.0053,
+    "latency_mean": 0.8813,
+    "latency_std": 0.0149,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "TRUST_IMPLICIT_COMBINED_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.2027,
+    "omega_std": 0.0277,
+    "omega_ci95": [
+      0.1911,
+      0.2157
+    ],
+    "enforce_mean": 0.4877,
+    "enforce_std": 0.0067,
+    "latency_mean": 0.9706,
+    "latency_std": 0.0191,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "IDENTITY_ONLY_CLEAN_NONE": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.6225,
+    "latency_std": 0.0055,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "IDENTITY_ONLY_TELEMETRY_POISONING_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.7671,
+    "latency_std": 0.0123,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "IDENTITY_ONLY_TELEMETRY_POISONING_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.8498,
+    "latency_std": 0.0105,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "IDENTITY_ONLY_IDENTITY_CREDENTIAL_ABUSE_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.3323,
+    "omega_std": 0.0248,
+    "omega_ci95": [
+      0.3216,
+      0.3434
+    ],
+    "enforce_mean": 0.5048,
+    "enforce_std": 0.0088,
+    "latency_mean": 0.7291,
+    "latency_std": 0.0076,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "IDENTITY_ONLY_IDENTITY_CREDENTIAL_ABUSE_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.2012,
+    "omega_std": 0.03,
+    "omega_ci95": [
+      0.1878,
+      0.2141
+    ],
+    "enforce_mean": 0.4863,
+    "enforce_std": 0.0098,
+    "latency_mean": 0.7439,
+    "latency_std": 0.0244,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "IDENTITY_ONLY_COMBINED_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.3212,
+    "omega_std": 0.032,
+    "omega_ci95": [
+      0.3075,
+      0.3358
+    ],
+    "enforce_mean": 0.5087,
+    "enforce_std": 0.0053,
+    "latency_mean": 0.8838,
+    "latency_std": 0.0122,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "IDENTITY_ONLY_COMBINED_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.2027,
+    "omega_std": 0.0277,
+    "omega_ci95": [
+      0.1911,
+      0.2157
+    ],
+    "enforce_mean": 0.4877,
+    "enforce_std": 0.0067,
+    "latency_mean": 0.9863,
+    "latency_std": 0.0797,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "TELEMETRY_ONLY_CLEAN_NONE": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.6906,
+    "latency_std": 0.0081,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "TELEMETRY_ONLY_TELEMETRY_POISONING_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.8393,
+    "latency_std": 0.0127,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "TELEMETRY_ONLY_TELEMETRY_POISONING_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.9208,
+    "latency_std": 0.0302,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "TELEMETRY_ONLY_IDENTITY_CREDENTIAL_ABUSE_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.3323,
+    "omega_std": 0.0248,
+    "omega_ci95": [
+      0.3216,
+      0.3434
+    ],
+    "enforce_mean": 0.5048,
+    "enforce_std": 0.0088,
+    "latency_mean": 2.2876,
+    "latency_std": 0.0348,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "TELEMETRY_ONLY_IDENTITY_CREDENTIAL_ABUSE_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.2012,
+    "omega_std": 0.03,
+    "omega_ci95": [
+      0.1878,
+      0.2141
+    ],
+    "enforce_mean": 0.4863,
+    "enforce_std": 0.0098,
+    "latency_mean": 2.9841,
+    "latency_std": 0.0597,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "TELEMETRY_ONLY_COMBINED_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.3212,
+    "omega_std": 0.032,
+    "omega_ci95": [
+      0.3075,
+      0.3358
+    ],
+    "enforce_mean": 0.5087,
+    "enforce_std": 0.0053,
+    "latency_mean": 2.435,
+    "latency_std": 0.0259,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "TELEMETRY_ONLY_COMBINED_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.2027,
+    "omega_std": 0.0277,
+    "omega_ci95": [
+      0.1911,
+      0.2157
+    ],
+    "enforce_mean": 0.4877,
+    "enforce_std": 0.0067,
+    "latency_mean": 3.2448,
+    "latency_std": 0.0478,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "CPO_SOFT_CLEAN_NONE": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.6389,
+    "latency_std": 0.0058,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "CPO_SOFT_TELEMETRY_POISONING_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.7938,
+    "latency_std": 0.0272,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "CPO_SOFT_TELEMETRY_POISONING_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.9631,
+    "latency_std": 0.1787,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "CPO_SOFT_IDENTITY_CREDENTIAL_ABUSE_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.3323,
+    "omega_std": 0.0248,
+    "omega_ci95": [
+      0.3216,
+      0.3434
+    ],
+    "enforce_mean": 0.5048,
+    "enforce_std": 0.0088,
+    "latency_mean": 0.817,
+    "latency_std": 0.0174,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "CPO_SOFT_IDENTITY_CREDENTIAL_ABUSE_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.2012,
+    "omega_std": 0.03,
+    "omega_ci95": [
+      0.1878,
+      0.2141
+    ],
+    "enforce_mean": 0.4863,
+    "enforce_std": 0.0098,
+    "latency_mean": 0.8303,
+    "latency_std": 0.0083,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "CPO_SOFT_COMBINED_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.3212,
+    "omega_std": 0.032,
+    "omega_ci95": [
+      0.3075,
+      0.3358
+    ],
+    "enforce_mean": 0.5087,
+    "enforce_std": 0.0053,
+    "latency_mean": 0.9501,
+    "latency_std": 0.0191,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "CPO_SOFT_COMBINED_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.2027,
+    "omega_std": 0.0277,
+    "omega_ci95": [
+      0.1911,
+      0.2157
+    ],
+    "enforce_mean": 0.4877,
+    "enforce_std": 0.0067,
+    "latency_mean": 1.0542,
+    "latency_std": 0.0131,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "SHIELD_BINARY_CLEAN_NONE": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.6348,
+    "latency_std": 0.0079,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "SHIELD_BINARY_TELEMETRY_POISONING_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.804,
+    "latency_std": 0.0486,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "SHIELD_BINARY_TELEMETRY_POISONING_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.8671,
+    "latency_std": 0.0124,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "SHIELD_BINARY_IDENTITY_CREDENTIAL_ABUSE_MEDIUM": {
+    "block_mean": 69.7,
+    "block_std": 3.17,
+    "block_ci95": [
+      68.339,
+      71.1055
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 30.3,
+    "allow_std": 3.17,
+    "rogue_detect_mean": 0.8125,
+    "rogue_detect_std": 0.0197,
+    "rogue_detect_ci95": [
+      0.8042,
+      0.8219
+    ],
+    "rogue_block_mean": 0.8125,
+    "rogue_block_std": 0.0197,
+    "rogue_block_ci95": [
+      0.8042,
+      0.8209
+    ],
+    "false_block_mean": 0.4592,
+    "false_block_std": 0.0833,
+    "false_block_ci95": [
+      0.4176,
+      0.492
+    ],
+    "omega_mean": 0.7507,
+    "omega_std": 0.0119,
+    "omega_ci95": [
+      0.7454,
+      0.7558
+    ],
+    "enforce_mean": 0.1773,
+    "enforce_std": 0.0168,
+    "latency_mean": 0.6863,
+    "latency_std": 0.0127,
+    "total_filter": 69.7,
+    "n_runs": 20
+  },
+  "SHIELD_BINARY_IDENTITY_CREDENTIAL_ABUSE_HIGH": {
+    "block_mean": 78.54,
+    "block_std": 2.5,
+    "block_ci95": [
+      77.362,
+      79.5821
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 21.46,
+    "allow_std": 2.5,
+    "rogue_detect_mean": 0.8826,
+    "rogue_detect_std": 0.0155,
+    "rogue_detect_ci95": [
+      0.875,
+      0.8882
+    ],
+    "rogue_block_mean": 0.8826,
+    "rogue_block_std": 0.0155,
+    "rogue_block_ci95": [
+      0.875,
+      0.8889
+    ],
+    "false_block_mean": 0.4884,
+    "false_block_std": 0.0803,
+    "false_block_ci95": [
+      0.4476,
+      0.5199
+    ],
+    "omega_mean": 0.7577,
+    "omega_std": 0.0128,
+    "omega_ci95": [
+      0.7525,
+      0.7637
+    ],
+    "enforce_mean": 0.1263,
+    "enforce_std": 0.012,
+    "latency_mean": 0.6891,
+    "latency_std": 0.0089,
+    "total_filter": 78.54,
+    "n_runs": 20
+  },
+  "SHIELD_BINARY_COMBINED_MEDIUM": {
+    "block_mean": 72.08,
+    "block_std": 3.58,
+    "block_ci95": [
+      70.1477,
+      73.3819
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 27.92,
+    "allow_std": 3.58,
+    "rogue_detect_mean": 0.8271,
+    "rogue_detect_std": 0.0229,
+    "rogue_detect_ci95": [
+      0.8156,
+      0.8354
+    ],
+    "rogue_block_mean": 0.8271,
+    "rogue_block_std": 0.0229,
+    "rogue_block_ci95": [
+      0.8156,
+      0.8354
+    ],
+    "false_block_mean": 0.514,
+    "false_block_std": 0.08,
+    "false_block_ci95": [
+      0.4701,
+      0.5429
+    ],
+    "omega_mean": 0.754,
+    "omega_std": 0.0147,
+    "omega_ci95": [
+      0.7469,
+      0.7598
+    ],
+    "enforce_mean": 0.1652,
+    "enforce_std": 0.0183,
+    "latency_mean": 0.829,
+    "latency_std": 0.0165,
+    "total_filter": 72.08,
+    "n_runs": 20
+  },
+  "SHIELD_BINARY_COMBINED_HIGH": {
+    "block_mean": 78.45,
+    "block_std": 2.59,
+    "block_ci95": [
+      77.2876,
+      79.5385
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 21.55,
+    "allow_std": 2.59,
+    "rogue_detect_mean": 0.8806,
+    "rogue_detect_std": 0.0135,
+    "rogue_detect_ci95": [
+      0.8743,
+      0.8861
+    ],
+    "rogue_block_mean": 0.8806,
+    "rogue_block_std": 0.0135,
+    "rogue_block_ci95": [
+      0.8743,
+      0.8861
+    ],
+    "false_block_mean": 0.4903,
+    "false_block_std": 0.0965,
+    "false_block_ci95": [
+      0.442,
+      0.5277
+    ],
+    "omega_mean": 0.7566,
+    "omega_std": 0.0155,
+    "omega_ci95": [
+      0.75,
+      0.7634
+    ],
+    "enforce_mean": 0.1257,
+    "enforce_std": 0.0148,
+    "latency_mean": 0.9054,
+    "latency_std": 0.0188,
+    "total_filter": 78.45,
+    "n_runs": 20
+  },
+  "AGENTIC_AUTO_CLEAN_NONE": {
+    "block_mean": 7.33,
+    "block_std": 11.72,
+    "block_ci95": [
+      2.6665,
+      13.3325
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 92.67,
+    "allow_std": 11.72,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0733,
+    "false_block_std": 0.1172,
+    "false_block_ci95": [
+      0.03,
+      0.1333
+    ],
+    "omega_mean": 0.9236,
+    "omega_std": 0.0018,
+    "omega_ci95": [
+      0.9226,
+      0.9242
+    ],
+    "enforce_mean": 0.9267,
+    "enforce_std": 0.1172,
+    "latency_mean": 0.6327,
+    "latency_std": 0.0038,
+    "total_filter": 7.33,
+    "n_runs": 20
+  },
+  "AGENTIC_AUTO_TELEMETRY_POISONING_MEDIUM": {
+    "block_mean": 7.33,
+    "block_std": 11.72,
+    "block_ci95": [
+      2.6665,
+      13.3325
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 92.67,
+    "allow_std": 11.72,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0733,
+    "false_block_std": 0.1172,
+    "false_block_ci95": [
+      0.03,
+      0.1333
+    ],
+    "omega_mean": 0.9236,
+    "omega_std": 0.0018,
+    "omega_ci95": [
+      0.9226,
+      0.9242
+    ],
+    "enforce_mean": 0.9267,
+    "enforce_std": 0.1172,
+    "latency_mean": 0.7918,
+    "latency_std": 0.0159,
+    "total_filter": 7.33,
+    "n_runs": 20
+  },
+  "AGENTIC_AUTO_TELEMETRY_POISONING_HIGH": {
+    "block_mean": 8.44,
+    "block_std": 14.78,
+    "block_ci95": [
+      3.0,
+      17.112
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 91.56,
+    "allow_std": 14.78,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0844,
+    "false_block_std": 0.1478,
+    "false_block_ci95": [
+      0.0367,
+      0.1711
+    ],
+    "omega_mean": 0.9232,
+    "omega_std": 0.0031,
+    "omega_ci95": [
+      0.9208,
+      0.9242
+    ],
+    "enforce_mean": 0.9156,
+    "enforce_std": 0.1478,
+    "latency_mean": 0.8831,
+    "latency_std": 0.0087,
+    "total_filter": 8.44,
+    "n_runs": 20
+  },
+  "AGENTIC_AUTO_IDENTITY_CREDENTIAL_ABUSE_MEDIUM": {
+    "block_mean": 52.77,
+    "block_std": 5.54,
+    "block_ci95": [
+      50.4676,
+      55.4046
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 47.23,
+    "allow_std": 5.54,
+    "rogue_detect_mean": 0.0875,
+    "rogue_detect_std": 0.0376,
+    "rogue_detect_ci95": [
+      0.0719,
+      0.1052
+    ],
+    "rogue_block_mean": 0.0875,
+    "rogue_block_std": 0.0376,
+    "rogue_block_ci95": [
+      0.0729,
+      0.1063
+    ],
+    "false_block_mean": 0.6815,
+    "false_block_std": 0.0544,
+    "false_block_ci95": [
+      0.6579,
+      0.7056
+    ],
+    "omega_mean": 0.2113,
+    "omega_std": 0.0405,
+    "omega_ci95": [
+      0.1952,
+      0.2308
+    ],
+    "enforce_mean": 0.2338,
+    "enforce_std": 0.0323,
+    "latency_mean": 1.0216,
+    "latency_std": 0.0323,
+    "total_filter": 52.77,
+    "n_runs": 20
+  },
+  "AGENTIC_AUTO_IDENTITY_CREDENTIAL_ABUSE_HIGH": {
+    "block_mean": 40.95,
+    "block_std": 7.07,
+    "block_ci95": [
+      37.3106,
+      43.6185
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 59.05,
+    "allow_std": 7.07,
+    "rogue_detect_mean": 0.1048,
+    "rogue_detect_std": 0.0416,
+    "rogue_detect_ci95": [
+      0.0882,
+      0.1243
+    ],
+    "rogue_block_mean": 0.1048,
+    "rogue_block_std": 0.0416,
+    "rogue_block_ci95": [
+      0.0875,
+      0.1243
+    ],
+    "false_block_mean": 0.5677,
+    "false_block_std": 0.0802,
+    "false_block_ci95": [
+      0.524,
+      0.5969
+    ],
+    "omega_mean": 0.1435,
+    "omega_std": 0.0274,
+    "omega_ci95": [
+      0.132,
+      0.1558
+    ],
+    "enforce_mean": 0.2805,
+    "enforce_std": 0.0386,
+    "latency_mean": 1.0749,
+    "latency_std": 0.0589,
+    "total_filter": 40.95,
+    "n_runs": 20
+  },
+  "AGENTIC_AUTO_COMBINED_MEDIUM": {
+    "block_mean": 56.59,
+    "block_std": 4.3,
+    "block_ci95": [
+      54.7079,
+      58.5095
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 43.41,
+    "allow_std": 4.3,
+    "rogue_detect_mean": 0.0771,
+    "rogue_detect_std": 0.0317,
+    "rogue_detect_ci95": [
+      0.0635,
+      0.0906
+    ],
+    "rogue_block_mean": 0.0771,
+    "rogue_block_std": 0.0317,
+    "rogue_block_ci95": [
+      0.0635,
+      0.0916
+    ],
+    "false_block_mean": 0.7179,
+    "false_block_std": 0.0397,
+    "false_block_ci95": [
+      0.7001,
+      0.7347
+    ],
+    "omega_mean": 0.1617,
+    "omega_std": 0.032,
+    "omega_ci95": [
+      0.1504,
+      0.1788
+    ],
+    "enforce_mean": 0.2141,
+    "enforce_std": 0.0251,
+    "latency_mean": 1.1864,
+    "latency_std": 0.0277,
+    "total_filter": 56.59,
+    "n_runs": 20
+  },
+  "AGENTIC_AUTO_COMBINED_HIGH": {
+    "block_mean": 48.57,
+    "block_std": 6.14,
+    "block_ci95": [
+      45.6466,
+      51.066
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 51.43,
+    "allow_std": 6.14,
+    "rogue_detect_mean": 0.1236,
+    "rogue_detect_std": 0.0545,
+    "rogue_detect_ci95": [
+      0.1,
+      0.1479
+    ],
+    "rogue_block_mean": 0.1236,
+    "rogue_block_std": 0.0545,
+    "rogue_block_ci95": [
+      0.1,
+      0.1472
+    ],
+    "false_block_mean": 0.6539,
+    "false_block_std": 0.0567,
+    "false_block_ci95": [
+      0.6281,
+      0.678
+    ],
+    "omega_mean": 0.1195,
+    "omega_std": 0.0191,
+    "omega_ci95": [
+      0.112,
+      0.129
+    ],
+    "enforce_mean": 0.2351,
+    "enforce_std": 0.0325,
+    "latency_mean": 1.2663,
+    "latency_std": 0.0294,
+    "total_filter": 48.57,
+    "n_runs": 20
+  },
+  "IF_TRUST_CLEAN_NONE": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 100.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      100.0,
+      100.0
+    ],
+    "allow_mean": 0.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 2.1777,
+    "latency_std": 1.198,
+    "total_filter": 100.0,
+    "n_runs": 20
+  },
+  "IF_TRUST_TELEMETRY_POISONING_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 100.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      100.0,
+      100.0
+    ],
+    "allow_mean": 0.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 2.0881,
+    "latency_std": 0.0349,
+    "total_filter": 100.0,
+    "n_runs": 20
+  },
+  "IF_TRUST_TELEMETRY_POISONING_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 100.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      100.0,
+      100.0
+    ],
+    "allow_mean": 0.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 2.1515,
+    "latency_std": 0.0239,
+    "total_filter": 100.0,
+    "n_runs": 20
+  },
+  "IF_TRUST_IDENTITY_CREDENTIAL_ABUSE_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 94.33,
+    "scope_std": 4.06,
+    "scope_ci95": [
+      92.1136,
+      95.768
+    ],
+    "allow_mean": 0.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 1.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      1.0,
+      1.0
+    ],
+    "rogue_block_mean": 0.0615,
+    "rogue_block_std": 0.0439,
+    "rogue_block_ci95": [
+      0.0448,
+      0.0854
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 0.0769,
+    "enforce_std": 0.0,
+    "latency_mean": 5.1991,
+    "latency_std": 0.2212,
+    "total_filter": 94.33,
+    "n_runs": 20
+  },
+  "IF_TRUST_IDENTITY_CREDENTIAL_ABUSE_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 94.6,
+    "scope_std": 2.46,
+    "scope_ci95": [
+      93.4848,
+      95.656
+    ],
+    "allow_mean": 0.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 1.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      1.0,
+      1.0
+    ],
+    "rogue_block_mean": 0.057,
+    "rogue_block_std": 0.0259,
+    "rogue_block_ci95": [
+      0.0458,
+      0.0687
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 0.0526,
+    "enforce_std": 0.0,
+    "latency_mean": 6.7309,
+    "latency_std": 0.1298,
+    "total_filter": 94.6,
+    "n_runs": 20
+  },
+  "IF_TRUST_COMBINED_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 94.52,
+    "scope_std": 2.93,
+    "scope_ci95": [
+      93.1715,
+      95.768
+    ],
+    "allow_mean": 0.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 1.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      1.0,
+      1.0
+    ],
+    "rogue_block_mean": 0.0594,
+    "rogue_block_std": 0.0318,
+    "rogue_block_ci95": [
+      0.0469,
+      0.075
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 0.0769,
+    "enforce_std": 0.0,
+    "latency_mean": 5.3005,
+    "latency_std": 0.0947,
+    "total_filter": 94.52,
+    "n_runs": 20
+  },
+  "IF_TRUST_COMBINED_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 93.22,
+    "scope_std": 2.09,
+    "scope_ci95": [
+      92.2375,
+      94.08
+    ],
+    "allow_mean": 0.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 1.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      1.0,
+      1.0
+    ],
+    "rogue_block_mean": 0.0715,
+    "rogue_block_std": 0.0221,
+    "rogue_block_ci95": [
+      0.0625,
+      0.0819
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 0.0526,
+    "enforce_std": 0.0,
+    "latency_mean": 6.975,
+    "latency_std": 0.0339,
+    "total_filter": 93.22,
+    "n_runs": 20
+  },
+  "ABLATION_NO_AUTHZ_CLEAN_NONE": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 10.0,
+    "scope_std": 14.58,
+    "scope_ci95": [
+      3.75,
+      16.25
+    ],
+    "allow_mean": 90.0,
+    "allow_std": 14.58,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.7504,
+    "latency_std": 0.0067,
+    "total_filter": 10.0,
+    "n_runs": 20
+  },
+  "ABLATION_NO_AUTHZ_TELEMETRY_POISONING_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 10.0,
+    "scope_std": 14.58,
+    "scope_ci95": [
+      3.75,
+      16.25
+    ],
+    "allow_mean": 90.0,
+    "allow_std": 14.58,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.9042,
+    "latency_std": 0.0119,
+    "total_filter": 10.0,
+    "n_runs": 20
+  },
+  "ABLATION_NO_AUTHZ_TELEMETRY_POISONING_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 10.0,
+    "scope_std": 14.58,
+    "scope_ci95": [
+      3.75,
+      16.25
+    ],
+    "allow_mean": 90.0,
+    "allow_std": 14.58,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.9866,
+    "latency_std": 0.0084,
+    "total_filter": 10.0,
+    "n_runs": 20
+  },
+  "ABLATION_NO_AUTHZ_IDENTITY_CREDENTIAL_ABUSE_MEDIUM": {
+    "block_mean": 0.16,
+    "block_std": 0.48,
+    "block_ci95": [
+      0.0,
+      0.414
+    ],
+    "scope_mean": 65.5,
+    "scope_std": 9.48,
+    "scope_ci95": [
+      61.0963,
+      69.3214
+    ],
+    "allow_mean": 31.04,
+    "allow_std": 9.75,
+    "rogue_detect_mean": 0.8115,
+    "rogue_detect_std": 0.09,
+    "rogue_detect_ci95": [
+      0.7687,
+      0.8469
+    ],
+    "rogue_block_mean": 0.0406,
+    "rogue_block_std": 0.0213,
+    "rogue_block_ci95": [
+      0.0323,
+      0.0521
+    ],
+    "false_block_mean": 0.0073,
+    "false_block_std": 0.0227,
+    "false_block_ci95": [
+      0.0,
+      0.021
+    ],
+    "omega_mean": 0.8129,
+    "omega_std": 0.0493,
+    "omega_ci95": [
+      0.7892,
+      0.8322
+    ],
+    "enforce_mean": 0.2077,
+    "enforce_std": 0.0518,
+    "latency_mean": 2.174,
+    "latency_std": 0.1038,
+    "total_filter": 65.66,
+    "n_runs": 20
+  },
+  "ABLATION_NO_AUTHZ_IDENTITY_CREDENTIAL_ABUSE_HIGH": {
+    "block_mean": 0.05,
+    "block_std": 0.24,
+    "block_ci95": [
+      0.0,
+      0.162
+    ],
+    "scope_mean": 60.29,
+    "scope_std": 6.21,
+    "scope_ci95": [
+      57.8583,
+      63.4129
+    ],
+    "allow_mean": 36.13,
+    "allow_std": 5.86,
+    "rogue_detect_mean": 0.7625,
+    "rogue_detect_std": 0.0493,
+    "rogue_detect_ci95": [
+      0.7424,
+      0.7854
+    ],
+    "rogue_block_mean": 0.0445,
+    "rogue_block_std": 0.03,
+    "rogue_block_ci95": [
+      0.0313,
+      0.0576
+    ],
+    "false_block_mean": 0.0024,
+    "false_block_std": 0.0104,
+    "false_block_ci95": [
+      0.0,
+      0.0071
+    ],
+    "omega_mean": 0.7466,
+    "omega_std": 0.0353,
+    "omega_ci95": [
+      0.7309,
+      0.7621
+    ],
+    "enforce_mean": 0.2154,
+    "enforce_std": 0.0263,
+    "latency_mean": 2.9413,
+    "latency_std": 0.0748,
+    "total_filter": 60.35,
+    "n_runs": 20
+  },
+  "ABLATION_NO_AUTHZ_COMBINED_MEDIUM": {
+    "block_mean": 0.07,
+    "block_std": 0.32,
+    "block_ci95": [
+      0.0,
+      0.2175
+    ],
+    "scope_mean": 68.9,
+    "scope_std": 8.89,
+    "scope_ci95": [
+      64.389,
+      72.3438
+    ],
+    "allow_mean": 27.55,
+    "allow_std": 8.57,
+    "rogue_detect_mean": 0.824,
+    "rogue_detect_std": 0.0714,
+    "rogue_detect_ci95": [
+      0.7885,
+      0.8521
+    ],
+    "rogue_block_mean": 0.0438,
+    "rogue_block_std": 0.0279,
+    "rogue_block_ci95": [
+      0.0323,
+      0.0563
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.821,
+    "omega_std": 0.0357,
+    "omega_ci95": [
+      0.8047,
+      0.8355
+    ],
+    "enforce_mean": 0.2007,
+    "enforce_std": 0.0434,
+    "latency_mean": 2.3183,
+    "latency_std": 0.0914,
+    "total_filter": 68.97,
+    "n_runs": 20
+  },
+  "ABLATION_NO_AUTHZ_COMBINED_HIGH": {
+    "block_mean": 0.16,
+    "block_std": 0.52,
+    "block_ci95": [
+      0.0,
+      0.493
+    ],
+    "scope_mean": 65.19,
+    "scope_std": 5.55,
+    "scope_ci95": [
+      62.892,
+      67.7309
+    ],
+    "allow_mean": 30.2,
+    "allow_std": 5.03,
+    "rogue_detect_mean": 0.7688,
+    "rogue_detect_std": 0.0358,
+    "rogue_detect_ci95": [
+      0.7535,
+      0.7847
+    ],
+    "rogue_block_mean": 0.0563,
+    "rogue_block_std": 0.0213,
+    "rogue_block_ci95": [
+      0.0472,
+      0.066
+    ],
+    "false_block_mean": 0.0023,
+    "false_block_std": 0.0099,
+    "false_block_ci95": [
+      0.0,
+      0.0068
+    ],
+    "omega_mean": 0.7597,
+    "omega_std": 0.031,
+    "omega_ci95": [
+      0.7449,
+      0.7723
+    ],
+    "enforce_mean": 0.2129,
+    "enforce_std": 0.0213,
+    "latency_mean": 3.131,
+    "latency_std": 0.0699,
+    "total_filter": 65.35,
+    "n_runs": 20
+  },
+  "ABLATION_NO_TRUST_CLEAN_NONE": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.7436,
+    "latency_std": 0.0777,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "ABLATION_NO_TRUST_TELEMETRY_POISONING_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 99.0,
+    "allow_std": 4.36,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9246,
+    "omega_std": 0.0006,
+    "omega_ci95": [
+      0.9239,
+      0.9247
+    ],
+    "enforce_mean": 0.99,
+    "enforce_std": 0.0436,
+    "latency_mean": 0.8983,
+    "latency_std": 0.0934,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "ABLATION_NO_TRUST_TELEMETRY_POISONING_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.0,
+    "scope_std": 0.0,
+    "scope_ci95": [
+      0.0,
+      0.0
+    ],
+    "allow_mean": 100.0,
+    "allow_std": 0.0,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.961,
+    "latency_std": 0.007,
+    "total_filter": 0.0,
+    "n_runs": 20
+  },
+  "ABLATION_NO_TRUST_IDENTITY_CREDENTIAL_ABUSE_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.32,
+    "scope_std": 0.49,
+    "scope_ci95": [
+      0.1115,
+      0.577
+    ],
+    "allow_mean": 72.34,
+    "allow_std": 6.58,
+    "rogue_detect_mean": 0.3333,
+    "rogue_detect_std": 0.0559,
+    "rogue_detect_ci95": [
+      0.3021,
+      0.3531
+    ],
+    "rogue_block_mean": 0.3271,
+    "rogue_block_std": 0.0597,
+    "rogue_block_ci95": [
+      0.2969,
+      0.35
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.4523,
+    "omega_std": 0.019,
+    "omega_ci95": [
+      0.4448,
+      0.4616
+    ],
+    "enforce_mean": 0.3761,
+    "enforce_std": 0.0314,
+    "latency_mean": 2.6955,
+    "latency_std": 0.1125,
+    "total_filter": 0.32,
+    "n_runs": 20
+  },
+  "ABLATION_NO_TRUST_IDENTITY_CREDENTIAL_ABUSE_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.15,
+    "scope_std": 0.29,
+    "scope_ci95": [
+      0.037,
+      0.3007
+    ],
+    "allow_mean": 50.5,
+    "allow_std": 5.81,
+    "rogue_detect_mean": 0.5243,
+    "rogue_detect_std": 0.0489,
+    "rogue_detect_ci95": [
+      0.5035,
+      0.5458
+    ],
+    "rogue_block_mean": 0.5215,
+    "rogue_block_std": 0.0506,
+    "rogue_block_ci95": [
+      0.4993,
+      0.5444
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.3802,
+    "omega_std": 0.0269,
+    "omega_ci95": [
+      0.3673,
+      0.3914
+    ],
+    "enforce_mean": 0.2578,
+    "enforce_std": 0.0287,
+    "latency_mean": 3.6603,
+    "latency_std": 0.1834,
+    "total_filter": 0.15,
+    "n_runs": 20
+  },
+  "ABLATION_NO_TRUST_COMBINED_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.44,
+    "scope_std": 0.64,
+    "scope_ci95": [
+      0.2135,
+      0.7771
+    ],
+    "allow_mean": 71.14,
+    "allow_std": 8.1,
+    "rogue_detect_mean": 0.3375,
+    "rogue_detect_std": 0.0677,
+    "rogue_detect_ci95": [
+      0.3083,
+      0.3677
+    ],
+    "rogue_block_mean": 0.3292,
+    "rogue_block_std": 0.0699,
+    "rogue_block_ci95": [
+      0.299,
+      0.3604
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.4517,
+    "omega_std": 0.0197,
+    "omega_ci95": [
+      0.4434,
+      0.4609
+    ],
+    "enforce_mean": 0.3684,
+    "enforce_std": 0.0357,
+    "latency_mean": 2.8595,
+    "latency_std": 0.1229,
+    "total_filter": 0.44,
+    "n_runs": 20
+  },
+  "ABLATION_NO_TRUST_COMBINED_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 0.44,
+    "scope_std": 0.54,
+    "scope_ci95": [
+      0.227,
+      0.7151
+    ],
+    "allow_mean": 53.19,
+    "allow_std": 5.48,
+    "rogue_detect_mean": 0.5146,
+    "rogue_detect_std": 0.048,
+    "rogue_detect_ci95": [
+      0.4924,
+      0.534
+    ],
+    "rogue_block_mean": 0.5063,
+    "rogue_block_std": 0.048,
+    "rogue_block_ci95": [
+      0.484,
+      0.5257
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.3829,
+    "omega_std": 0.0216,
+    "omega_ci95": [
+      0.3738,
+      0.3929
+    ],
+    "enforce_mean": 0.2723,
+    "enforce_std": 0.0264,
+    "latency_mean": 3.8193,
+    "latency_std": 0.1624,
+    "total_filter": 0.44,
+    "n_runs": 20
+  },
+  "ABLATION_NO_RISK_CLEAN_NONE": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 10.0,
+    "scope_std": 14.58,
+    "scope_ci95": [
+      3.75,
+      16.25
+    ],
+    "allow_mean": 90.0,
+    "allow_std": 14.58,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.7353,
+    "latency_std": 0.0042,
+    "total_filter": 10.0,
+    "n_runs": 20
+  },
+  "ABLATION_NO_RISK_TELEMETRY_POISONING_MEDIUM": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 10.0,
+    "scope_std": 14.58,
+    "scope_ci95": [
+      3.75,
+      16.25
+    ],
+    "allow_mean": 90.0,
+    "allow_std": 14.58,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.8933,
+    "latency_std": 0.0199,
+    "total_filter": 10.0,
+    "n_runs": 20
+  },
+  "ABLATION_NO_RISK_TELEMETRY_POISONING_HIGH": {
+    "block_mean": 0.0,
+    "block_std": 0.0,
+    "block_ci95": [
+      0.0,
+      0.0
+    ],
+    "scope_mean": 10.0,
+    "scope_std": 14.58,
+    "scope_ci95": [
+      3.75,
+      16.25
+    ],
+    "allow_mean": 90.0,
+    "allow_std": 14.58,
+    "rogue_detect_mean": 0.0,
+    "rogue_detect_std": 0.0,
+    "rogue_detect_ci95": [
+      0.0,
+      0.0
+    ],
+    "rogue_block_mean": 0.0,
+    "rogue_block_std": 0.0,
+    "rogue_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.9247,
+    "omega_std": 0.0,
+    "omega_ci95": [
+      0.9247,
+      0.9247
+    ],
+    "enforce_mean": 1.0,
+    "enforce_std": 0.0,
+    "latency_mean": 0.9589,
+    "latency_std": 0.0111,
+    "total_filter": 10.0,
+    "n_runs": 20
+  },
+  "ABLATION_NO_RISK_IDENTITY_CREDENTIAL_ABUSE_MEDIUM": {
+    "block_mean": 0.14,
+    "block_std": 0.41,
+    "block_ci95": [
+      0.0,
+      0.3465
+    ],
+    "scope_mean": 57.94,
+    "scope_std": 10.94,
+    "scope_ci95": [
+      53.1495,
+      62.5602
+    ],
+    "allow_mean": 39.2,
+    "allow_std": 11.76,
+    "rogue_detect_mean": 0.7177,
+    "rogue_detect_std": 0.1113,
+    "rogue_detect_ci95": [
+      0.6698,
+      0.7667
+    ],
+    "rogue_block_mean": 0.0302,
+    "rogue_block_std": 0.0251,
+    "rogue_block_ci95": [
+      0.0198,
+      0.0427
+    ],
+    "false_block_mean": 0.0041,
+    "false_block_std": 0.0123,
+    "false_block_ci95": [
+      0.0,
+      0.0103
+    ],
+    "omega_mean": 0.7566,
+    "omega_std": 0.0614,
+    "omega_ci95": [
+      0.73,
+      0.784
+    ],
+    "enforce_mean": 0.2596,
+    "enforce_std": 0.0598,
+    "latency_mean": 2.2437,
+    "latency_std": 0.131,
+    "total_filter": 58.08,
+    "n_runs": 20
+  },
+  "ABLATION_NO_RISK_IDENTITY_CREDENTIAL_ABUSE_HIGH": {
+    "block_mean": 0.1,
+    "block_std": 0.29,
+    "block_ci95": [
+      0.0,
+      0.2395
+    ],
+    "scope_mean": 51.4,
+    "scope_std": 8.35,
+    "scope_ci95": [
+      48.1012,
+      55.6323
+    ],
+    "allow_mean": 46.15,
+    "allow_std": 8.14,
+    "rogue_detect_mean": 0.6646,
+    "rogue_detect_std": 0.0787,
+    "rogue_detect_ci95": [
+      0.6333,
+      0.7021
+    ],
+    "rogue_block_mean": 0.0292,
+    "rogue_block_std": 0.0228,
+    "rogue_block_ci95": [
+      0.0202,
+      0.041
+    ],
+    "false_block_mean": 0.0031,
+    "false_block_std": 0.0092,
+    "false_block_ci95": [
+      0.0,
+      0.0078
+    ],
+    "omega_mean": 0.6775,
+    "omega_std": 0.0545,
+    "omega_ci95": [
+      0.6562,
+      0.7048
+    ],
+    "enforce_mean": 0.2721,
+    "enforce_std": 0.0405,
+    "latency_mean": 3.0399,
+    "latency_std": 0.1305,
+    "total_filter": 51.5,
+    "n_runs": 20
+  },
+  "ABLATION_NO_RISK_COMBINED_MEDIUM": {
+    "block_mean": 0.15,
+    "block_std": 0.45,
+    "block_ci95": [
+      0.0,
+      0.3795
+    ],
+    "scope_mean": 61.16,
+    "scope_std": 8.89,
+    "scope_ci95": [
+      56.9843,
+      64.7928
+    ],
+    "allow_mean": 35.41,
+    "allow_std": 7.84,
+    "rogue_detect_mean": 0.7302,
+    "rogue_detect_std": 0.0664,
+    "rogue_detect_ci95": [
+      0.7,
+      0.7583
+    ],
+    "rogue_block_mean": 0.0437,
+    "rogue_block_std": 0.0309,
+    "rogue_block_ci95": [
+      0.0323,
+      0.0604
+    ],
+    "false_block_mean": 0.0,
+    "false_block_std": 0.0,
+    "false_block_ci95": [
+      0.0,
+      0.0
+    ],
+    "omega_mean": 0.7586,
+    "omega_std": 0.0415,
+    "omega_ci95": [
+      0.7421,
+      0.7789
+    ],
+    "enforce_mean": 0.2563,
+    "enforce_std": 0.0366,
+    "latency_mean": 2.3731,
+    "latency_std": 0.0743,
+    "total_filter": 61.31,
+    "n_runs": 20
+  },
+  "ABLATION_NO_RISK_COMBINED_HIGH": {
+    "block_mean": 0.16,
+    "block_std": 0.38,
+    "block_ci95": [
+      0.0495,
+      0.3755
+    ],
+    "scope_mean": 61.66,
+    "scope_std": 5.92,
+    "scope_ci95": [
+      58.8349,
+      64.0582
+    ],
+    "allow_mean": 35.3,
+    "allow_std": 5.52,
+    "rogue_detect_mean": 0.7042,
+    "rogue_detect_std": 0.0594,
+    "rogue_detect_ci95": [
+      0.6771,
+      0.7299
+    ],
+    "rogue_block_mean": 0.0389,
+    "rogue_block_std": 0.0303,
+    "rogue_block_ci95": [
+      0.0271,
+      0.0549
+    ],
+    "false_block_mean": 0.0044,
+    "false_block_std": 0.0134,
+    "false_block_ci95": [
+      0.0,
+      0.0122
+    ],
+    "omega_mean": 0.6914,
+    "omega_std": 0.0417,
+    "omega_ci95": [
+      0.6731,
+      0.7097
+    ],
+    "enforce_mean": 0.2523,
+    "enforce_std": 0.0303,
+    "latency_mean": 3.2136,
+    "latency_std": 0.1329,
+    "total_filter": 61.82,
+    "n_runs": 20
+  }
+}

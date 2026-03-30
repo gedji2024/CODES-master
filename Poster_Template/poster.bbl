@@ -1,0 +1,42 @@
+\begin{thebibliography}{1}
+
+\bibitem{kipf2017semi}
+T.~N. Kipf and M.~Welling, ``Semi-supervised classification with graph
+  convolutional networks,'' {\em arXiv preprint arXiv:1609.02907}, 2017.
+
+\bibitem{williams1992simple}
+R.~J. Williams, ``Simple statistical gradient-following algorithms for
+  connectionist reinforcement learning,'' {\em Machine Learning}, vol.~8,
+  no.~3--4, pp.~229--256, 1992.
+
+\bibitem{salimans2017evolution}
+T.~Salimans, J.~Ho, X.~Chen, S.~Sidor, and I.~Sutskever, ``Evolution strategies
+  as a scalable alternative to reinforcement learning,'' {\em arXiv preprint
+  arXiv:1703.03864}, 2017.
+
+\bibitem{rashid2020monotonic}
+T.~Rashid, M.~Samvelyan, C.~Schroeder~de Witt, G.~Farquhar, J.~Foerster, and
+  S.~Whiteson, ``Monotonic value function factorisation for deep multi-agent
+  reinforcement learning,'' {\em Journal of Machine Learning Research},
+  vol.~21, no.~178, pp.~1--51, 2020.
+
+\bibitem{son2019qtran}
+K.~Son, D.~Kim, W.~J. Kang, D.~E. Hostallero, and Y.~Yi, ``{QTRAN}: Learning to
+  factorize with transformation for cooperative multi-agent reinforcement
+  learning,'' in {\em Proc. ICML}, pp.~5887--5896, 2019.
+
+\bibitem{hu_energy_2024}
+X.~Hu {\em et~al.}, ``Energy-efficient routing in wireless sensor networks
+  using quantum particle swarm optimization with fuzzy logic,'' {\em IEEE
+  Sensors Journal}, 2024.
+
+\bibitem{vaswani_attention_2023}
+A.~Vaswani, N.~Shazeer, N.~Parmar, J.~Uszkoreit, L.~Jones, A.~N. Gomez,
+  {\L}.~Kaiser, and I.~Polosukhin, ``Attention is all you need,'' {\em Advances
+  in Neural Information Processing Systems}, vol.~30, 2017.
+
+\bibitem{sill_monotonic_1997}
+J.~Sill, ``Monotonic networks,'' {\em Advances in Neural Information Processing
+  Systems}, vol.~10, 1997.
+
+\end{thebibliography}

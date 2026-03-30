@@ -1,0 +1,96 @@
+% ============================================================
+% CASTER-ZT — Supplemental Material: Proofs of Theoretical Properties
+% To be submitted as a separate file alongside the main paper.
+% ============================================================
+\documentclass[lettersize,journal]{IEEEtran}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{cite}
+\usepackage{hyperref}
+
+\newtheorem{proposition}{Proposition}
+
+\markboth{IEEE Transactions on Mobile Computing --- Supplemental Material}%
+{DK \MakeLowercase{\textit{et al.}}: Proofs of Theoretical Properties}
+
+\begin{document}
+
+\title{Supplemental Material: Proofs of Theoretical Properties\\
+for ``Zero-Trust Shielded Graph-Structured Decision Control\\
+for Secure Autonomous Recovery in AI-Native 6G\\
+Disaster-Monitoring Sensing Networks''}
+
+\author{Georges~Parfait~DK,~Raiwi~El-Rouin,~and~Sonnet~Peter%
+\thanks{G.~P.~DK, R.~El-Rouin, and S.~Peter are with the D\'{e}partement de G\'{e}nie Informatique et G\'{e}nie Logiciel, \'{E}cole Polytechnique de Montr\'{e}al, Montr\'{e}al, QC, Canada.}%
+}
+
+\maketitle
+
+This supplemental document provides the complete proofs for the ten propositions stated in the main paper.
+All proposition numbers and references correspond to those in the main text.
+
+\bigskip
+
+\begin{proof}[Proof of Proposition~1 (Monotone conservatism)]
+Since $w_1, w_2, w_3, w_4 > 0$, the composite gate score $g_t = w_1(1-\tau_t)+w_2\rho_t+w_3 u_t+w_4\Delta_t$ is monotonically decreasing in $\tau_t$ and increasing in $\rho_t, u_t, \Delta_t$.
+Since $\kappa_1, \kappa_2 \ge 0$, $\tau_{\min} = \tau_0 + \kappa_1\rho_t + \kappa_2 u_t$ is non-decreasing in $\rho_t, u_t$, making the trust condition harder to satisfy.
+The \textsc{allow} branch requires $g_t < \gamma_1$, $\tau_t \ge \tau_{\min}$, and $\Delta_t \le \delta_{\max}$.
+Worsening any input can only increase $g_t$, raise $\tau_{\min}$, or violate the divergence bound, pushing the output toward a more conservative branch.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~2 (Unauthorized-actuation exclusion)]
+In the shield algorithm, $\alpha_t=0$ triggers $d_t=\textsc{block}$ at the authorization check, before any permissive branch is evaluated.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~3 (Divergence-triggered safeguard)]
+$\Delta_t > \delta_{\max}^{\mathrm{hard}}$ triggers $d_t=\textsc{block}$ at the hard-divergence check.
+$\Delta_t > \delta_{\max}$ violates the \textsc{allow} condition, preventing permissive decisions.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~4 (Bounded decision completeness)]
+The shield algorithm is a finite ordered branching structure with mutually exclusive branches (strict threshold ordering) and a final \textsc{else} clause catching all remaining cases.
+Every valid input therefore maps to exactly one $d_t \in \mathcal{D}$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~5 (Per-decision complexity)]
+Graph encoding: $\mathcal{O}(L|E_t|d)$.
+Candidate scoring and trust--risk evaluation: $\mathcal{O}(|\mathcal{A}|k)$ each.
+Shield evaluation: $\mathcal{O}(1)$.
+Total: $\mathcal{O}(L|E_t|d + |\mathcal{A}|k)$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~6 (Defense-in-depth bound)]
+Under identity attack, an unsafe \textsc{allow} requires an authorization false negative: $\Pr \le \varepsilon_\alpha$.
+Under telemetry attack: $\Pr \le \varepsilon_\tau$.
+Under combined attack with conditional independence:
+$\Pr[\textsc{allow} \mid \text{combined}] = \Pr[\alpha_t=1 \mid \text{id}] \cdot \Pr[g_t<\gamma_1 \mid \text{telem}] \le \varepsilon_\alpha \varepsilon_\tau$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~7 (Calibration-consistent accuracy)]
+Each episode produces Bernoulli $y_i$ with $\mathbb{E}[y_i]=\varepsilon^\star$.
+By Hoeffding's inequality: $\Pr[\varepsilon^\star - \hat\varepsilon > t] \le \exp(-2nt^2)$.
+Setting $\exp(-2nt^2)=\delta$ gives $t=\sqrt{\ln(1/\delta)/(2n)}$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~8 (Bounded price of safety)]
+With probability $(1-\eta-\eta_{\mathrm{block}})$, the shield allows (loss~0).
+With probability $\eta$, scope-reduction yields loss $\le U_{\mathrm{gap}}$.
+With probability $\eta_{\mathrm{block}}$, blocking yields loss $\le U_{\max}$.
+Summing: $\mathbb{E}[\text{loss}] \le \eta U_{\mathrm{gap}} + \eta_{\mathrm{block}} U_{\max}$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~9 (Conformal admissibility coverage)]
+By the conformal framework~\cite{angelopoulos2023conformal}, if scores $(r_1,\ldots,r_{n+1})$ are exchangeable, $\Pr[r_{n+1} \le r_{(\lceil(1-\alpha)(n+1)\rceil)}] \ge 1-\alpha$.
+The shield allows only if $g_t < \gamma_1$, which corresponds to $r_{n+1} > r_{(\lceil(1-\alpha)(n+1)\rceil)}$, occurring with probability $\le \alpha$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~10 (Calibration convergence rate)]
+By Hoeffding's concentration, $|\hat\varepsilon(\gamma) - \varepsilon(\gamma)| \le \sqrt{\ln(2/\delta)/(2n)}$ w.h.p.
+Since $\varepsilon'(\gamma) \ge c_\varepsilon > 0$, the mean value theorem gives $|\varepsilon(\gamma_1^{(n)}) - \varepsilon(\gamma_1^\star)| \ge c_\varepsilon |\gamma_1^{(n)} - \gamma_1^\star|$.
+The triangle inequality yields $c_\varepsilon |\gamma_1^{(n)} - \gamma_1^\star| = \mathcal{O}(1/\sqrt{n})$, so $|\gamma_1^{(n)} - \gamma_1^\star| = \mathcal{O}_P(1/\sqrt{n})$.
+\end{proof}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

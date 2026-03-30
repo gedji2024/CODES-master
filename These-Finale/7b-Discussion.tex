@@ -1,0 +1,348 @@
+\Chapter{DISCUSSION GÉNÉRALE}\label{sec:Discussion}
+
+Ce chapitre effectue une analyse transversale des résultats obtenus dans les trois articles de cette thèse. Contrairement aux sections de discussion individuelles de chaque article, qui se concentrent sur les résultats spécifiques à chaque contribution, ce chapitre adopte une perspective intégrative. Il examine comment les trois articles interagissent, se renforcent mutuellement et, collectivement, répondent à la question de recherche principale de cette thèse.
+
+
+%%
+%%  RETOUR SUR LES QUESTIONS DE RECHERCHE
+%%
+\section{Retour sur les questions de recherche}\label{sec:disc-retour-questions}
+
+\subsection{Q1 --- Efficacité énergétique (GAPF)}
+
+\noindent\textit{``Est-il possible d'atteindre un routage multi-sauts quasi-optimal (PDR $\geq$ 98\%) en fusionnant des politiques MARL via un encodeur GNN, tout en respectant les contraintes des plateformes embarquées~?''}
+
+\medskip
+\noindent\textbf{Réponse~: Oui.} GAPF atteint un PDR de 98--99\% sur l'ensemble des 7 scénarios, avec seulement 1\,473 paramètres entraînables et une consommation mémoire de ${\sim}951$\,MB --- soit $26\times$ moins de paramètres et $13\times$ moins de mémoire que les agents QMIX/QTRAN. La fusion GCN+CAS exploite la complémentarité de QMIX (coordination monotone) et QTRAN (interactions non monotones) en sélectionnant dynamiquement l'expert optimal selon le contexte topologique.
+
+\subsection{Q2 --- Durabilité carbone (CALASH)}
+
+\noindent\textit{``Peut-on réduire significativement le LCI d'un WSN en intégrant conjointement la réduction de données sensible au carbone, le routage avec garanties formelles, l'auto-guérison et la comptabilité du cycle de vie, sur une couche physique 6G~?''}
+
+\medskip
+\noindent\textbf{Réponse~: Oui.} CALASH réduit le LCI de 33\% par rapport aux protocoles de référence, atteignant 82.9\% de PDR et 60\% de durée de vie supérieure. Les quatre piliers agissent de manière synergique, et la borne de Pareto CDL prouve mathématiquement la convergence simultanée vers un taux de livraison quasi-optimal et un budget carbone borné.
+
+\subsection{Q3 --- Sécurité zéro-confiance (CASTER-ZT)}
+
+\noindent\textit{``Peut-on détecter les politiques compromises avec zéro faux positif tout en maintenant un score de récupération élevé, dans le budget de latence O-RAN~?''}
+
+\medskip
+\noindent\textbf{Réponse~: Oui.} CASTER-ZT atteint 74.2--98.3\% de détection avec un taux de faux positifs rigoureusement nul, $\omega_{\text{rec}} = 0.733$ (3.7--5.2$\times$ supérieur aux références), et 3.07\,ms par décision --- bien dans le budget de 10\,ms du near-RT RIC O-RAN.
+
+\subsection{Question principale}
+
+L'ensemble des résultats confirme qu'une pile protocolaire complète --- écoénergétique, durable en carbone et sécurisée --- est réalisable pour les WSN de surveillance des catastrophes intégrés au 6G. Les douze critères du Tableau~\ref{tab:gap-analysis} sont couverts collectivement, une couverture qu'aucune approche existante ne peut égaler.
+
+
+%%
+%%  ANALYSE TRANSVERSALE DES RESULTATS
+%%
+\section{Analyse transversale des résultats}\label{sec:disc-transversale}
+
+\subsection{Synergies quantitatives entre les couches}
+
+L'architecture en couches de la pile protocolaire crée des synergies mesurables~:
+
+\textbf{Effet de GAPF sur CALASH.} Le routage plus efficace de GAPF (énergie 2--3.5$\times$ inférieure) réduit directement le terme $C_{\text{opérationnel}}$ de la métrique LCI. Bien que le carbone opérationnel soit faible en valeur absolue ($\sim$0.01\,gCO$_2$eq), la réduction de la consommation d'énergie a un effet indirect beaucoup plus important~: elle prolonge la durée de vie du réseau, ce qui augmente le dénominateur du LCI (paquets utiles livrés) et réduit ainsi le LCI global. Si l'on combine l'efficacité de GAPF (+60\% de durée de vie estimée) avec les quatre piliers de CALASH, l'amélioration cumulée du LCI pourrait dépasser les 33\% observés pour CALASH seul, bien que cette hypothèse reste à valider expérimentalement par une évaluation intégrée bout-en-bout.
+
+\textbf{Effet de CALASH sur GAPF.} Le pilier CADR de CALASH réduit le volume de données transmises via la détection comprimée, ce qui diminue le trafic dans le réseau. Cette réduction de trafic bénéficie directement à GAPF en réduisant la contention sur les liens radio et en préservant l'énergie des relais --- amplifiant les gains d'efficacité de la première couche.
+
+\textbf{Effet de CASTER-ZT sur l'ensemble.} Le bouclier zéro-confiance protège les gains des deux premières couches contre les compromissions. Sans cette protection, un adversaire qui compromet la politique de routage de GAPF ou CALASH pourrait annuler tous les gains d'efficacité et de durabilité en un seul épisode d'attaque. L'investissement computationnel de CASTER-ZT (3.07\,ms/décision, $\sim$20K paramètres) est donc un ``coût d'assurance'' faible par rapport aux gains qu'il protège.
+
+\subsection{Le paradigme de la fusion vs.\ l'apprentissage monolithique}
+
+Le succès de GAPF avec seulement 1\,473 paramètres --- contre ${\sim}39\,000$ par agent RNN dans QMIX/QTRAN --- remet en question l'approche dominante d'entraîner un réseau de plus en plus grand. L'alternative, fusionner des experts légers via un méta-contrôleur informé par la topologie, emprunte un chemin orthogonal au paysage de la décomposition de valeur (QMIX \cite{rashid2018qmix}, WQMIX \cite{Rashid2020WQMIX}, QPLEX \cite{Wang2021QPLEX}, FOP \cite{Zhang2021FOP}) qui tend vers des architectures plus lourdes. Ce paradigme de \emph{portfolio d'experts} est bien établi en optimisation combinatoire mais n'avait jamais été appliqué au routage MARL dans les WSN.
+
+\subsection{Analyse de la complexité Dec-POMDP et implications}
+
+La résolution optimale d'un Dec-POMDP étant NEXP-complète \cite{Bernstein2002DecPOMDP}, le PDR $\geq$ 98\% de GAPF ne peut pas être garanti optimal au sens absolu. Le paradigme CTDE (QMIX, QTRAN) constitue une approximation structurée réduisant l'espace de recherche de $|\mathcal{A}|^n$ à $\sum_i |\mathcal{A}_i|$, et GAPF ajoute la sélection d'expert comme niveau supplémentaire. L'inférence reste polynomiale ($O(|E| \cdot d)$ pour le GCN, $O(n)$ pour le CAS), garantissant la scalabilité pratique.
+
+\subsection{Robustesse adversariale~: analyse et perspectives}
+
+La robustesse adversariale traverse les trois couches~: GAPF est potentiellement vulnérable aux attaques par injection de n\oe{}uds, mais le CAS réduit la surface d'attaque en opérant à un niveau d'abstraction supérieur~; CALASH bénéficie d'un \emph{nettoyage} topologique indirect via SHDR~; CASTER-ZT détecte explicitement les actuations adversariales, bien que les attaques par \emph{backdoor} \cite{Kiourti2021BackdoorDRL} restent un défi ouvert que le MC-Dropout atténue partiellement. L'intégration de défenses basées sur les MDP robustes \cite{Iyengar2005RobustMDP} constitue une direction future prometteuse.
+
+\subsection{Faisabilité du déploiement TinyML}
+
+La question de la déployabilité sur microcontrôleurs mérite une analyse détaillée. Le paradigme TinyML \cite{Warden2020TinyML} --- exécution de modèles d'apprentissage automatique sur des microcontrôleurs à budget $<$ 1\,mW --- est particulièrement pertinent pour notre pile protocolaire.
+
+\begin{table}[htbp]
+\centering
+\caption{Analyse de déployabilité TinyML des trois cadres proposés.}
+\label{tab:tinyml-deploy}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccl}
+\toprule
+\textbf{Cadre} & \textbf{Param.} & \textbf{Mémoire} & \textbf{OPS/inf.} & \textbf{Cible} & \textbf{Technique de compression} \\
+ & & \textbf{(FP32)} & & & \\
+\midrule
+GAPF (GCN+CAS) & 1\,473 & 5.8\,KB & $\sim$3K & Cortex-M4 & Aucune nécessaire \\
+CALASH (DQN) & $\sim$5K & 19.5\,KB & $\sim$10K & Cortex-M4 & Quantification INT8 ($\to$4.9\,KB) \\
+CASTER-ZT (GraphSAGE) & $\sim$20K & 78\,KB & $\sim$40K & Cortex-M7/TPU & Distillation + INT8 ($\to$20\,KB) \\
+\midrule
+\textbf{Pile complète} & $\sim$27K & 103\,KB & $\sim$53K & Cortex-M7 & Quantification mixte \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Le Tableau~\ref{tab:tinyml-deploy} montre que GAPF est directement déployable sur un Cortex-M4 sans aucune compression. CALASH nécessite une quantification INT8 standard (supportée par TensorFlow Lite for Microcontrollers \cite{david2021tensorflow}). CASTER-ZT, le plus lourd, nécessite soit un Cortex-M7 (avec 512\,KB de RAM) soit un accélérateur de bord dédié. Le cadre MCUNet \cite{Lin2020MCUNet} démontre que des réseaux de neurones de $\sim$1M de paramètres peuvent être exécutés sur des Cortex-M7~; notre pile, avec ${\sim}26$\,K paramètres au total (${\sim}38\times$ plus légère), est donc confortablement dans l'enveloppe.
+
+\subsection{Le carbone incorporé comme métrique oubliée}
+
+La révélation que le carbone incorporé domine d'environ six ordres de grandeur le carbone opérationnel ($10\,000/0{,}01 = 10^6$) pour les dispositifs IoT a des implications profondes. Elle suggère que la communauté des réseaux verts, en se concentrant exclusivement sur la réduction de la consommation d'énergie opérationnelle, a optimisé le mauvais terme de l'équation. Le vrai levier pour la durabilité réside dans la \textbf{maximisation de l'utilité par unité de carbone incorporé} --- c'est-à-dire dans la livraison du plus grand nombre possible de paquets utiles avant la fin de vie du réseau. Ce changement de perspective, formalisé par la métrique LCI, pourrait influencer la conception de protocoles IoT bien au-delà des WSN.
+
+\subsection{Zéro-confiance comme couche systémique}
+
+CASTER-ZT démontre que le paradigme zéro-confiance peut s'appliquer à la \textbf{couche de décision} des systèmes autonomes. La séparation entre composants apprenables (GraphSAGE) et déterministes (bouclier à 14 paramètres) crée une \textbf{barrière de confiance}~: même si les composants neuronaux sont compromis, le bouclier fournit une dernière ligne de défense vérifiée formellement. Les décisions graduées (5 niveaux) dépassent les mécanismes existants --- CPO \cite{achiam2017cpo} optimise en espérance sans garantie individuelle, le blindage binaire \cite{alshiekh2018shielding} ne propose pas de dégradation gracieuse --- et s'apparentent aux protocoles d'escalade industriels (IEC~62443).
+
+\subsection{Paradigmes émergents}
+
+Trois paradigmes émergents pourraient amplifier les contributions~: (i)~l'apprentissage fédéré \cite{McMahan2017FedAvg} pour l'entraînement distribué avec détection du \emph{model poisoning} par CASTER-ZT~; (ii)~les jumeaux numériques \cite{Nguyen2024DTORAN} pour l'entraînement continu et la prédiction de pannes~; (iii)~la quantification INT4 des GNN \cite{Bianchi2021QuantizedGNN} pour réduire l'empreinte de GAPF à $\sim$1.5\,KB. Ces directions sont détaillées dans les travaux futurs (Section~\ref{sec:concl-futures}).
+
+
+%%
+%%  ANALYSE DE CONVERGENCE
+%%
+\section{Analyse de convergence et garanties théoriques}\label{sec:disc-convergence}
+
+Cette section examine les propriétés de convergence des trois couches de la pile protocolaire sous un angle unifié, en reliant les garanties théoriques de chaque composant aux conditions opérationnelles des WSN de surveillance des catastrophes.
+
+\subsection{Convergence de GAPF~: le méta-contrôleur comme réducteur de variance}
+
+La convergence de GAPF repose sur deux niveaux~: (1)~QMIX converge vers la factorisation optimale dans la classe des fonctions de valeur monotones sous la contrainte IGM \cite{rashid2018qmix}, tandis que QTRAN couvre un espace plus large via une factorisation affine au prix d'une convergence plus lente~; (2)~le méta-contrôleur CAS agit comme un \textbf{réducteur de variance} en combinant contextuellement les deux estimateurs. Cette combinaison est analogue au \emph{stacking} de Wolpert \cite{Wolpert1992Stacking}, réduisant la variance de l'estimateur combiné à condition que les erreurs des experts soient faiblement corrélées --- une propriété attendue vu les contraintes de factorisation orthogonales de QMIX et QTRAN.
+
+\subsection{Convergence de CALASH~: borne de Lyapunov et stabilité}
+
+La convergence de CALASH est garantie par l'optimisation drift-plus-penalty de Lyapunov. Neely \cite{neely2010lyapunov} démontre que cette approche converge vers un voisinage $O(1/V)$ de l'optimum, avec une taille de file moyenne $O(V)$. Pour CALASH, $V = 100$ offre une réduction du LCI de 33\% avec une latence acceptable. La borne CDL étend ce résultat en prouvant la convergence simultanée vers un PDR quasi-optimal et un budget carbone borné, résolvant le conflit entre maximisation du PDR et minimisation du carbone grâce à la modulation temporelle de l'intensité carbone et la file virtuelle CARE.
+
+\subsection{Convergence de CASTER-ZT~: correction et complétude du bouclier}
+
+Les garanties de CASTER-ZT relèvent de la vérification formelle plutôt que de la convergence stochastique. Les dix propositions formelles du bouclier sont prouvées par construction logique~:
+
+\begin{enumerate}
+    \item \textbf{Correction} (\emph{soundness})~: si le bouclier classifie une action comme ``malveillante'' (niveau \emph{bloquer}), alors l'action viole au moins une des règles de sécurité définies formellement. Cette propriété garantit l'absence de faux positifs --- confirmée expérimentalement (0\% FP sur 2\,420 exécutions).
+    \item \textbf{Complétude bornée}~: le bouclier détecte toute action dont le score de confiance est inférieur au seuil $\theta_{\text{conf}}$ \emph{et} dont l'incertitude épistémique (MC-Dropout) dépasse $\theta_{\text{unc}}$. Les actions malveillantes qui imitent parfaitement le comportement normal (avec confiance élevée et faible incertitude) ne sont pas détectées --- cette limitation est inhérente à tout système de détection d'anomalies basé sur un modèle de comportement normal.
+    \item \textbf{Latence bornée}~: chaque décision du bouclier s'exécute en temps borné $O(1)$ par rapport à la taille du réseau (14 paramètres scalaires, 5 comparaisons), garantissant le respect du budget O-RAN de 10\,ms.
+\end{enumerate}
+
+\subsection{Synthèse~: complémentarité des garanties}
+
+Le Tableau~\ref{tab:convergence-summary} résume les propriétés de convergence de chaque couche.
+
+\begin{table}[htbp]
+\centering
+\caption{Synthèse des propriétés de convergence et garanties théoriques de la pile protocolaire.}
+\label{tab:convergence-summary}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccl}
+\toprule
+\textbf{Couche} & \textbf{Type de garantie} & \textbf{Condition} & \textbf{Résultat} & \textbf{Limitation} \\
+\midrule
+GAPF (GCN+CAS) & Convergence stochastique & Erreurs faiblement corrélées & Réduction de variance & Pas de borne finie \\
+QMIX (expert) & Convergence monotone & IGM satisfaite & $Q$-optimal dans classe monotone & Biais si IGM violée \\
+QTRAN (expert) & Convergence affine & Factorisation correcte & $Q$-optimal dans classe affine & Instabilité d'entraînement \\
+CALASH (Lyapunov) & Convergence $O(1/V)$ & Files stables & Voisinage de l'optimum LCI & Compromis $V$ \\
+CASTER-ZT (bouclier) & Correction formelle & Seuils calibrés & 0\% faux positifs & Attaques mimétiques \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+La complémentarité des garanties est notable~: GAPF fournit une convergence probabiliste vers des politiques efficaces, CALASH ajoute une convergence déterministe vers un budget carbone borné, et CASTER-ZT fournit des garanties de correction formelle sur chaque décision individuelle. Aucune couche isolée ne fournit les trois types de garanties simultanément --- c'est leur composition qui crée un système à la fois efficace, durable et sûr.
+
+
+%%
+%%  ANALYSE DE SENSIBILITE
+%%
+\section{Analyse de sensibilité}\label{sec:disc-sensibilite}
+
+L'identification des paramètres les plus influents est essentielle pour guider le déploiement pratique et les travaux futurs. Cette section analyse la sensibilité de chaque couche à ses hyperparamètres critiques et aux conditions environnementales.
+
+\subsection{Paramètres critiques de GAPF}
+
+Le méta-contrôleur GAPF est caractérisé par trois hyperparamètres~: $L = 2$ couches GCN (compromis entre couverture topologique et sur-lissage), $d = 16$ pour la dimension d'embedding (maintenant $<$ 1\,500 paramètres), et $\delta = 0.6$ pour le seuil CAS (taux de sélection active de $\sim$75\%).
+
+\subsection{Paramètres critiques de CALASH}
+
+Le paramètre de compromis $V = 100$ offre une réduction du LCI de 33\% avec une latence acceptable, et le LCI est relativement insensible à $V$ dans la plage 50--500. Le ratio de compression initial $\rho_0 = 0.3$ garantit la reconstruction avec une erreur $<$ 1\%, avec modulation entre $\rho_{\min} = 0.1$ et $\rho_{\max} = 0.5$ selon l'intensité carbone.
+
+\subsection{Paramètres critiques de CASTER-ZT}
+
+Le seuil de confiance $\theta_{\text{conf}} = 0.8$ est calibré pour maintenir un taux de décisions ``autoriser'' supérieur à 90\% en conditions normales tout en minimisant le risque résiduel. Le MC-Dropout utilise $T = 20$ passes avec $p_{\text{drop}} = 0.1$, contribuant $\sim$1.5\,ms des 3.07\,ms de latence totale.
+
+\subsection{Sensibilité aux conditions environnementales}
+
+\begin{table}[htbp]
+\centering
+\caption{Analyse de sensibilité de la pile protocolaire aux conditions environnementales. $\uparrow$/$\downarrow$~: impact positif/négatif sur la performance.}
+\label{tab:sensitivity}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Condition} & \textbf{GAPF} & \textbf{CALASH} & \textbf{CASTER-ZT} & \textbf{Pile complète} \\
+\midrule
+Densité réseau élevée ($>$ 100 n\oe{}uds) & $\downarrow$ (over-smoothing) & $\uparrow$ (redondance) & $\uparrow$ (diversité) & Modéré $\uparrow$ \\
+Densité réseau faible ($<$ 30 n\oe{}uds) & $\uparrow$ (graphe simple) & $\downarrow$ (fragilité) & $\downarrow$ (peu de données) & Modéré $\downarrow$ \\
+Intensité carbone haute & Aucun impact & $\uparrow$ (fort levier) & Aucun impact & $\uparrow$ \\
+Intensité carbone basse & Aucun impact & $\downarrow$ (faible levier) & Aucun impact & $\downarrow$ \\
+Taux de compromission élevé & $\downarrow$ (experts biaisés) & $\downarrow$ (routes corrompues) & $\uparrow$ (fort levier) & Modéré --- \\
+Mobilité des n\oe{}uds & $\downarrow\downarrow$ (topologie instable) & $\downarrow$ (re-clustering) & $\downarrow$ (modèle invalidé) & $\downarrow\downarrow$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Le Tableau~\ref{tab:sensitivity} révèle que la principale vulnérabilité de la pile est la \textbf{mobilité des n\oe{}uds}~: le GCN de GAPF capture une topologie statique, et les changements rapides de topologie invalident les embeddings. Cette limitation est inhérente à l'hypothèse de WSN statiques adoptée dans les trois articles --- une hypothèse raisonnable pour les capteurs de surveillance (fixes une fois déployés) mais restrictive pour les scénarios impliquant des capteurs mobiles (drones, robots).
+
+
+%%
+%%  ANALYSE DES MODES DE DEFAILLANCE
+%%
+\section{Analyse des modes de défaillance}\label{sec:disc-failure-modes}
+
+Le Tableau~\ref{tab:failure-modes} résume les sept modes de défaillance identifiés pour la pile protocolaire, leur probabilité, impact et mécanismes de mitigation. Le mode le plus probable et impactant est le partitionnement du réseau (M3), intrinsèquement lié au scénario de catastrophe, mitigé par SHDR. Les modes les plus dangereux (M6~: attaques mimétiques, M7~: compromission du bouclier) ont une probabilité très faible, cohérente avec le profil de menace des WSN de surveillance.
+
+\begin{table}[htbp]
+\centering
+\caption{Analyse des modes de défaillance de la pile protocolaire (FMEA simplifiée).}
+\label{tab:failure-modes}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{clccl}
+\toprule
+\textbf{Mode} & \textbf{Description} & \textbf{Probabilité} & \textbf{Impact} & \textbf{Mitigation} \\
+\midrule
+M1 & Dégradation de distribution (GAPF) & Modérée & Élevé & Diversité d'entraînement + retour défaut \\
+M2 & Épuisement synchrone & Faible & Modéré & Équilibrage énergétique \\
+M3 & Partitionnement du réseau & Élevée (catastrophe) & Critique & SHDR + redondance matérielle \\
+M4 & Données carbone indisponibles & Faible & Modéré & Profil de repli historique \\
+M5 & Non-stationnarité du mix énergétique & Faible & Faible & CADR paramétrique \\
+M6 & Attaque mimétique sophistiquée & Très faible & Élevé & Détection de dérive statistique \\
+M7 & Compromission du bouclier & Très faible & Critique & TrustZone + vérification hash \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+
+%%
+%%  SCALABILITE FORMELLE
+%%
+\section{Analyse de scalabilité}\label{sec:disc-scalabilite}
+
+Le Tableau~\ref{tab:scalability} résume la complexité d'inférence de chaque composant et identifie les seuils critiques. Le goulot d'étranglement principal est le GCN de GAPF, limité à $\sim$500 n\oe{}uds par le phénomène d'over-smoothing \cite{Chen2020OverSmoothing}. Le bouclier CASTER-ZT, avec sa complexité $O(1)$, est le composant le plus scalable.
+
+\begin{table}[htbp]
+\centering
+\caption{Analyse de scalabilité de la pile protocolaire.}
+\label{tab:scalability}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Composant} & \textbf{Complexité/décision} & \textbf{Mémoire} & \textbf{Seuil critique} & \textbf{Solution au-delà} \\
+\midrule
+GCN (GAPF) & $O(n \cdot \bar{k} \cdot d)$ & $O(n \cdot d)$ & $n \sim 500$ (over-smoothing) & GraphSAINT, sous-graphes \\
+CAS (GAPF) & $O(n)$ & $O(1)$ & Aucun & --- \\
+Lyapunov (CALASH) & $O(n)$ & $O(n)$ & $n \sim 10\,000$ (mémoire) & Lyapunov distribué \\
+SHDR (CALASH) & $O(n^2)$ (rare) & $O(n)$ & $n \sim 1\,000$ (temps) & Clustering parallèle \\
+Évaluateur (CASTER-ZT) & $O(|E_s| \cdot d_s \cdot T)$ & $O(d_s^2)$ & Latence $>$ 10\,ms & Réduction de $T$ \\
+Bouclier (CASTER-ZT) & $O(1)$ & $O(1)$ & Aucun & --- \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+
+%%
+%%  COMPARAISON AVEC L'ETAT DE L'ART
+%%
+\section{Positionnement par rapport à l'état de l'art}\label{sec:disc-positionnement}
+
+Le Tableau~\ref{tab:positionnement} compare la pile protocolaire proposée avec les principales approches de la littérature selon trois dimensions~: performance, empreinte computationnelle et couverture des critères.
+
+\begin{table}[htbp]
+\centering
+\caption{Positionnement de la pile proposée par rapport aux principales approches de la littérature.}
+\label{tab:positionnement}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Approche} & \textbf{PDR} & \textbf{Durée de vie} & \textbf{LCI} & \textbf{Sécurité} & \textbf{Paramètres} & \textbf{Critères /12} \\
+\midrule
+LEACH & 60--75\% & 931 tours & 13.42 & Aucune & $\sim$0 (heuristique) & 2 \\
+EE-LEACH / HEED & 70--80\% & 1\,100 tours & N/A & Aucune & $\sim$0 & 2 \\
+QMIX & 85--92\% & 1\,200 tours & N/A & Aucune & $\sim$39K/agent & 2 \\
+QTRAN & 83--90\% & 1\,150 tours & N/A & Aucune & $\sim$39K/agent & 2 \\
+CPO (Safe RL) & N/A & N/A & N/A & Espérance & $\sim$100K & 3 \\
+Shield binaire & N/A & N/A & N/A & Binaire & $\sim$10K & 4 \\
+\midrule
+\textbf{GAPF (Art.~1)} & \textbf{$\geq$98\%} & +43--111\% & N/A & Non & \textbf{1\,473} & \textbf{4} \\
+\textbf{CALASH (Art.~2)} & 82.9\% & \textbf{1\,486 tours} & \textbf{8.99} & Non & $\sim$5K & \textbf{8} \\
+\textbf{CASTER-ZT (Art.~3)} & N/A & N/A & N/A & \textbf{Graduée+formelle} & $\sim$20K & \textbf{9} \\
+\textbf{Pile complète} & \textbf{$\geq$98\%} & \textbf{+60\%} & \textbf{$-$33\%} & \textbf{ZT graduée} & \textbf{$\sim$27K} & \textbf{12} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Les résultats montrent que la pile complète offre une couverture sans précédent des douze critères, avec un budget computationnel total de $\sim$27K paramètres --- comparable à un seul agent RNN dans les approches MARL existantes. Ce constat signifie que pour un coût computationnel similaire à une seule politique QMIX ($\sim$39K paramètres), la pile fournit conjointement l'efficacité énergétique, la durabilité carbone et la sécurité zéro-confiance.
+
+\subsection{Comparaison avec les travaux concurrents 2024--2025}
+
+Les travaux récents confirment l'originalité de notre approche~: Nguyen et al.\ \cite{Nguyen2025GNNIoT} (2025) proposent un routage GNN avec $\sim$50K paramètres pour un PDR de $\sim$95\% mais sans durabilité ni sécurité~; Sefati et al.\ \cite{sefati_federated_2025} et Rahman et al.\ \cite{rahman_distributed_2025} (2025) combinent routage fédéré/distribué sans conscience carbone~; les approches de communication sémantique (JSCC) offrent un gain potentiel de compression mais nécessitent $\sim$100K paramètres. Aucun de ces travaux ne couvre simultanément les trois dimensions avec des garanties formelles.
+
+
+
+%%
+%%  CONSIDERATIONS ETHIQUES
+%%
+\section{Considérations éthiques et sociétales}\label{sec:disc-ethique}
+
+Le déploiement de WSN autonomes gérés par AI soulève quatre enjeux éthiques~: (i)~la \textbf{confidentialité} des données capteurs, partiellement atténuée par CASTER-ZT et la détection comprimée de CALASH~; (ii)~le \textbf{biais algorithmique et l'équité spatiale}, où l'équilibrage énergétique de GAPF atténue le risque de sous-couverture de certaines zones~; (iii)~\textbf{l'autonomie et la supervision humaine}, où CASTER-ZT intègre le principe de \emph{human-in-the-loop} via le niveau ``escalader''~; (iv)~\textbf{l'impact environnemental de la recherche} elle-même ($\sim$144 heures GPU d'entraînement), modeste par rapport aux grands modèles de langage mais illustrant le paradoxe de concevoir des protocoles ``verts'' avec des outils énergivores.
+
+
+%%
+%%  REPRODUCTIBILITE ET SCIENCE OUVERTE
+%%
+\section{Reproductibilité et science ouverte}\label{sec:disc-reproductibilite}
+
+Conformément aux recommandations de Pineau et al.\ \cite{Pineau2021Reproducibility}, cette thèse adhère à trois niveaux de reproductibilité~: méthodologique (pseudo-code, hyperparamètres, graines fixées), computationnelle (bibliothèques et versions spécifiées) et des données (trois sources publiques). Le Tableau~\ref{tab:reproducibility} résume la conformité de chaque article.
+
+\begin{table}[htbp]
+\centering
+\caption{Conformité aux critères de reproductibilité NeurIPS \cite{Pineau2021Reproducibility}.}
+\label{tab:reproducibility}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccc}
+\toprule
+\textbf{Critère de reproductibilité} & \textbf{Art.~1 (GAPF)} & \textbf{Art.~2 (CALASH)} & \textbf{Art.~3 (CASTER-ZT)} \\
+\midrule
+Pseudo-code complet & \ding{51} & \ding{51} & \ding{51} \\
+Hyperparamètres documentés & \ding{51} (Annexe~\ref{ann:gapf-suppl}) & \ding{51} & \ding{51} \\
+Graines aléatoires fixées & \ding{51} (42, 123, 456) & \ding{51} (30 graines MC) & \ding{51} (20 graines) \\
+Bibliothèques et versions & \ding{51} & \ding{51} & \ding{51} \\
+Données publiques & --- & \ding{51} (3 sources) & --- \\
+Tests statistiques & Wilcoxon & Kruskal-Wallis & Wilcoxon \\
+Intervalles de confiance & $\mu \pm \sigma$ & Bootstrap 95\% & $\mu \pm \sigma$ \\
+Temps de calcul rapporté & \ding{51} & \ding{51} & \ding{51} \\
+Études d'ablation & --- & \ding{51} (5 ablations) & \ding{51} (4 variantes) \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+
+%%
+%%  IMPLICATIONS PRATIQUES
+%%
+\section{Implications pour le déploiement}\label{sec:disc-implications}
+
+La légèreté de la pile (1\,473 paramètres pour GAPF, $\sim$5K pour CALASH, $\sim$20K pour CASTER-ZT) rend le déploiement réaliste sur des accélérateurs de bord existants --- GAPF ($\sim$6\,KB en FP32) est directement déployable sur un Cortex-M4 avec 256\,KB de RAM. L'intégration dans l'architecture O-RAN est naturelle~: GAPF et CALASH comme rApps sur le non-RT RIC, CASTER-ZT (3.07\,ms) comme xApp sur le near-RT RIC. Les simulations sont ancrées dans des données réelles (Intel Lab, UK Carbon API, USGS ShakeMap), facilitant la transition vers un testbed matériel.
+
+
+
+%%
+%%  LIMITES DE LA DISCUSSION
+%%
+\section{Limites de la discussion}\label{sec:disc-limites}
+
+Cette discussion présente trois limites principales~: (i)~les synergies entre couches sont estimées analytiquement plutôt que mesurées dans un système intégré, et la déployabilité embarquée repose sur des estimations théoriques des accélérateurs~; (ii)~les comparaisons avec l'état de l'art portent sur des approches n'ayant pas été conçues pour les mêmes douze critères, et les travaux concurrents 2024--2025 utilisent parfois des métriques différentes~; (iii)~la validation est limitée aux WSN de surveillance des catastrophes avec routage hiérarchique, et la scalabilité au-delà de 200 n\oe{}uds n'a pas été caractérisée expérimentalement.

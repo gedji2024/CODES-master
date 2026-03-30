@@ -1,0 +1,289 @@
+\babel@toc {french}{}\relax 
+\contentsline {compteur}{DÉDICACE}{iii}{chapter*.1}%
+\contentsline {compteur}{REMERCIEMENTS}{iv}{chapter*.2}%
+\contentsline {compteur}{RÉSUMÉ}{v}{chapter*.3}%
+\contentsline {compteur}{ABSTRACT}{vii}{chapter*.4}%
+\babel@toc {english}{}\relax 
+\babel@toc {french}{}\relax 
+{\pdfbookmark [0]{TABLE DES MATIÈRES}{toc}}
+\contentsline {compteur}{LISTE DES TABLEAUX}{xvi}{chapter*.5}%
+\contentsline {compteur}{LISTE DES FIGURES}{xxi}{chapter*.6}%
+\contentsline {compteur}{LISTE DES SIGLES ET ABRÉVIATIONS}{xxiv}{chapter*.7}%
+\contentsline {compteur}{LISTE DES ANNEXES}{xxvii}{chapter*.8}%
+\contentsline {chapter}{\numberline {1}INTRODUCTION}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Contexte et mise en situation}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Justification économique, sociétale et réglementaire}{3}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Éléments de la problématique}{3}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Défi 1~: Efficacité énergétique du routage dans les WSN de surveillance des catastrophes}{3}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Défi 2~: Empreinte carbone du cycle de vie des WSN}{4}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}Défi 3~: Sécurité des politiques de routage apprises par intelligence artificielle}{5}{subsection.1.3.3}%
+\contentsline {section}{\numberline {1.4}Questions de recherche}{6}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Objectifs de recherche}{6}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}Objectif général}{6}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}Objectifs spécifiques}{7}{subsection.1.5.2}%
+\contentsline {section}{\numberline {1.6}Plan de la thèse}{8}{section.1.6}%
+\contentsline {chapter}{\numberline {2}REVUE DE LITTÉRATURE}{9}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Routage écoénergétique dans les WSN}{9}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Protocoles de routage hiérarchique}{9}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Modèle énergétique de premier ordre}{10}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}Approches métaheuristiques}{10}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}Détection comprimée, récupération d'énergie et résilience}{12}{subsection.2.1.4}%
+\contentsline {subsection}{\numberline {2.1.5}Synthèse taxonomique du routage dans les WSN}{12}{subsection.2.1.5}%
+\contentsline {section}{\numberline {2.2}Apprentissage par renforcement et réseaux de neurones de graphes pour les réseaux}{13}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Apprentissage par renforcement multi-agent (MARL)}{13}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Réseaux de neurones de graphes (GNN)}{14}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Apprentissage par renforcement profond pour le routage}{15}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Synthèse comparative des approches MARL et DRL}{16}{subsection.2.2.4}%
+\contentsline {section}{\numberline {2.3}Intelligence embarquée et TinyML pour les réseaux de capteurs}{16}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Le paradigme TinyML}{16}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Pertinence pour cette thèse}{17}{subsection.2.3.2}%
+\contentsline {section}{\numberline {2.4}Durabilité carbone dans les TIC}{18}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Analyse du cycle de vie (ACV)}{18}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Optimisation de Lyapunov pour les systèmes en réseau}{19}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}Intensité carbone des réseaux électriques}{20}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.4.4}Travaux récents sur l'empreinte carbone des systèmes numériques (2024--2026)}{20}{subsection.2.4.4}%
+\contentsline {subsection}{\numberline {2.4.5}Réseaux verts et communication écoénergétique}{20}{subsection.2.4.5}%
+\contentsline {subsection}{\numberline {2.4.6}Synthèse comparative des approches de durabilité dans les réseaux}{21}{subsection.2.4.6}%
+\contentsline {section}{\numberline {2.5}Sécurité et confiance dans les systèmes autonomes}{21}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}Apprentissage par renforcement sûr (\emph {Safe RL})}{21}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}Vérification formelle des systèmes autonomes}{22}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}Attaques adversariales sur les politiques d'apprentissage par renforcement}{23}{subsection.2.5.3}%
+\contentsline {subsection}{\numberline {2.5.4}Architecture zéro-confiance (\emph {Zero-Trust})}{24}{subsection.2.5.4}%
+\contentsline {subsection}{\numberline {2.5.5}Quantification d'incertitude}{25}{subsection.2.5.5}%
+\contentsline {subsection}{\numberline {2.5.6}Synthèse comparative des approches de sécurité pour les systèmes autonomes}{26}{subsection.2.5.6}%
+\contentsline {section}{\numberline {2.6}Technologies habilitantes 6G}{26}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}Communication sub-térahertz}{26}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.6.2}Surfaces intelligentes reconfigurables (RIS)}{27}{subsection.2.6.2}%
+\contentsline {subsection}{\numberline {2.6.3}Détection--communication intégrée (ISAC)}{27}{subsection.2.6.3}%
+\contentsline {subsection}{\numberline {2.6.4}Architecture O-RAN}{27}{subsection.2.6.4}%
+\contentsline {subsection}{\numberline {2.6.5}Travaux récents sur le 6G pour la gestion des catastrophes (2024--2026)}{28}{subsection.2.6.5}%
+\contentsline {subsection}{\numberline {2.6.6}Synthèse comparative des technologies 6G pour les WSN}{28}{subsection.2.6.6}%
+\contentsline {section}{\numberline {2.7}Paradigmes émergents pour les WSN intelligents}{29}{section.2.7}%
+\contentsline {subsection}{\numberline {2.7.1}Apprentissage fédéré pour les réseaux de capteurs}{29}{subsection.2.7.1}%
+\contentsline {subsection}{\numberline {2.7.2}Jumeaux numériques pour la gestion des réseaux}{29}{subsection.2.7.2}%
+\contentsline {subsection}{\numberline {2.7.3}Communication sémantique pour l'IoT}{30}{subsection.2.7.3}%
+\contentsline {section}{\numberline {2.8}Tableau récapitulatif des lacunes}{30}{section.2.8}%
+\contentsline {section}{\numberline {2.9}Synthèse et lacunes identifiées}{32}{section.2.9}%
+\contentsline {chapter}{\numberline {3}DÉMARCHE DE L'ENSEMBLE DU TRAVAIL DE RECHERCHE}{34}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Logique d'ensemble de la recherche}{34}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Cadre méthodologique}{35}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Protocole expérimental commun}{36}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Modèle énergétique de premier ordre}{36}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Modèle de catastrophe}{36}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Données de référence}{36}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Protocoles de référence (\emph {baselines})}{37}{subsection.3.3.4}%
+\contentsline {section}{\numberline {3.4}Fondements théoriques de la formulation}{37}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Cadre statistique et reproductibilité}{38}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Graines aléatoires et répétitions}{38}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Tests statistiques}{38}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Intervalles de confiance et métriques rapportées}{38}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Reproductibilité}{39}{subsection.3.5.4}%
+\contentsline {section}{\numberline {3.6}Stratégie de validation et calibration}{39}{section.3.6}%
+\contentsline {section}{\numberline {3.7}Modèle de menaces et hypothèses de sécurité}{39}{section.3.7}%
+\contentsline {section}{\numberline {3.8}Article 1 --- GAPF~: les fondations du routage intelligent}{41}{section.3.8}%
+\contentsline {section}{\numberline {3.9}Environnement de simulation}{41}{section.3.9}%
+\contentsline {subsection}{\numberline {3.9.1}Architecture logicielle}{41}{subsection.3.9.1}%
+\contentsline {subsection}{\numberline {3.9.2}Paramétrage des scénarios}{41}{subsection.3.9.2}%
+\contentsline {subsection}{\numberline {3.9.3}Analyse de complexité algorithmique}{42}{subsection.3.9.3}%
+\contentsline {subsection}{\numberline {3.9.4}Espaces d'état, d'action et de récompense}{42}{subsection.3.9.4}%
+\contentsline {subsection}{\numberline {3.9.5}Procédure d'entraînement et convergence}{43}{subsection.3.9.5}%
+\contentsline {section}{\numberline {3.10}Justification des choix d'hyperparamètres}{44}{section.3.10}%
+\contentsline {section}{\numberline {3.11}Article 2 --- CALASH~: l'extension vers la durabilité carbone}{44}{section.3.11}%
+\contentsline {section}{\numberline {3.12}Article 3 --- CASTER-ZT~: la couche de sécurité zéro-confiance}{46}{section.3.12}%
+\contentsline {section}{\numberline {3.13}Protocole d'intégration inter-articles}{46}{section.3.13}%
+\contentsline {subsection}{\numberline {3.13.1}Flux de données de bout en bout}{46}{subsection.3.13.1}%
+\contentsline {subsection}{\numberline {3.13.2}Spécifications des interfaces}{47}{subsection.3.13.2}%
+\contentsline {subsection}{\numberline {3.13.3}Analyse de latence de bout en bout}{48}{subsection.3.13.3}%
+\contentsline {subsection}{\numberline {3.13.4}Budget mémoire de la pile complète}{48}{subsection.3.13.4}%
+\contentsline {subsection}{\numberline {3.13.5}Scénarios de déploiement}{49}{subsection.3.13.5}%
+\contentsline {section}{\numberline {3.14}Synthèse de la démarche}{50}{section.3.14}%
+\contentsline {chapter}{\numberline {4}ARTICLE 1~: ENERGY-EFFICIENT AND NEAR REAL-TIME ROUTING ALGORITHM FOR DISASTER MONITORING IN WIRELESS SENSOR NETWORKS}{51}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Abstract}{51}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Introduction}{52}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Background and Related Work}{54}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Methodology}{58}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Problem description}{58}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}The Energy model}{59}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Reward Scalarization via Monotonic Q$\cdot $K Attention Network}{60}{subsection.4.4.3}%
+\contentsline {subsubsection}{Individual Reward Objectives}{60}{section*.27}%
+\contentsline {subsubsection}{Monotonic Q$\cdot $K Attention Architecture}{60}{section*.28}%
+\contentsline {paragraph}{Stage~1: Attention weighting.}{61}{section*.29}%
+\contentsline {paragraph}{Stage~2: Monotonic network.}{61}{section*.30}%
+\contentsline {subsubsection}{Composite Step Reward}{61}{section*.31}%
+\contentsline {subsubsection}{Evolution Strategies Meta-Learning}{61}{section*.32}%
+\contentsline {subsection}{\numberline {4.4.4}GAPF: Graph-Attentive Policy Fusion}{62}{subsection.4.4.4}%
+\contentsline {subsubsection}{Problem Formulation}{62}{section*.33}%
+\contentsline {subsubsection}{Architecture}{62}{section*.34}%
+\contentsline {paragraph}{Graph construction.}{63}{section*.35}%
+\contentsline {paragraph}{GCN encoder.}{63}{section*.36}%
+\contentsline {paragraph}{CAS controller.}{63}{section*.37}%
+\contentsline {subsubsection}{Training Procedure}{65}{section*.38}%
+\contentsline {subsubsection}{Design Rationale}{65}{section*.39}%
+\contentsline {subsection}{\numberline {4.4.5}Time Complexity Analysis}{66}{subsection.4.4.5}%
+\contentsline {paragraph}{Per-step inference.}{66}{section*.40}%
+\contentsline {paragraph}{Episode-level GAPF overhead.}{66}{section*.41}%
+\contentsline {paragraph}{Total episode complexity.}{66}{section*.42}%
+\contentsline {section}{\numberline {4.5}Results and Discussion}{67}{section.4.5}%
+\contentsline {paragraph}{Execution-time instrumentation.}{68}{section*.43}%
+\contentsline {subsubsection}{Consolidated Results Across All Scenarios}{69}{section*.44}%
+\contentsline {subsubsection}{Key Findings}{70}{section*.45}%
+\contentsline {paragraph}{(F1) GAPF consistently achieves the highest PDR, with the advantage growing in sparser networks.}{70}{section*.46}%
+\contentsline {paragraph}{(F2) GAPF achieves $2$--$3.5\times $ lower energy consumption and $3$--$9\times $ better energy balance than QMIX/QTRAN.}{70}{section*.47}%
+\contentsline {paragraph}{(F3) QMIX and QTRAN converge to statistically indistinguishable performance.}{70}{section*.48}%
+\contentsline {paragraph}{(F4) QPSOFL collapses at scale; low energy reflects non-delivery.}{70}{section*.49}%
+\contentsline {paragraph}{(F5) GAPF is the only algorithm passing all feasibility constraints.}{71}{section*.50}%
+\contentsline {subsection}{\numberline {4.5.1}Deployment Feasibility on Resource-Constrained Nodes}{71}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Limitations}{71}{subsection.4.5.2}%
+\contentsline {section}{\numberline {4.6}Conclusion}{72}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Contributions and Impact}{73}{subsection.4.6.1}%
+\contentsline {subsection}{\numberline {4.6.2}Broader Impact}{73}{subsection.4.6.2}%
+\contentsline {subsection}{\numberline {4.6.3}Future Work}{74}{subsection.4.6.3}%
+\contentsline {chapter}{\numberline {5}ARTICLE 2~: CARBON-AWARE AUTONOMOUS DATA REDUCTION AND SELF-HEALING ROUTING FOR 6G-INTEGRATED DISASTER SENSOR NETWORKS: A LIFECYCLE-SUSTAINABLE APPROACH}{76}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Abstract}{76}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Introduction}{77}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Related Work}{78}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Energy-Efficient Clustering Protocols}{78}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Metaheuristic and RL-Based Routing}{79}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}Carbon-Aware Networking}{80}{subsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.3.4}Disaster-Resilient WSNs and Lifecycle Assessment}{80}{subsection.5.3.4}%
+\contentsline {section}{\numberline {5.4}Methodology}{80}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}System Model}{81}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Problem Formulation}{82}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}CALASH Framework}{82}{subsection.5.4.3}%
+\contentsline {subsubsection}{Pillar 1: CADR --- Carbon-Aware Data Reduction}{83}{section*.53}%
+\contentsline {subsubsection}{Pillar 2: CARE --- Carbon-Aware Routing Engine}{84}{section*.54}%
+\contentsline {subsubsection}{Pillar 3: SHDR --- Self-Healing Disaster Recovery}{85}{section*.55}%
+\contentsline {subsubsection}{Pillar 4: LSE --- Lifecycle Sustainability Engine}{85}{section*.56}%
+\contentsline {subsection}{\numberline {5.4.4}6G Enabling Technologies}{86}{subsection.5.4.4}%
+\contentsline {subsubsection}{Sub-THz Communication with OFDM}{86}{section*.57}%
+\contentsline {subsubsection}{Cascaded RIS Channel Model}{86}{section*.58}%
+\contentsline {subsubsection}{ISAC --- Integrated Sensing and Communication}{86}{section*.59}%
+\contentsline {subsection}{\numberline {5.4.5}Theoretical Guarantee: CDL Pareto Bound}{87}{subsection.5.4.5}%
+\contentsline {section}{\numberline {5.5}Results and Discussion}{90}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}Data Provenance and Reproducibility}{90}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}Experimental Setup}{90}{subsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.5.3}DQN Training Hyperparameters}{92}{subsection.5.5.3}%
+\contentsline {subsection}{\numberline {5.5.4}Time Complexity Analysis}{92}{subsection.5.5.4}%
+\contentsline {subsection}{\numberline {5.5.5}Discussion of Results}{93}{subsection.5.5.5}%
+\contentsline {subsubsection}{CALASH vs.\ Traditional Baselines}{94}{section*.67}%
+\contentsline {subsubsection}{CALASH vs.\ RIS-DRL: The 6G-Aware Baseline}{95}{section*.68}%
+\contentsline {subsubsection}{LCI Mechanism Analysis}{97}{section*.69}%
+\contentsline {subsubsection}{Ablation Study}{97}{section*.71}%
+\contentsline {subsubsection}{Statistical Significance}{98}{section*.72}%
+\contentsline {subsubsection}{Data Fidelity}{99}{section*.74}%
+\contentsline {subsubsection}{Evaluation Methodology and Real Data Validation}{99}{section*.75}%
+\contentsline {subsubsection}{Scalability Analysis}{99}{section*.77}%
+\contentsline {subsubsection}{Sensitivity Analysis}{100}{section*.79}%
+\contentsline {subsubsection}{Carbon Intensity Sensitivity Across National Grids}{102}{section*.81}%
+\contentsline {subsubsection}{Computational Feasibility and Execution Time}{102}{section*.82}%
+\contentsline {section}{\numberline {5.6}Conclusion}{103}{section.5.6}%
+\contentsline {chapter}{\numberline {6}ARTICLE 3~: ZERO-TRUST SHIELDED GRAPH-STRUCTURED DECISION CONTROL FOR SECURE AUTONOMOUS RECOVERY IN AI-NATIVE 6G DISASTER-MONITORING SENSING NETWORKS}{105}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Abstract}{105}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Introduction}{106}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Related Work}{109}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Graph learning for structured network decision making}{109}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Adversarial robustness for graph models}{109}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.3.3}Safe, shielded, and constrained learning}{109}{subsection.6.3.3}%
+\contentsline {subsection}{\numberline {6.3.4}Uncertainty, calibration, and selective prediction}{110}{subsection.6.3.4}%
+\contentsline {subsection}{\numberline {6.3.5}Resilient sensing, disaster monitoring, and security datasets}{110}{subsection.6.3.5}%
+\contentsline {subsection}{\numberline {6.3.6}AI-native network context, 6G trends, and agentic AI}{110}{subsection.6.3.6}%
+\contentsline {subsection}{\numberline {6.3.7}Zero-trust architecture}{112}{subsection.6.3.7}%
+\contentsline {subsection}{\numberline {6.3.8}AI safety governance and regulatory landscape}{112}{subsection.6.3.8}%
+\contentsline {subsection}{\numberline {6.3.9}Model-space comparison and positioning}{113}{subsection.6.3.9}%
+\contentsline {subsection}{\numberline {6.3.10}Synthesis and research gap}{113}{subsection.6.3.10}%
+\contentsline {section}{\numberline {6.4}CASTER-ZT Framework}{113}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}System, threat, and deployment model}{113}{subsection.6.4.1}%
+\contentsline {subsubsection}{Threat model}{114}{section*.85}%
+\contentsline {subsection}{\numberline {6.4.2}Formal problem formulation}{116}{subsection.6.4.2}%
+\contentsline {subsubsection}{Recovery policy and candidate scoring}{116}{section*.86}%
+\contentsline {subsubsection}{Dual-hypothesis trust--risk evaluation}{117}{section*.87}%
+\contentsline {subsubsection}{Zero-trust admissibility and bounded decisions}{118}{section*.88}%
+\contentsline {subsection}{\numberline {6.4.3}CASTER-ZT architecture}{120}{subsection.6.4.3}%
+\contentsline {subsubsection}{Main components}{120}{section*.90}%
+\contentsline {subsection}{\numberline {6.4.4}Shield design and algorithms}{122}{subsection.6.4.4}%
+\contentsline {subsubsection}{Trust assessment}{122}{section*.91}%
+\contentsline {subsubsection}{Action-risk evaluation}{122}{section*.92}%
+\contentsline {subsubsection}{Shield algorithm}{123}{section*.93}%
+\contentsline {subsubsection}{Shield calibration procedure}{123}{section*.94}%
+\contentsline {subsubsection}{Scope-reduction procedure}{123}{section*.95}%
+\contentsline {subsection}{\numberline {6.4.5}Training pipeline}{123}{subsection.6.4.5}%
+\contentsline {subsubsection}{GNN encoder and policy training}{125}{section*.97}%
+\contentsline {subsubsection}{Trust autoencoder training}{126}{section*.98}%
+\contentsline {subsubsection}{Risk scorer training}{127}{section*.99}%
+\contentsline {subsubsection}{Contrastive safety encoder training}{127}{section*.100}%
+\contentsline {subsection}{\numberline {6.4.6}Theoretical properties}{128}{subsection.6.4.6}%
+\contentsline {section}{\numberline {6.5}Experimental Evaluation}{135}{section.6.5}%
+\contentsline {subsection}{\numberline {6.5.1}Evaluation protocol}{135}{subsection.6.5.1}%
+\contentsline {subsubsection}{Real-data calibration evidence}{135}{section*.102}%
+\contentsline {subsubsection}{Real-data-informed calibration}{135}{section*.104}%
+\contentsline {subsubsection}{Hyperparameter specification}{138}{section*.105}%
+\contentsline {subsubsection}{Training convergence evidence}{139}{section*.107}%
+\contentsline {subsubsection}{Method variants}{139}{section*.109}%
+\contentsline {subsection}{\numberline {6.5.2}Experimental results}{143}{subsection.6.5.2}%
+\contentsline {subsubsection}{RQ1: Security under attack}{143}{section*.110}%
+\contentsline {subsubsection}{External baseline analysis}{144}{section*.112}%
+\contentsline {subsubsection}{RQ2: Recovery quality under attack}{147}{section*.115}%
+\contentsline {subsubsection}{RQ2 continued: Ablation analysis}{148}{section*.117}%
+\contentsline {subsubsection}{RQ3: Generalization across severity and seeds}{149}{section*.120}%
+\contentsline {subsubsection}{RQ3 continued: Multi-scale evaluation}{150}{section*.122}%
+\contentsline {subsubsection}{RQ3 continued: Threshold sensitivity analysis}{150}{section*.125}%
+\contentsline {subsubsection}{RQ4: 6G deployment compliance and AI-native validation}{151}{section*.127}%
+\contentsline {subsubsection}{Threats to validity}{153}{section*.130}%
+\contentsline {section}{\numberline {6.6}Discussion and Limitations}{154}{section.6.6}%
+\contentsline {subsection}{\numberline {6.6.1}The role of defense in depth}{155}{subsection.6.6.1}%
+\contentsline {subsection}{\numberline {6.6.2}External baseline comparison}{155}{subsection.6.6.2}%
+\contentsline {subsection}{\numberline {6.6.3}Honest limitation: telemetry poisoning}{156}{subsection.6.6.3}%
+\contentsline {subsection}{\numberline {6.6.4}CASTER-ZT as a fully AI-driven autonomous system}{156}{subsection.6.6.4}%
+\contentsline {subsection}{\numberline {6.6.5}Simulation scale and multi-scale evidence}{159}{subsection.6.6.5}%
+\contentsline {subsection}{\numberline {6.6.6}Threshold sensitivity and operator control}{159}{subsection.6.6.6}%
+\contentsline {subsection}{\numberline {6.6.7}Broader implications and agentic AI perspective}{160}{subsection.6.6.7}%
+\contentsline {subsection}{\numberline {6.6.8}Societal relevance and future utility}{162}{subsection.6.6.8}%
+\contentsline {section}{\numberline {6.7}Conclusion}{164}{section.6.7}%
+\contentsline {chapter}{\numberline {7}DISCUSSION GÉNÉRALE}{173}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Retour sur les questions de recherche}{173}{section.7.1}%
+\contentsline {subsection}{\numberline {7.1.1}Q1 --- Efficacité énergétique (GAPF)}{173}{subsection.7.1.1}%
+\contentsline {subsection}{\numberline {7.1.2}Q2 --- Durabilité carbone (CALASH)}{173}{subsection.7.1.2}%
+\contentsline {subsection}{\numberline {7.1.3}Q3 --- Sécurité zéro-confiance (CASTER-ZT)}{174}{subsection.7.1.3}%
+\contentsline {subsection}{\numberline {7.1.4}Question principale}{174}{subsection.7.1.4}%
+\contentsline {section}{\numberline {7.2}Analyse transversale des résultats}{174}{section.7.2}%
+\contentsline {subsection}{\numberline {7.2.1}Synergies quantitatives entre les couches}{174}{subsection.7.2.1}%
+\contentsline {subsection}{\numberline {7.2.2}Le paradigme de la fusion vs.\ l'apprentissage monolithique}{175}{subsection.7.2.2}%
+\contentsline {subsection}{\numberline {7.2.3}Analyse de la complexité Dec-POMDP et implications}{175}{subsection.7.2.3}%
+\contentsline {subsection}{\numberline {7.2.4}Robustesse adversariale~: analyse et perspectives}{175}{subsection.7.2.4}%
+\contentsline {subsection}{\numberline {7.2.5}Faisabilité du déploiement TinyML}{175}{subsection.7.2.5}%
+\contentsline {subsection}{\numberline {7.2.6}Le carbone incorporé comme métrique oubliée}{176}{subsection.7.2.6}%
+\contentsline {subsection}{\numberline {7.2.7}Zéro-confiance comme couche systémique}{176}{subsection.7.2.7}%
+\contentsline {subsection}{\numberline {7.2.8}Paradigmes émergents}{177}{subsection.7.2.8}%
+\contentsline {section}{\numberline {7.3}Analyse de convergence et garanties théoriques}{177}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}Convergence de GAPF~: le méta-contrôleur comme réducteur de variance}{177}{subsection.7.3.1}%
+\contentsline {subsection}{\numberline {7.3.2}Convergence de CALASH~: borne de Lyapunov et stabilité}{177}{subsection.7.3.2}%
+\contentsline {subsection}{\numberline {7.3.3}Convergence de CASTER-ZT~: correction et complétude du bouclier}{178}{subsection.7.3.3}%
+\contentsline {subsection}{\numberline {7.3.4}Synthèse~: complémentarité des garanties}{178}{subsection.7.3.4}%
+\contentsline {section}{\numberline {7.4}Analyse de sensibilité}{179}{section.7.4}%
+\contentsline {subsection}{\numberline {7.4.1}Paramètres critiques de GAPF}{179}{subsection.7.4.1}%
+\contentsline {subsection}{\numberline {7.4.2}Paramètres critiques de CALASH}{179}{subsection.7.4.2}%
+\contentsline {subsection}{\numberline {7.4.3}Paramètres critiques de CASTER-ZT}{179}{subsection.7.4.3}%
+\contentsline {subsection}{\numberline {7.4.4}Sensibilité aux conditions environnementales}{179}{subsection.7.4.4}%
+\contentsline {section}{\numberline {7.5}Analyse des modes de défaillance}{180}{section.7.5}%
+\contentsline {section}{\numberline {7.6}Analyse de scalabilité}{180}{section.7.6}%
+\contentsline {section}{\numberline {7.7}Positionnement par rapport à l'état de l'art}{181}{section.7.7}%
+\contentsline {subsection}{\numberline {7.7.1}Comparaison avec les travaux concurrents 2024--2025}{181}{subsection.7.7.1}%
+\contentsline {section}{\numberline {7.8}Considérations éthiques et sociétales}{181}{section.7.8}%
+\contentsline {section}{\numberline {7.9}Reproductibilité et science ouverte}{182}{section.7.9}%
+\contentsline {section}{\numberline {7.10}Implications pour le déploiement}{182}{section.7.10}%
+\contentsline {section}{\numberline {7.11}Limites de la discussion}{183}{section.7.11}%
+\contentsline {chapter}{\numberline {8}CONCLUSION}{184}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Synthèse des travaux}{184}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Contributions scientifiques originales}{184}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Retombées et contributions sur tous les plans}{186}{section.8.3}%
+\contentsline {section}{\numberline {8.4}Alignement avec les Objectifs de développement durable}{187}{section.8.4}%
+\contentsline {section}{\numberline {8.5}Limitations de la solution proposée}{187}{section.8.5}%
+\contentsline {section}{\numberline {8.6}Directions de recherche futures}{188}{section.8.6}%
+\contentsline {subsection}{\numberline {8.6.1}Court terme (1--2 ans)}{188}{subsection.8.6.1}%
+\contentsline {subsection}{\numberline {8.6.2}Moyen terme (2--4 ans)}{189}{subsection.8.6.2}%
+\contentsline {subsection}{\numberline {8.6.3}Long terme (4+ ans)}{189}{subsection.8.6.3}%
+\contentsline {section}{\numberline {8.7}Transférabilité à d'autres domaines}{189}{section.8.7}%
+\contentsline {section}{\numberline {8.8}Implications institutionnelles et réglementaires}{190}{section.8.8}%
+\contentsline {section}{\numberline {8.9}Bilan quantitatif global}{190}{section.8.9}%
+\contentsline {compteur}{RÉFÉRENCES}{192}{chapter*.141}%
+\contentsline {compteur}{ANNEXES}{211}{chapter*.141}%

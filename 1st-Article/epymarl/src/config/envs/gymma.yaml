@@ -1,0 +1,23 @@
+# Environment config for WSN routing (gym_examples:WSNRouting-v0).
+#
+# The WSN env simulates a disaster-monitoring sensor network where n_sensors=70
+# agents route packets to a base station. Each episode runs for time_limit steps.
+# Logging intervals are set high to suppress console output during training;
+# the evaluation pass (evaluate=True) handles metric collection separately.
+env: "gymma"
+
+env_args:
+  key: null               # set via CLI: env_args.key=gym_examples:WSNRouting-v0
+  time_limit: 100          # steps per episode (increased from 30 for multi-hop routing)
+  pretrained_wrapper: null
+  n_sensors: 70            # number of sensor agents (override via CLI for scenarios)
+  coverage_radius: 35.0    # communication range in meters (override via CLI for scenarios)
+
+test_greedy: True          # use greedy action selection during periodic test runs
+test_nepisode: 500         # number of eval episodes (must be multiple of batch_size_run)
+test_interval: 1000000     # effectively disabled; eval pass handles testing
+save_model_interval: 100000 # save checkpoints at ~100k and ~200k timesteps
+log_interval:  1000000     # suppress per-episode logging during training
+runner_log_interval: 1000000
+learner_log_interval: 1000000
+t_max: 200000            # total training timesteps (200k for proper MARL convergence)

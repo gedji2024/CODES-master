@@ -1,0 +1,51 @@
+# QTRAN algorithm config for WSN routing.
+#
+# QTRAN uses a less restrictive factorization than QMIX: instead of enforcing
+# monotonicity, it learns a transformation between individual Q-values and the
+# joint Q-value via TD, optimality (opt), and non-optimality (nopt) losses.
+#
+# Tuning notes (WSN routing, 20 sensors, 200k timesteps):
+#   - epsilon_anneal_time = 150k (75% of t_max) gives enough exploration
+#   - target_update_interval = 30 episodes (faster sync than default 200)
+#   - buffer_size = 15000 (half of t_max is a good heuristic)
+#   - opt_loss / nopt_min_loss weights balance the three loss terms
+
+# ── Exploration ──────────────────────────────────────────────
+action_selector: "epsilon_greedy"
+epsilon_start: 0.5
+epsilon_finish: 0.01
+epsilon_anneal_time: 150000     # 75% of t_max for proper exploration
+evaluation_epsilon: 0.01
+
+# ── Runner ───────────────────────────────────────────────────
+runner: "parallel"
+batch_size_run: 4               # 4 envs in parallel for ~2-3x speedup
+
+# ── Replay buffer ────────────────────────────────────────────
+buffer_size: 15000              # ~half of t_max; stores full episodes
+
+# ── Target network ───────────────────────────────────────────
+target_update_interval: 30      # hard-update every 30 episodes
+
+# ── Reward handling ──────────────────────────────────────────
+standardise_returns: True
+standardise_rewards: False      # keep delivery signal visible to learner
+
+# ── Network architecture ────────────────────────────────────
+agent_output_type: "q"
+learner: "qtran_learner"
+double_q: True
+mixer: "qtran_base"
+use_rnn: True
+rnn_hidden_dim: 64
+mixing_embed_dim: 64
+qtran_arch: "qtran_paper"
+hypernet_layers: 2
+hypernet_embed: 64
+network_size: big
+
+# ── QTRAN loss weights ──────────────────────────────────────
+opt_loss: 1                     # weight for optimality constraint
+nopt_min_loss: 0.1              # weight for non-optimality constraint
+
+name: "qtran"

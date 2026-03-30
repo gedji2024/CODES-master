@@ -1,0 +1,512 @@
+%% Pour changer les IEEEtran.bst controls, les usagers doivent créer une entrée “IEEEtranBSTCTL” %% dans leur fichier .bib :
+%% @IEEEtranBSTCTL{References:BSTcontrol,      
+%% CTLuse_forced_etal= "yes",    Pour faire apparaître et al. pour 3 auteurs et plus.
+%% CTLmax_names_forced_etal = "2",
+%% CTLnames_show_etal= "1",
+%% CTLuse_alt_spacing= "no",     Pour ne pas utiliser l'espacement entre mots pour les 
+%% références avec URL.
+%% CTLalt_stretch_factor= "1"     Le facteur d'étirement entre mots.
+%% }    
+
+
+%% To change the IEEEtran.bst controls, users should create an IEEEtranBSTCTL entry 
+%% in their .bib file:
+%% @IEEEtranBSTCTL{References:BSTcontrol,      
+%% CTLuse_forced_etal= "yes",      To display et al. for 3 and more authors.
+%% CTLmax_names_forced_etal = "2",
+%% CTLnames_show_etal= "1",
+%% CTLuse_alt_spacing= "no",     ''Shuts off the alternate interword spacing 
+%% for entries with URLs''.
+%% CTLalt_stretch_factor= "1"      ''If alternate interword spacing for entries with URLs is 
+%% enabled, this is the interword spacing stretch factor that will be used.''
+%% } 
+
+@IEEEtranBSTCTL{IEEEexample:BSTcontrol,
+CTLuse_forced_etal       = "yes",
+CTLmax_names_forced_etal = "3",
+CTLnames_show_etal       = "1" 
+}
+
+%% Même si pour le moment le champ doi n'est pas supporté par le style IEEEtran, il y sera 
+%% probablement intégré dans le futur. Si votre document a un doi, ajoutez-le.
+%% Dans les exemples en bas, le champ doi a été ajouté pour tous les documents qui en ont un.
+
+%% The DOI is not supported yet by the IEEEtran style, but it will probably be in the future.  
+%% If your document has a DOI, include it in the reference. 
+%% In the examples below, the DOI field was added in all the references that have a DOI.
+
+%% Utiliser \& au lieu de & si un lien se transforme en commentaire.
+%% Use \& instead of & if a link becomes a comment.
+
+%% Livre imprimé, 7e édition / Printed book, 7th edition
+@book{Brydson1999,
+author = {Brydson, J. A.},
+title = {Plastics materials},
+year = {1999},
+publisher = {Butterworth-Heinemann},
+address = {Oxford, UK},
+edition = {Seventh}
+}
+
+
+%% Livre imprimé
+%% Printed book
+@book{Boyce2002,
+author = {Boyce, William E. and DiPrima, Richard Clyde},
+title = {Équations différentielles},
+year = {2002},
+publisher = {Chenelière},
+address = {Montréal, QC}
+}
+
+
+%% Livre imprimé avec éditeur intellectuel, 2e édition
+%% Edited printed book, 2nd edition
+@book{Fraas2010,
+editor = {Fraas, Lewis M. and Partain, Larry D.},
+title = {Solar Cells and Their Applications},
+year = {2010},
+publisher = {Wiley},
+address = {Hoboken, NJ},
+edition = {Second}
+}
+
+
+%% Livre électronique
+%% Electronic book
+@book{Manasreh2011,
+author = {Manasreh, Omar},
+title = {Introduction to Nanomaterials and Devices},
+year = {2011},
+publisher = {Wiley},
+address = {Hoboken, NJ},
+doi = {10.1002/9781118148419},
+url = {http://onlinelibrary.wiley.com/book/10.1002/9781118148419}
+}
+
+
+%% Livre électronique avec éditeur intellectuel, 3e édition
+%% Edited electronic book, 3rd edition
+@book{Chen2009,
+editor = {Chen, Wai-Kai},
+title = {Analog and {VLSI} Circuits: The Circuits and Filters Handbook},
+year = {2009},
+publisher = {{CRC} Press},
+address = {Boca Raton, FL},
+edition = {Third},
+url = {https://doi.org/10.1201/9781315219127}
+}
+
+
+%% Section sans titre d'un livre électronique (des pages dans un livre)
+%% Section without title of an electronic book (some pages in a book)
+@inbook{Kizza2013,
+author = {Kizza, Joseph Migga},
+title = {Guide to Computer Network Security},
+year = {2013},
+publisher = {Springer},
+address = {London, UK},
+edition = {Second},
+pages = {119-120},
+doi = {10.1007/978-1-4471-4543-1},
+url = {http://dx.doi.org/10.1007/978-1-4471-4543-1}
+}
+
+
+%% Article dans l'encyclopédie Techniques de l'ingénieur
+%% Article in the Techniques de l'ingénieur encyclopedia
+@incollection{Boyer2006,
+author = {Boyer, Frédéric and Alamir, Mazen and Chablat, Damien and Khalil, Wisama and Leroyer, Alban and Lemoine, Philippe},
+title = {Robot anguille sous-marin en 3{D}},
+booktitle = {Techniques de l'ingénieur},
+year = {2006},
+publisher = {Éditions T.I.},
+address = {Saint-Denis, France},
+doi = {10.51257/a-v1-s7856},
+url = {https://doi.org/10.51257/a-v1-s7856}
+}
+
+
+%% Chapitre de livre électronique avec éditeur intellectuel
+%% Chapter in an edited electronic book
+@incollection{Haist2014,
+author = {Haist, Tobias and Hasler, Malte and Osten, Wolfang and Baranek, Michal},
+title = {Programmable microscopy},
+booktitle = {Multi-dimensional Imaging},
+editor = {Javidi, Bahram and Tajahuerce, Enrique and Andrés, Pedro},
+year = {2014},
+publisher = {{IEEE} Press-Wiley},
+address = {Chichester, UK},
+pages = {153-173},
+doi = {10.1002/9781118705766},
+url = {http://ieeexplore.ieee.org/xpl/bkabstractplus.jsp?bkn=6798070}
+}
+
+
+%% Entrée dans une encyclopédie
+%% Entry in an encyclopedia
+@incollection{Daintith2010,
+editor = {Daintith, John and Martin, Elizabeth},
+title = {Lanthanoids},
+booktitle = {A Dictionary of Science},
+year = {2010},
+publisher = {Oxford University Press},
+address = {Oxford, UK},
+edition = {Sixth},
+pages = {460-461},
+url = {https://app.knovel.com/hotlink/toc/id:kpDSE00001/dictionary-science-6th/dictionary-science-6th}
+}
+
+
+%% Entrée dans Wikipédia avec date de mise à jour
+%% Entry in Wikipedia with last update date
+@incollection{Corrosion2018,
+title = {Corrosion},
+booktitle = {Wikipédia},     	
+year = {2018},
+month = {6 sept.},          	
+url = {http://fr.wikipedia.org/wiki/Corrosion}    		
+}
+%% For the same reference in English, use:
+%% title = {Corrosion},
+%% booktitle = {Wikipedia},
+%% year = {2018},
+%% month = {Sept. 6,},
+%% url = {https://en.wikipedia.org/wiki/Corrosion}
+
+
+%% Article de revue publié (imprimé)
+%% Published journal article (in print)
+%% IEEE demande d'utiliser les titres abrégés de revues, mais il n'y a pas d'abréviations IEEE pour les revues publiées chez d'autres éditeurs. Ainsi, nous vous recommandons d'utiliser les titres non-abrégés plutôt que les titres abrégés pour toutes les revues de tous les éditeurs, y compris IEEE, pour vos travaux académiques et votre mémoire ou thèse.
+%% IEEE requires the use of abbreviated journal titles, but there are no IEEE abbreviations for journals published by other publishers. Thus, we recommend that you use the full titles rather than the abbreviated titles for all journals from all publishers, including IEEE, for your assignments, dissertation or thesis.
+@article{Kaliouby1987,
+title = {New two-port scattering matrix measurement technique using a sliding load},
+author = {Kaliouby, Leopoldine and Bosisio, Renato G.},
+journal = {{IEEE} Transactions on Instrumentation and Measurement},
+year = {1987},
+volume = {IM-36},
+number = {4},
+pages = {1028-1030}
+}
+
+
+%% Article de revue publié (électronique)
+%% Published journal article (in electronic format)
+%% IEEE demande d'utiliser les titres abrégés de revues, mais il n'y a pas d'abréviations IEEE pour les revues publiées chez d'autres éditeurs. Ainsi, nous vous recommandons d'utiliser les titres non-abrégés plutôt que les titres abrégés pour toutes les revues de tous les éditeurs, y compris IEEE, pour vos travaux académiques et votre mémoire ou thèse.
+%% IEEE requires the use of abbreviated journal titles, but there are no IEEE abbreviations for journals published by other publishers. Thus, we recommend that you use the full titles rather than the abbreviated titles for all journals from all publishers, including IEEE, for your assignments, dissertation or thesis.
+@article{Senjian2015,
+author = {Senjian, An and Boussaid, Farid and Bennamoun, Mohammed and Sohel, Ferdous},
+title = {Quantitative error analysis of bilateral filtering},
+journal = {{IEEE} Signal Processing Letters},		
+year = {2015},
+volume = {22},
+number = {2},
+pages = {202-206},
+doi = {10.1109/LSP.2014.2353694},
+url = {http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6892949}
+}
+
+
+%% Article accepté pour publication et déjà disponible en ligne
+%% Journal article to be published, already available online
+%% IEEE demande d'utiliser les titres abrégés de revues, mais il n'y a pas d'abréviations IEEE pour les revues publiées chez d'autres éditeurs. Ainsi, nous vous recommandons d'utiliser les titres non-abrégés plutôt que les titres abrégés pour toutes les revues de tous les éditeurs, y compris IEEE, pour vos travaux académiques et votre mémoire ou thèse.
+%% IEEE requires the use of abbreviated journal titles, but there are no IEEE abbreviations for journals published by other publishers. Thus, we recommend that you use the full titles rather than the abbreviated titles for all journals from all publishers, including IEEE, for your assignments, dissertation or thesis.
+@article{Choy2023b,
+author = {Choy, Wallace C. H. and Ren, Xingang},
+title = {XXXX},
+journal = {{IEEE} Journal of Selected Topics in Quantum Electronics},
+year = {2023},
+volume = {55},
+number = {1},
+pages = {1-9},
+url = {http://xxxx},
+note = {à paraître}		
+}
+%% For the same reference in English, use:
+%% note = {to be published}
+
+
+%% Article soumis qui n’est pas encore accepté
+%% Submitted article that was not yet accepted
+%% IEEE demande d'utiliser les titres abrégés de revues, mais il n'y a pas d'abréviations IEEE pour les revues publiées chez d'autres éditeurs. Ainsi, nous vous recommandons d'utiliser les titres non-abrégés plutôt que les titres abrégés pour toutes les revues de tous les éditeurs, y compris IEEE, pour vos travaux académiques et votre mémoire ou thèse.
+%% IEEE requires the use of abbreviated journal titles, but there are no IEEE abbreviations for journals published by other publishers. Thus, we recommend that you use the full titles rather than the abbreviated titles for all journals from all publishers, including IEEE, for your assignments, dissertation or thesis.
+@article{Choy2023,
+author = {Choy, Wallace C. H. and Ren, Xingang},
+title = {XXXX},
+journal = {{IEEE} Journal of Selected Topics in Quantum Electronics},
+year = {2023},
+note = {soumis pour publication}
+}
+%% For the same reference in English, use:
+%% note = {submitted for publication}
+
+
+@unpublished{Choy2023a,
+author = {Choy, Wallace C. H. and Ren, Xingang},
+title = {XXXX},
+year = {2023},
+note = {soumis pour publication}
+}
+
+
+%% Numéro d’une revue académique (électronique)
+%% Journal issue (in electronic format)
+@periodical{IEEE2023,
+title = {{IEEE} Transactions on Antennas and Propagation},
+year = {2023},
+volume = {71},
+number = {8},
+month = aug,
+url = {http://ieeexplore.ieee.org/xpl/tocresult.jsp?isnumber=6178353&punumber=8}
+}
+
+
+%% Article de périodique électronique
+%% Periodical article available online
+@article{Gervais2013,
+title = {Plagiat: Quel vilain mot!},
+author = {Gervais, Martine},
+journal = {Plan},
+year = {2013},
+volume = {L},
+number = {2},
+pages = {46-47},
+month = mar,
+url = {http://www.oiq.qc.ca/Documents/DCAP/chroniques_PLAN/ethique_deontologie/2013_ethique_deontologie/2013_eth_deonto_PLAN_03_FR.pdf}
+}
+
+
+%% Article de périodique électronique, sans auteur mentionné
+%% Periodical article without author, available online
+@misc{Ledevoir2013,
+howpublished = {Le Devoir},
+title = {Des satellites canadiens s'élancent de l'{I}nde},
+year = {2013},
+month = feb,
+day={25},
+url = {http://www.ledevoir.com/societe/science-et-technologie/371795/des-satellites-canadiens-s-elancent-de-l-inde}
+}
+
+
+%% Communication de conférence électronique
+%% Conference paper in electronic format
+%% IEEE demande d'utiliser les noms abrégés de conférences, mais il n'y a pas d'abréviations IEEE pour les conférences qui ne sont pas organisées par IEEE. Ainsi, nous vous recommandons d'utiliser les noms non-abrégés plutôt que les noms abrégés pour toutes les conférences, y compris IEEE, pour vos travaux académiques et votre mémoire ou thèse.
+%% IEEE requires the use of abbreviated conference names, but there are no IEEE abbreviations for conferences not organized by IEEE. Thus, we recommend that you use the full names rather than the abbreviated names for all conferences, including IEEE, for your assignments, dissertation or thesis.
+@inproceedings{Madani2010,
+author = {Madani, Nioosha and Guerrouj, Latifa and Di Penta, Massimiliano and Guéhéneuc, Yann-Gaël and Antoniol, Giuliano},
+title = {Recognizing words from source code identifiers using speech recognition techniques},
+booktitle = {14th European Conference on Software Maintenance and Reengineering ({CSMR})},
+year = {2010},
+address = {Madrid, Spain},
+month = {15-18 mars},		
+intype = {communication présentée à},		
+pages = {68-77},
+doi = {10.1109/CSMR.2010.31},
+url = {http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5714421}
+}
+%% For the same reference in English, use:
+%% month = {Mar. 15-18,},
+%% intype = {presented at the},
+
+
+%% Mémoire de maîtrise électronique
+%% Master's thesis in electronic format
+@mastersthesis{Massicotte2013,
+author = {Massicotte, Geneviève},
+title = {Biocapteur ampérométrique intégré pour une unité de détection dédiée aux neurotransmetteurs},
+school = {Dép. de génie électrique, École Polytechnique de Montréal}, 
+year = {2013},
+address = {Montréal, QC},
+type = {mémoire de maîtrise},		
+url = {http://publications.polymtl.ca/1319/}
+}
+%% For the same reference in English, use:
+%% type = {Master's thesis},
+
+
+%% Thèse de doctorat électronique
+%% PhD dissertation in electronic format
+@phdthesis{Rossi2011,
+author = {Rossi, Angelo},
+title = {Sécurité dans les réseaux mobiles de nouvelle génération},
+school = {Dép. de génie informatique et génie logiciel, École Polytechnique de Montréal},
+year = {2011},
+address = {Montréal, QC},
+type = {thèse de doctorat},		
+url = {http://publications.polymtl.ca/614/}
+}
+%% For the same reference in English, use:
+%% type = {PhD dissertation},
+
+
+%% Raport technique imprimé
+%% Technical report (in print)
+@techreport{DeSantis2002,
+author = {De Santis, Romano Mario},
+title = {Enhanced tuning of industrial controllers via a dual loop {pid} form},
+institution = {Dép. de genie électrique, École Polytechnique de Montréal},
+year = {2002},
+address = {Montréal, QC},
+number = {EPM/RT 01-06},
+type = {Rapport technique}		
+}
+%% For the same reference in English, use:
+%% type = {Technical report}
+
+
+%% Raport technique électronique
+%% Technical report (in electronic format)
+@techreport{Anschutz2011,
+author = {Anschutz, Tom},
+title = {Migration to {E}thernet-based broadband aggregation},
+institution = {Broadband Forum},
+year = {2011},
+number = {TR-101i2},
+url = {https://www.broadband-forum.org/technical/download/TR-101.pdf}
+}
+
+
+%% Brevet canadien imprimé ou électronique
+%% Canadian patent (in print or electronic format)
+@patent{Thorsson2014,
+author = {Thorsson, Brynjolfur and Thorvaldsson, Bjorn and Asgeirsson, Asgeir}, 
+title = {Tracing items through a non-sequential process},
+number = {CA2634408},		
+year = {2014},
+month = {13 mai},			
+yearfiled = {2006},
+url = {http://brevets-patents.ic.gc.ca/opic-cipo/cpd/eng/patent/2634408/summary.html}
+}
+%% For the same reference in English, use:
+%% month = {May 13},	
+
+
+%% Brevet américain imprimé ou électronique
+%% American patent (in print or electronic format)
+@patent{Schirmer2012,
+author = {Schirmer, Andreas and Rude, Mathew and Brubaker, Shane},
+title = {Method for producing a fatty alcohol or fatty aldehyde},	
+number = {US8268599B2},	
+year = {2012},
+month = {18 sept.},
+url = {http://www.google.com.ar/patents/US8268599}
+}
+%% For the previous reference in English, use:
+%% month = {Sept. 18},	
+
+
+%% Demande de brevet américain
+%% American patent application (in print or electronic format)
+@patent{Sakai2015,
+author = {Sakai, Takashi and Kosaka, Shunsuke and Kunisaki, Akira},
+title = {Industrial robot},
+number = {US20150246449A1},		
+year = {2015},
+month = {3 sept.},			
+type = {Demande de brevet},	
+url = {https://patents.google.com/patent/US20150246449}
+}
+%% For the previous reference in English, use:
+%% month = {Sept. 3},
+%% type = {Patent application},
+
+
+%% Norme imprimée
+%% Standard in print
+@standard{CSA2002,
+title = {L'ISO 14001 et l'état de la conformité au {C}anada},	
+number = {CSA PLUS 1162},
+year = {2002}
+}
+%% For the same reference in English, use:
+%% title = {ISO 14001 and Compliance in {C}anada},	
+
+
+%% Norme électronique
+%% Standard in electronic format
+@standard{Electrical2023,
+title = {{IEEE} Guide for Monitoring Distribution Transformers},
+number = {C57.167},
+year = {2023},
+doi = {10.1109/IEEESTD.2023.10168067},
+url = {https://ieeexplore.ieee.org/document/10168067}
+}
+
+
+%% Article de quotidien
+%% Newspaper article
+@misc{Gazette2017,
+author = {{Montreal Gazette Editorial Board}},
+title = {Editorial: The end of {E}nergy {E}ast},
+year = {2017},
+month = {6 oct.},
+howpublished = {{The Montreal Gazette}},
+url = {http://montrealgazette.com/opinion/editorials/editorial-the-end-of-energy-east}
+}
+
+
+%% Logiciel
+%% Software
+@electronic{Druide2023,
+author = {{Druide}},
+title = {Antidote 11},
+year = {2023},
+url = {https://www.antidote.info/fr/antidote-11}
+} 
+
+
+%% Présentation PowerPoint disponible en ligne
+%% PowerPoint presentation available online
+@electronic{Audevart2018,
+author = {Audevart, Alexia},
+title = {{Big data, Hadoop \& Spark}},
+year = {2018},
+howpublished = {SlideShare},
+url = {https://www.slideshare.net/AlexiaAudevart/big-data-hadoop-spark-87171048}
+}
+
+
+%% Vidéo en ligne (YouTube)
+%% Online video (Youtube)
+@misc{Guttag2011,
+author = {Guttag, John},
+title = {{MIT} 6.00{SC}: Introduction to computer science and programming: Core elements of a program},
+year = {2011},
+howpublished = {YouTube},
+url = {https://www.youtube.com/watch?v=SLvTCHhu5SE}
+} 
+
+
+%% Ensemble de données disponible en ligne
+%% Data set available online
+@misc{Hinton2016,
+author = {Hinton, Thomas J. and Jallerat, Quentin and Palchesko, Rachelle N. and Park, Joon Hyung and Grodzicki, Martin S. and Shue, Hao-Jan and Ramadan, Mohamed H. and Hudson, Andrew R. and Feinberg, Adam W.},
+title = {Three-dimensional printing of complex biological structures by freeform reversible embedding of suspended hydrogels},
+year = {2016},
+howpublished = {Dryad},
+note = {dataset},
+url = {https://doi.org/10.5061/dryad.tp4cp}
+} 
+
+
+%% Communication personnelle
+%% Personal communication
+@misc{Com2018,
+author = {Desjardins, Laurent},
+year = {2018},
+month = {18 sept.},	
+note = {communication personnelle}		
+}
+%% For the same reference in English, use:
+%% month = {May 13,},	
+%% note = {private communication}
+
+
+%% Page Web
+%% Web page
+@electronic{Gouvernement2023,
+author = {{Gouvernement du Québec}},
+title = {Construire une économie verte},
+year = {2023},
+url = {https://www.quebec.ca/gouvernement/politiques-orientations/plan-economie-verte/actions-lutter-contre-changements-climatiques/construire-economie-verte}
+}

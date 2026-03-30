@@ -1,0 +1,73 @@
+exclude: null
+
+grid-search:
+  # Algorithm configurations
+  "--config":
+    - "qmix"
+  
+  # Learning rate
+  lr:
+    - 0.0001
+  
+  # Standardize rewards
+  standardise_rewards:
+    - True
+  
+  # Use RNN or not
+  use_rnn:
+    - False
+  
+  # Target update interval or tau
+  target_update_interval_or_tau:
+    - 50
+  
+  # Hidden dimension for the network
+  hidden_dim:
+    - 128
+  
+  # Evaluation epsilon
+  evaluation_epsilon:
+    - 0.0
+  
+  # Epsilon annealing time
+  epsilon_anneal_time:
+    - 100000
+
+  # Buffer size
+  buffer_size:
+    - 2000
+
+  # Batch size
+  batch_size:
+    - 128
+  
+  # Total number of environment steps
+  t_max:
+    - 30000
+
+  # Number of test episodes
+  test_nepisode:
+    - 100
+  
+  # Interval for testing the policy
+  test_interval:
+    - 25000
+  
+  # Interval for logging the training information
+  log_interval:
+    - 25000
+  
+  # Interval for saving the model
+  save_model_interval:
+    - 50000
+  
+  # Whether to save the model
+  save_model:
+    - false
+
+
+grid-search-groups:
+  env0:
+    - "--env-config": "gymma"
+    - env_args.key: gym_examples:WSNRouting-v0
+    - env_args.time_limit: 30

@@ -1,0 +1,85 @@
+name: wsn-rl
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  # Core interpreter
+  - python=3.8
+  - pip
+  # Core scientific stack (pulled from conda where possible for binary speed/stability)
+  - numpy
+  - pandas
+  - scipy
+  - matplotlib
+  - pyyaml
+  - pillow
+  - setuptools
+  - wheel
+  - gym=0.21.0
+  # Choose one of the following for CPU or GPU (uncomment GPU line & remove cpuonly if you have CUDA)
+  - pytorch
+  - torchvision
+  - torchaudio
+  - cpuonly  # replace with: cudatoolkit=12.1  (or appropriate) if using GPU
+  # Optional: add 'cuda-toolkit' meta packages only if needed; leave minimal for CI reproducibility.
+  # Other utilities
+  - matplotlib
+  - pandas
+  - scipy
+  # Pip-only / legacy pinned packages & project extras
+  - pip:
+      - absl-py
+      - attrs
+      - click
+      - einops
+      - gym-examples
+      - idna==2.7
+      - imageio
+      - importlib-metadata==4.13.0
+      - lbforaging
+      - mpyq==0.2.5
+      - pbr==4.3.0
+      - pluggy==0.7.1
+      - portpicker==1.2.0
+      - probscale
+      - protobuf==3.6.1
+      - py==1.6.0
+      - pygame
+      - pyparsing==2.2.2
+      - pysc2==3.0.0
+      - pytest==4.3.1
+      - python-dateutil==2.7.3
+      - requests==2.19.1
+      - rware
+      - s2clientprotocol==4.10.1.75800.0
+      - sacred
+      - six==1.11.0
+      - sk-video==1.1.10
+      - snakeviz
+      - tensorboard-logger
+      # torch-scatter must match the installed torch version; install after creation if wheel missing
+      - torch-scatter
+      - tornado==5.1.1
+      - urllib3==1.23
+      - websocket-client==0.53.0
+      - whichcraft==0.5.2
+      - wrapt==1.10.11
+      - stable-baselines3==1.7.0
+      - gaussian-adaptive-attention
+      - git+https://github.com/oxwhirl/smac.git
+
+## Usage
+# Create the environment:
+#   conda env create -f environment.yml
+# Activate:
+#   conda activate wsn-rl
+# (If torch-scatter fails) Install a matching wheel:
+#   pip install torch-scatter -f https://data.pyg.org/whl/torch-<TORCH_MAJ.MINOR>.0+cpu.html
+# or for CUDA (example torch 2.4, CUDA 12.1):
+#   pip install torch-scatter -f https://data.pyg.org/whl/torch-2.4.0+cu121.html
+
+## Notes
+# - Python 3.8 chosen for compatibility with very old pinned packages (protobuf 3.6.1, requests 2.19.1, etc.).
+# - Consider modernizing these pins if not strictly required; keep this legacy set for reproducibility.
+# - Remove 'cpuonly' and supply a cudatoolkit if GPU acceleration is desired.

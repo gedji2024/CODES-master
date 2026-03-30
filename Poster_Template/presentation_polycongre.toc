@@ -1,0 +1,4 @@
+\beamer@sectionintoc {1}{Context \& Motivation}{3}{0}{1}
+\beamer@sectionintoc {2}{Proposed Framework: GAPF}{5}{0}{2}
+\beamer@sectionintoc {3}{Experimental Results}{7}{0}{3}
+\beamer@sectionintoc {4}{Impact \& Conclusion}{9}{0}{4}

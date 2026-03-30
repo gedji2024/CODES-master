@@ -1,0 +1,39 @@
+{
+  "components": {
+    "autoencoder": {
+      "epochs_trained": 16,
+      "final_train_loss": 0.002172,
+      "final_val_loss": 0.014668,
+      "e_thresh": 0.5914,
+      "precision": 0.9693,
+      "recall": 0.4139,
+      "f1": 0.5801,
+      "accuracy": 0.9026,
+      "n_params": 1839
+    },
+    "risk_scorer": {
+      "epochs_trained": 27,
+      "final_train_loss": 0.00775,
+      "final_val_loss": 0.006372,
+      "auc_roc": 0.999,
+      "accuracy": 0.9982,
+      "n_params": 1473
+    },
+    "contrastive": {
+      "epochs_trained": 44,
+      "final_train_loss": 0.121535,
+      "final_val_loss": 0.120993,
+      "n_params": 3648
+    },
+    "gnn_policy": {
+      "epochs_trained": 17,
+      "final_train_loss": 0.000154,
+      "final_val_loss": 4.5e-05,
+      "test_accuracy": 1.0,
+      "mc_uncertainty_mean": 0.0001,
+      "n_gnn_params": 4544,
+      "n_policy_params": 8515
+    }
+  },
+  "total_train_time_s": 62773.62
+}

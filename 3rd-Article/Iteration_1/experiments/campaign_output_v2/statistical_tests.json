@@ -1,0 +1,422 @@
+{
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_TRUST_IMPLICIT_rogue_detection_rate": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7424,
+    "baseline_mean": 0.0,
+    "significant": true
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_TRUST_IMPLICIT_rogue_block_rate": {
+    "statistic": 0.0,
+    "p_value": 0.000121,
+    "caster_mean": 0.0403,
+    "baseline_mean": 0.0,
+    "significant": true
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_TRUST_IMPLICIT_omega_rec": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7331,
+    "baseline_mean": 0.2012,
+    "significant": true
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_TRUST_IMPLICIT_false_block_rate": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_CPO_SOFT_rogue_detection_rate": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7424,
+    "baseline_mean": 0.0,
+    "significant": true
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_CPO_SOFT_rogue_block_rate": {
+    "statistic": 0.0,
+    "p_value": 0.000121,
+    "caster_mean": 0.0403,
+    "baseline_mean": 0.0,
+    "significant": true
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_CPO_SOFT_omega_rec": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7331,
+    "baseline_mean": 0.2012,
+    "significant": true
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_CPO_SOFT_false_block_rate": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_SHIELD_BINARY_rogue_detection_rate": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7424,
+    "baseline_mean": 0.8826,
+    "significant": true
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_SHIELD_BINARY_rogue_block_rate": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.0403,
+    "baseline_mean": 0.8826,
+    "significant": true
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_SHIELD_BINARY_omega_rec": {
+    "statistic": 55.0,
+    "p_value": 0.063723,
+    "caster_mean": 0.7331,
+    "baseline_mean": 0.7577,
+    "significant": false
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_SHIELD_BINARY_false_block_rate": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.4884,
+    "significant": true
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_AGENTIC_AUTO_rogue_detection_rate": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7424,
+    "baseline_mean": 0.1048,
+    "significant": true
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_AGENTIC_AUTO_rogue_block_rate": {
+    "statistic": 1.0,
+    "p_value": 0.000153,
+    "caster_mean": 0.0403,
+    "baseline_mean": 0.1048,
+    "significant": true
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_AGENTIC_AUTO_omega_rec": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7331,
+    "baseline_mean": 0.1435,
+    "significant": true
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_AGENTIC_AUTO_false_block_rate": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.5677,
+    "significant": true
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_IF_TRUST_rogue_detection_rate": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7424,
+    "baseline_mean": 1.0,
+    "significant": true
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_IF_TRUST_rogue_block_rate": {
+    "statistic": 27.5,
+    "p_value": 0.020119,
+    "caster_mean": 0.0403,
+    "baseline_mean": 0.057,
+    "significant": true
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_IF_TRUST_omega_rec": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7331,
+    "baseline_mean": 0.9247,
+    "significant": true
+  },
+  "IDENTITY_CREDENTIAL_ABUSE_HIGH_IF_TRUST_false_block_rate": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "COMBINED_HIGH_TRUST_IMPLICIT_rogue_detection_rate": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7847,
+    "baseline_mean": 0.0,
+    "significant": true
+  },
+  "COMBINED_HIGH_TRUST_IMPLICIT_rogue_block_rate": {
+    "statistic": 0.0,
+    "p_value": 0.00012,
+    "caster_mean": 0.0486,
+    "baseline_mean": 0.0,
+    "significant": true
+  },
+  "COMBINED_HIGH_TRUST_IMPLICIT_omega_rec": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7581,
+    "baseline_mean": 0.2027,
+    "significant": true
+  },
+  "COMBINED_HIGH_TRUST_IMPLICIT_false_block_rate": {
+    "statistic": 0.0,
+    "p_value": 0.317311,
+    "caster_mean": 0.0036,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "COMBINED_HIGH_CPO_SOFT_rogue_detection_rate": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7847,
+    "baseline_mean": 0.0,
+    "significant": true
+  },
+  "COMBINED_HIGH_CPO_SOFT_rogue_block_rate": {
+    "statistic": 0.0,
+    "p_value": 0.00012,
+    "caster_mean": 0.0486,
+    "baseline_mean": 0.0,
+    "significant": true
+  },
+  "COMBINED_HIGH_CPO_SOFT_omega_rec": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7581,
+    "baseline_mean": 0.2027,
+    "significant": true
+  },
+  "COMBINED_HIGH_CPO_SOFT_false_block_rate": {
+    "statistic": 0.0,
+    "p_value": 0.317311,
+    "caster_mean": 0.0036,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "COMBINED_HIGH_SHIELD_BINARY_rogue_detection_rate": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7847,
+    "baseline_mean": 0.8806,
+    "significant": true
+  },
+  "COMBINED_HIGH_SHIELD_BINARY_rogue_block_rate": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.0486,
+    "baseline_mean": 0.8806,
+    "significant": true
+  },
+  "COMBINED_HIGH_SHIELD_BINARY_omega_rec": {
+    "statistic": 101.0,
+    "p_value": 0.898317,
+    "caster_mean": 0.7581,
+    "baseline_mean": 0.7566,
+    "significant": false
+  },
+  "COMBINED_HIGH_SHIELD_BINARY_false_block_rate": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.0036,
+    "baseline_mean": 0.4903,
+    "significant": true
+  },
+  "COMBINED_HIGH_AGENTIC_AUTO_rogue_detection_rate": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7847,
+    "baseline_mean": 0.1236,
+    "significant": true
+  },
+  "COMBINED_HIGH_AGENTIC_AUTO_rogue_block_rate": {
+    "statistic": 0.0,
+    "p_value": 0.000131,
+    "caster_mean": 0.0486,
+    "baseline_mean": 0.1236,
+    "significant": true
+  },
+  "COMBINED_HIGH_AGENTIC_AUTO_omega_rec": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7581,
+    "baseline_mean": 0.1195,
+    "significant": true
+  },
+  "COMBINED_HIGH_AGENTIC_AUTO_false_block_rate": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.0036,
+    "baseline_mean": 0.6539,
+    "significant": true
+  },
+  "COMBINED_HIGH_IF_TRUST_rogue_detection_rate": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7847,
+    "baseline_mean": 1.0,
+    "significant": true
+  },
+  "COMBINED_HIGH_IF_TRUST_rogue_block_rate": {
+    "statistic": 33.5,
+    "p_value": 0.013169,
+    "caster_mean": 0.0486,
+    "baseline_mean": 0.0715,
+    "significant": true
+  },
+  "COMBINED_HIGH_IF_TRUST_omega_rec": {
+    "statistic": 0.0,
+    "p_value": 2e-06,
+    "caster_mean": 0.7581,
+    "baseline_mean": 0.9247,
+    "significant": true
+  },
+  "COMBINED_HIGH_IF_TRUST_false_block_rate": {
+    "statistic": 0.0,
+    "p_value": 0.317311,
+    "caster_mean": 0.0036,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_TRUST_IMPLICIT_rogue_detection_rate": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_TRUST_IMPLICIT_rogue_block_rate": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_TRUST_IMPLICIT_omega_rec": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.9247,
+    "baseline_mean": 0.9247,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_TRUST_IMPLICIT_false_block_rate": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_CPO_SOFT_rogue_detection_rate": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_CPO_SOFT_rogue_block_rate": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_CPO_SOFT_omega_rec": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.9247,
+    "baseline_mean": 0.9247,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_CPO_SOFT_false_block_rate": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_SHIELD_BINARY_rogue_detection_rate": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_SHIELD_BINARY_rogue_block_rate": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_SHIELD_BINARY_omega_rec": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.9247,
+    "baseline_mean": 0.9247,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_SHIELD_BINARY_false_block_rate": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_AGENTIC_AUTO_rogue_detection_rate": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_AGENTIC_AUTO_rogue_block_rate": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_AGENTIC_AUTO_omega_rec": {
+    "statistic": 0.0,
+    "p_value": 0.023544,
+    "caster_mean": 0.9247,
+    "baseline_mean": 0.9232,
+    "significant": true
+  },
+  "TELEMETRY_POISONING_HIGH_AGENTIC_AUTO_false_block_rate": {
+    "statistic": 0.0,
+    "p_value": 0.023544,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0844,
+    "significant": true
+  },
+  "TELEMETRY_POISONING_HIGH_IF_TRUST_rogue_detection_rate": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_IF_TRUST_rogue_block_rate": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_IF_TRUST_omega_rec": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.9247,
+    "baseline_mean": 0.9247,
+    "significant": false
+  },
+  "TELEMETRY_POISONING_HIGH_IF_TRUST_false_block_rate": {
+    "statistic": 0.0,
+    "p_value": 1.0,
+    "caster_mean": 0.0,
+    "baseline_mean": 0.0,
+    "significant": false
+  }
+}

@@ -1,0 +1,28 @@
+# epymarl conda environment was created with python = 3.7
+# gym is version 0.21.0
+# importlib_metadata 4.13.0
+# einops
+# requests 2.19.1
+# urllib 1.23
+conda activate epymarl
+pip uninstall numpy
+pip install numpy
+pip uninstall torch
+pip install torch torchvision torchaudio
+pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-1.8.0+cpu.html
+
+python src/main.py --config=qmix --env-config=gymma with env_args.time_limit=50 env_args.key="gym_examples:WSNRouting-v0"
+
+# Save to disk by default for sacred
+    logger.info("Saving to FileStorageObserver in results/sacred.")
+    valid_map_name = map_name.replace(":", "_")
+    file_obs_path = os.path.join(results_path, f"sacred/{config_dict['name']}/{valid_map_name}")
+
+# when git clone gym...
+# cd gym
+# git checkout 0.22.0
+
+# ============ Python Style formatting ============
+flake8
+Black
+iso

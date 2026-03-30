@@ -1,0 +1,20 @@
+{
+  "12": {
+    "block_mean": 0.0,
+    "rogue_detect": 0.742,
+    "omega_rec": 0.733,
+    "latency_ms": 3.067
+  },
+  "36": {
+    "block_mean": 0.0,
+    "rogue_detect": 0.949,
+    "omega_rec": 0.886,
+    "latency_ms": 4.383
+  },
+  "100": {
+    "block_mean": 0.0,
+    "rogue_detect": 0.983,
+    "omega_rec": 0.868,
+    "latency_ms": 10.254
+  }
+}

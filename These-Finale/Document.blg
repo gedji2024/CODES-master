@@ -1,0 +1,74 @@
+This is BibTeX, Version 0.99e (TeX Live 2026)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: Document.aux
+A level-1 auxiliary file: 1-Dedicace.aux
+A level-1 auxiliary file: 2-Remerciements.aux
+A level-1 auxiliary file: 3-Resume_sujet.aux
+A level-1 auxiliary file: 3-Abstract.aux
+A level-1 auxiliary file: 4-Sigles_Abrev.aux
+A level-1 auxiliary file: 5-Introduction.aux
+A level-1 auxiliary file: 6-Revue_litterature.aux
+A level-1 auxiliary file: 6b-Demarche.aux
+A level-1 auxiliary file: 7-Theme1.aux
+A level-1 auxiliary file: 7-Theme2.aux
+A level-1 auxiliary file: 7-Theme3.aux
+A level-1 auxiliary file: 7b-Discussion.aux
+A level-1 auxiliary file: 8-Conclusion.aux
+The style file: IEEEtran-francais.bst
+A level-1 auxiliary file: 9-Annexes.aux
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated field_info (elt_size=4) to 15980 items from 5000.
+Database file #1: Document.bib
+-- IEEEtran.bst version 1.12 (2007/01/11) by Michael Shell.
+-- http://www.michaelshell.org/tex/ieeetran/bibtex/
+-- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+** IEEEtran BST control entry "IEEEexample:BSTcontrol" detected.
+Warning--empty booktitle in mishra_meta-heuristic-based_2021
+
+Done.
+You've used 244 entries,
+            4024 wiz_defined-function locations,
+            2075 strings with 59165 characters,
+and the built_in function-call counts, 163268 in all, are:
+= -- 13823
+> -- 2993
+< -- 1248
++ -- 1711
+- -- 519
+* -- 7658
+:= -- 25709
+add.period$ -- 490
+call.type$ -- 244
+change.case$ -- 255
+chr.to.int$ -- 2836
+cite$ -- 245
+duplicate$ -- 12311
+empty$ -- 13733
+format.name$ -- 692
+if$ -- 37409
+int.to.chr$ -- 0
+int.to.str$ -- 243
+missing$ -- 2026
+newline$ -- 884
+num.names$ -- 239
+pop$ -- 4280
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 4
+skip$ -- 13202
+stack$ -- 0
+substring$ -- 7101
+swap$ -- 9438
+text.length$ -- 306
+text.prefix$ -- 0
+top$ -- 6
+type$ -- 244
+warning$ -- 1
+while$ -- 708
+width$ -- 246
+write$ -- 2463
+(There was 1 warning)

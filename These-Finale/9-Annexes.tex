@@ -1,0 +1,656 @@
+%%
+%%  Annexes
+%%
+%%  Note: Ne pas modifier la ligne ci-dessous. / Do not modify the following line.
+\ifthenelse{\equal{\Langue}{english}}{
+	\addcontentsline{toc}{compteur}{APPENDICES}
+}{
+	\addcontentsline{toc}{compteur}{ANNEXES}
+}
+%%
+\Annexe{Paramètres de simulation communs aux trois articles}\label{ann:params}
+
+Le Tableau~\ref{tab:common-params} résume les paramètres de simulation communs utilisés dans les trois articles de cette thèse.
+
+\begin{table}[htb]
+\centering
+\caption{Paramètres de simulation communs}
+\label{tab:common-params}
+\begin{tabular}{lll}
+\toprule
+\textbf{Paramètre} & \textbf{Valeur} & \textbf{Articles} \\
+\midrule
+Nombre de n\oe{}uds ($N$) & 20--100 (Art.~1), 200 (Art.~2) & 1, 2 \\
+Dimension du terrain & $200 \times 200$\,m$^2$ & 1, 2 \\
+Position de la BS & $(100, 250)$ & 1, 2 \\
+Énergie initiale ($E_0$) & 0.5\,J & 1, 2 \\
+$E_{\text{elec}}$ & 50\,nJ/bit & 1, 2 \\
+$\varepsilon_{\text{fs}}$ & 10\,pJ/bit/m$^2$ & 1, 2 \\
+$\varepsilon_{\text{mp}}$ & 0.0013\,pJ/bit/m$^4$ & 1, 2 \\
+$d_0$ (distance seuil) & 87.7\,m & 1, 2 \\
+Taille des paquets & 4\,000\,bits & 1, 2 \\
+Nombre de tours & 5\,000 & 1, 2 \\
+Tour de catastrophe & 2\,000 & 2 \\
+Graines aléatoires & 3 (Art.~1), 30 (Art.~2), 20 (Art.~3) & 1, 2, 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\Annexe{Architectures des réseaux de neurones}\label{ann:architectures}
+
+\section*{Article 1~: GAPF}
+
+L'architecture GAPF comprend 1\,473 paramètres répartis comme suit~:
+
+\begin{table}[htb]
+\centering
+\caption{Décomposition des paramètres de GAPF}
+\label{tab:gapf-params}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Composant} & \textbf{Dimensions} & \textbf{Paramètres} \\
+\midrule
+GCN couche 1 ($W^{(1)}$) & $F_{\text{in}} \times 32$ & $F_{\text{in}} \times 32$ \\
+GCN couche 2 ($W^{(2)}$) & $32 \times 16$ & 512 \\
+Réseau Q$\cdot$K (clé) & $16 \times 8$ & 128 \\
+Réseau Q$\cdot$K (requête) & $16 \times 8$ & 128 \\
+CAS (projection de sortie) & $16 \times K$ & $16K$ \\
+\midrule
+\textbf{Total} & & \textbf{1\,473} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section*{Article 2~: Agent DQN de CALASH}
+
+L'agent Double DQN de CARE utilise l'architecture MLP suivante~:
+
+\begin{table}[htb]
+\centering
+\caption{Architecture de l'agent DQN de CALASH}
+\label{tab:calash-dqn}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Couche} & \textbf{Dimensions} & \textbf{Paramètres} \\
+\midrule
+Entrée $\to$ Cachée 1 & $9 \times 64$ + 64 & 640 \\
+Cachée 1 $\to$ Cachée 2 & $64 \times 32$ + 32 & 2\,080 \\
+Cachée 2 $\to$ Sortie & $32 \times 1$ + 1 & 33 \\
+\midrule
+\textbf{Total} & & \textbf{2\,753} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Le vecteur d'état à 9 dimensions encode~: (1)~énergie résiduelle normalisée, (2)~distance au CH, (3)~distance CH$\to$BS, (4)~nombre de membres du cluster, (5)~intensité carbone normalisée, (6)~pression de la file carbone, (7)~ratio de n\oe{}uds vivants, (8)~facteur de cycle de vie, (9)~indicateur de catastrophe.
+
+\section*{Article 3~: CASTER-ZT}
+
+L'architecture CASTER-ZT comprend $\sim$20\,000 paramètres~:
+
+\begin{table}[htb]
+\centering
+\caption{Décomposition des paramètres de CASTER-ZT}
+\label{tab:casterzt-params}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Composant} & \textbf{Architecture} & \textbf{Paramètres} \\
+\midrule
+Encodeur GraphSAGE & 2 couches, $d{=}64$ & $\sim$8\,400 \\
+Politique de récupération & MLP $128 \to 64 \to |\mathcal{A}|$ & $\sim$8\,500 \\
+Évaluateur confiance-risque & MLP double-tête & $\sim$3\,000 \\
+Bouclier déterministe & 14 seuils scalaires & 14 \\
+\midrule
+\textbf{Total} & & $\sim$\textbf{20\,000} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\Annexe{Protocoles de référence}\label{ann:baselines}
+
+Le Tableau~\ref{tab:baselines} récapitule les protocoles de référence utilisés dans les évaluations expérimentales des trois articles.
+
+\begin{table}[htb]
+\centering
+\caption{Protocoles de référence par article}
+\label{tab:baselines}
+\begin{tabular}{llp{3in}}
+\toprule
+\textbf{Article} & \textbf{Protocole} & \textbf{Description} \\
+\midrule
+1 & LEACH & Rotation aléatoire des CH \\
+1 & EE-LEACH & Élection de CH pondérée par l'énergie \\
+1 & ABC-ACO & Hybride métaheuristique \\
+1 & Q-Routing & Q-learning tabulaire pour le routage \\
+\midrule
+2 & LEACH & Rotation aléatoire des CH \\
+2 & LEACH-1hop & LEACH avec relais mono-saut \\
+2 & EE-LEACH & Élection pondérée par l'énergie \\
+2 & ABC-ACO & Hybride métaheuristique \\
+2 & EERP & Protocole de routage écoénergétique \\
+2 & Q-Routing & Q-learning pour le routage \\
+2 & RIS-DRL & RL profond avec surfaces RIS \\
+\midrule
+3 & CPO-Soft & Optimisation de politique sous contrainte \\
+3 & Shield-Binary & Bouclier binaire autoriser/bloquer \\
+3 & Agentic-Auto & Politique autonome sans bouclier \\
+3 & IF-Trust & Isolation Forest avec confiance \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\Annexe{Preuves des propriétés théoriques de CASTER-ZT (matériel supplémentaire de l'Article~3)}\label{ann:proofs}\label{ann:caster-suppl}
+
+Cette annexe reproduit les preuves complètes des dix propositions formelles énoncées dans l'Article~3 (Chapitre~\ref{sec:Theme3}). Ce matériel a été soumis en tant que document supplémentaire accompagnant l'article principal à IEEE Transactions on Mobile Computing. Les numéros de propositions correspondent à ceux du texte principal.
+
+\medskip
+
+\begin{proof}[Preuve de la Proposition~1 (Conservatisme monotone)]
+Puisque $w_1, w_2, w_3, w_4 > 0$, le score composite de seuil $g_t = w_1(1-\tau_t)+w_2\rho_t+w_3 u_t+w_4\Delta_t$ est monotoniquement décroissant en $\tau_t$ et croissant en $\rho_t, u_t, \Delta_t$.
+Puisque $\kappa_1, \kappa_2 \ge 0$, $\tau_{\min} = \tau_0 + \kappa_1\rho_t + \kappa_2 u_t$ est non décroissant en $\rho_t, u_t$, rendant la condition de confiance plus difficile à satisfaire.
+La branche \textsc{allow} requiert $g_t < \gamma_1$, $\tau_t \ge \tau_{\min}$, et $\Delta_t \le \delta_{\max}$.
+La dégradation de toute entrée ne peut qu'augmenter $g_t$, élever $\tau_{\min}$, ou violer la borne de divergence, poussant la sortie vers une branche plus conservatrice.
+\end{proof}
+
+\begin{proof}[Preuve de la Proposition~2 (Exclusion d'actuation non autorisée)]
+Dans l'algorithme du bouclier, $\alpha_t=0$ déclenche $d_t=\textsc{block}$ à la vérification d'autorisation, avant que toute branche permissive ne soit évaluée.
+\end{proof}
+
+\begin{proof}[Preuve de la Proposition~3 (Sauvegarde de divergence)]
+$\Delta_t > \delta_{\max}^{\mathrm{hard}}$ déclenche $d_t=\textsc{block}$ à la vérification de divergence dure.
+$\Delta_t > \delta_{\max}$ viole la condition \textsc{allow}, empêchant les décisions permissives.
+\end{proof}
+
+\begin{proof}[Preuve de la Proposition~4 (Complétude décisionnelle bornée)]
+L'algorithme du bouclier est une structure de branchement ordonnée finie avec des branches mutuellement exclusives (ordonnancement strict des seuils) et une clause \textsc{else} finale capturant tous les cas restants.
+Toute entrée valide est donc associée à exactement un $d_t \in \mathcal{D}$.
+\end{proof}
+
+\begin{proof}[Preuve de la Proposition~5 (Complexité par décision)]
+Encodage du graphe~: $\mathcal{O}(L|E_t|d)$.
+Évaluation des candidats et évaluation confiance-risque~: $\mathcal{O}(|\mathcal{A}|k)$ chacune.
+Évaluation du bouclier~: $\mathcal{O}(1)$.
+Total~: $\mathcal{O}(L|E_t|d + |\mathcal{A}|k)$.
+\end{proof}
+
+\begin{proof}[Preuve de la Proposition~6 (Borne de défense en profondeur)]
+Sous attaque d'identité, un \textsc{allow} non sûr requiert un faux négatif d'autorisation~: $\Pr \le \varepsilon_\alpha$.
+Sous attaque de télémétrie~: $\Pr \le \varepsilon_\tau$.
+Sous attaque combinée avec indépendance conditionnelle~:
+$\Pr[\textsc{allow} \mid \text{combinée}] = \Pr[\alpha_t=1 \mid \text{id}] \cdot \Pr[g_t<\gamma_1 \mid \text{telem}] \le \varepsilon_\alpha \varepsilon_\tau$.
+\end{proof}
+
+\begin{proof}[Preuve de la Proposition~7 (Précision cohérente avec la calibration)]
+Chaque épisode produit un Bernoulli $y_i$ avec $\mathbb{E}[y_i]=\varepsilon^\star$.
+Par l'inégalité de Hoeffding~: $\Pr[\varepsilon^\star - \hat\varepsilon > t] \le \exp(-2nt^2)$.
+En posant $\exp(-2nt^2)=\delta$, on obtient $t=\sqrt{\ln(1/\delta)/(2n)}$.
+\end{proof}
+
+\begin{proof}[Preuve de la Proposition~8 (Prix borné de la sécurité)]
+Avec probabilité $(1-\eta-\eta_{\mathrm{block}})$, le bouclier autorise (perte~0).
+Avec probabilité $\eta$, la réduction de portée engendre une perte $\le U_{\mathrm{gap}}$.
+Avec probabilité $\eta_{\mathrm{block}}$, le blocage engendre une perte $\le U_{\max}$.
+En sommant~: $\mathbb{E}[\text{perte}] \le \eta U_{\mathrm{gap}} + \eta_{\mathrm{block}} U_{\max}$.
+\end{proof}
+
+\begin{proof}[Preuve de la Proposition~9 (Couverture d'admissibilité conforme)]
+Par le cadre conforme~\cite{angelopoulos2023conformal}, si les scores $(r_1,\ldots,r_{n+1})$ sont échangeables, $\Pr[r_{n+1} \le r_{(\lceil(1-\alpha)(n+1)\rceil)}] \ge 1-\alpha$.
+Le bouclier autorise seulement si $g_t < \gamma_1$, ce qui correspond à $r_{n+1} > r_{(\lceil(1-\alpha)(n+1)\rceil)}$, se produisant avec probabilité $\le \alpha$.
+\end{proof}
+
+\begin{proof}[Preuve de la Proposition~10 (Taux de convergence de la calibration)]
+Par la concentration de Hoeffding, $|\hat\varepsilon(\gamma) - \varepsilon(\gamma)| \le \sqrt{\ln(2/\delta)/(2n)}$ avec haute probabilité.
+Puisque $\varepsilon'(\gamma) \ge c_\varepsilon > 0$, le théorème des accroissements finis donne $|\varepsilon(\gamma_1^{(n)}) - \varepsilon(\gamma_1^\star)| \ge c_\varepsilon |\gamma_1^{(n)} - \gamma_1^\star|$.
+L'inégalité triangulaire donne $c_\varepsilon |\gamma_1^{(n)} - \gamma_1^\star| = \mathcal{O}(1/\sqrt{n})$, d'où $|\gamma_1^{(n)} - \gamma_1^\star| = \mathcal{O}_P(1/\sqrt{n})$.
+\end{proof}
+
+
+\Annexe{Matériel supplémentaire de GAPF (Article~1)}\label{ann:gapf-suppl}
+
+Cette annexe reproduit le matériel supplémentaire soumis avec l'Article~1 (Chapitre~\ref{sec:Theme1}) à IEEE Transactions on Green Communications and Networking. Elle contient les hyperparamètres d'entraînement, la preuve de monotonie du réseau d'attention, l'analyse complète des résultats par scénario, l'analyse de faisabilité de déploiement, et la table comparative de méthodes récentes.
+
+%% ============================================================
+%%  E.1  Hyperparamètres d'entraînement
+%% ============================================================
+\section*{E.1~~Hyperparamètres d'entraînement}
+
+Le Tableau~\ref{tab:hyperparameters-gapf} résume l'ensemble des hyperparamètres utilisés pour QMIX, QTRAN et GAPF.
+
+\begin{table}[htb]
+\centering
+\caption{Hyperparamètres d'entraînement pour QMIX, QTRAN et GAPF}
+\label{tab:hyperparameters-gapf}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{llccc}
+\toprule
+\textbf{Catégorie} & \textbf{Paramètre} & \textbf{QMIX} & \textbf{QTRAN} & \textbf{GAPF} \\
+\midrule
+\multirow{5}{*}{Optimisation}
+ & Optimiseur          & Adam     & RMSprop  & Adam     \\
+ & Taux d'apprentissage & 0.0003  & 0.0003   & 0.003    \\
+ & Gradient clip norm  & 10       & 10       & 1.0      \\
+ & Facteur d'actualisation $\gamma$ & 0.99 & 0.99 & ---  \\
+ & Échelle de récompense & 0.01   & 0.01     & ---      \\
+\midrule
+\multirow{4}{*}{Exploration}
+ & Stratégie                    & $\varepsilon$-greedy & $\varepsilon$-greedy & REINFORCE \\
+ & $\varepsilon_{\text{start}}$ & 0.5    & 0.5    & ---  \\
+ & $\varepsilon_{\text{end}}$   & 0.01   & 0.01   & ---  \\
+ & Pas d'annulation             & 150\,000 & 150\,000 & --- \\
+\midrule
+\multirow{5}{*}{Architecture}
+ & Réseau d'agent       & GRU (64) & GRU (64) & GCN + MLP \\
+ & Dim.\ cachée RNN     & 64       & 64       & ---       \\
+ & Dim.\ mélangeur      & 64       & 64       & ---       \\
+ & Dim.\ GNN            & ---      & ---      & 16        \\
+ & Dim.\ méta-contrôleur & ---    & ---      & 64        \\
+\midrule
+\multirow{4}{*}{Entraînement}
+ & Pas de temps totaux          & 200\,000 & 200\,000 & ---       \\
+ & Épisodes d'entraînement      & $\sim$2\,000 & $\sim$2\,000 & 2\,000 \\
+ & Taille du lot (épisodes)     & 32       & 32       & 1 (on-policy) \\
+ & Taille du tampon de rejeu    & 15\,000  & 15\,000  & ---       \\
+\midrule
+\multirow{3}{*}{Cible / Référence}
+ & Mise à jour cible    & Dur, chaque 30 ép. & Dur, chaque 30 ép. & ---            \\
+ & Double Q-learning    & Oui      & Oui      & ---            \\
+ & EMA $\beta$          & ---      & ---      & 0.95           \\
+\midrule
+\multirow{2}{*}{Évaluation}
+ & Épisodes de test     & 1\,000   & 1\,000   & 1\,000   \\
+ & $\varepsilon$ d'éval.& 0.01     & 0.01     & ---      \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+
+%% ============================================================
+%%  E.2  Théorème de monotonie
+%% ============================================================
+\section*{E.2~~Garantie de monotonie du réseau d'attention Q$\cdot$K}
+
+\begin{theorem}[Garantie de monotonie]
+Pour tout $\mathbf{r}^{(1)}, \mathbf{r}^{(2)} \in [0,1]^4$ avec $\mathbf{r}^{(1)} \leq \mathbf{r}^{(2)}$ composante par composante, la sortie du réseau satisfait $f_\phi(\mathbf{r}^{(1)}) \leq f_\phi(\mathbf{r}^{(2)})$.
+\end{theorem}
+
+\begin{proof}
+Puisque $\alpha_i > 0$ pour tout $i$ (les poids d'attention sont obtenus par softmax), $\mathbf{r}^{(1)} \leq \mathbf{r}^{(2)}$ implique $\boldsymbol{\alpha} \odot \mathbf{r}^{(1)} \leq \boldsymbol{\alpha} \odot \mathbf{r}^{(2)}$.
+Pour chaque couche monotone, le Jacobien satisfait $\partial g / \partial r'_i = \sigma'(\cdot) \cdot W_i \geq 0$, puisque la dérivée du softplus $\sigma'(x) = (1 + e^{-x})^{-1} \in (0,1)$ et $W_i \geq 0$ (les matrices de poids sont contraintes non négatives via $\mathbf{W}_\ell = \mathrm{softplus}(\mathbf{W}_\ell^{\mathrm{raw}})$).
+Par la règle de la chaîne appliquée sur toutes les couches, la composition $f_\phi = g_\psi \circ (\boldsymbol{\alpha} \odot \cdot)$ est monotoniquement non décroissante en chaque composante d'entrée.
+\end{proof}
+
+\noindent Cette propriété garantit qu'une action Pareto-dominante (améliorant chaque objectif simultanément) reçoit toujours une récompense scalaire supérieure, prévenant toute mise en forme pathologique de la récompense.
+
+
+%% ============================================================
+%%  E.3  Analyse de faisabilité de déploiement
+%% ============================================================
+\section*{E.3~~Analyse de faisabilité de déploiement}
+
+Le paradigme CTDE (Centralized Training, Decentralized Execution)~\cite{kraemer2016multi,lowe2017multi} découple fondamentalement la complexité d'entraînement de la complexité de déploiement. Le Tableau~\ref{tab:deployment_components_annex} précise quels composants sont actifs lors du déploiement.
+
+\begin{table}[htb]
+\centering
+\caption{Carte de déploiement des composants sous le paradigme CTDE}
+\label{tab:deployment_components_annex}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccc}
+\toprule
+\textbf{Composant} & \textbf{Exécuté sur} & \textbf{Déployé~?} & \textbf{Taille} \\
+\midrule
+Mélangeur QMIX / QTRAN      & Serveur d'entraînement & Non  & ---          \\
+Réseau Q$\cdot$K monotone    & Serveur d'entraînement & Non  & ---          \\
+Boucle Evolution Strategies  & Serveur d'entraînement & Non  & ---          \\
+\midrule
+Méta-contrôleur GAPF (GCN + CAS) & Passerelle / puits & Oui (1$\times$/épisode) & $\sim$1\,473 param. ($\sim$6\,Ko) \\
+Agent par capteur (GRU)      & Chaque nœud capteur   & Oui (1$\times$/pas)     & $\sim$25K param. ($\sim$100\,Ko) \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+Le Tableau~\ref{tab:resource_requirements_annex} compare les besoins en ressources de l'agent par capteur avec deux microcontrôleurs commerciaux représentatifs.
+
+\begin{table}[htb]
+\centering
+\caption{Besoins en ressources de l'agent par capteur vs spécifications de microcontrôleurs commerciaux}
+\label{tab:resource_requirements_annex}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Ressource} & \textbf{Agent} & \textbf{STM32L4} & \textbf{nRF52840} \\
+\midrule
+Flash (poids du modèle) & $\sim$100\,Ko & 1\,Mo & 1\,Mo \\
+SRAM (activations + état caché) & $\sim$2\,Ko & 256\,Ko & 256\,Ko \\
+Calcul par pas & $\sim$29K MACs & 80\,MHz Cortex-M4 & 64\,MHz Cortex-M4 \\
+Latence d'inférence (est.) & $<$\,1\,ms & --- & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Le Tableau~\ref{tab:feasibility_metrics_annex} rapporte les métriques de faisabilité mesurées empiriquement pour $N = 70$ capteurs.
+
+\begin{table}[htb]
+\centering
+\caption{Métriques de faisabilité mesurées (machine hôte~: Apple M-series, mode CPU). Latence et mémoire mesurées sur 30 itérations avec 3 passes de préchauffage. Énergie estimée à 0.1\,W (typique Cortex-M4 à 80\,MHz).}
+\label{tab:feasibility_metrics_annex}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Algorithme} & \textbf{Latence p95 (ms)} & \textbf{RAM pic (Ko)} & \textbf{MACs} & \textbf{Énergie ($\mu$J)} \\
+\midrule
+QMIX (agent + mélangeur)  & 0.27  & 2.98  & 2\,539\,904 & 27.2 \\
+QTRAN (agent + mélangeur)  & 0.17  & 34.32 & 4\,955\,532 & 16.7 \\
+GAPF (GCN, passerelle)     & 0.03  & 4.12  & 181\,408    & 3.0  \\
+\midrule
+Agent seul (déployé)        & $<$\,1 & $\sim$2 & $\sim$29K & $<$\,10 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La procédure de déploiement depuis le modèle entraîné vers le micrologiciel embarqué procède en quatre étapes~: (1)~les poids de l'agent sont extraits du checkpoint PyTorch en tableaux \texttt{float32} sérialisés dans un fichier d'en-tête C; (2)~la passe avant du GRU est implémentée en $\sim$100 lignes de C; (3)~le micrologiciel compilé est flashé sur le MCU via SWD/JTAG; (4)~à chaque pas de routage, le capteur effectue une passe avant GRU et sélectionne le prochain saut via $\arg\max$. Des chaînes d'outils automatisées telles que TFLite Micro~\cite{david2021tensorflow} peuvent également générer du code C optimisé.
+
+
+%% ============================================================
+%%  E.4  Résultats détaillés par scénario
+%% ============================================================
+\section*{E.4~~Résultats détaillés par scénario}
+
+Sept scénarios ont été évalués, chacun avec trois graines aléatoires (42, 123, 456), totalisant 21\,000 épisodes de test. Le Tableau~\ref{tab:cross_scenario_pdr_annex} consolide le taux de livraison des paquets (PDR).
+
+\begin{table}[htb]
+\centering
+\caption{PDR à travers les scénarios. $\Delta$~: amélioration relative de GAPF sur la meilleure ligne de base MARL.}
+\label{tab:cross_scenario_pdr_annex}
+\begin{tabular}{lccccccc}
+\toprule
+ & $n$ & $R$ (m) & QMIX & QTRAN & QPSOFL & GAPF & $\Delta$ (\%) \\
+\midrule
+S1 & 20  & 25 & 0.559 & 0.558 & 0.075 & \textbf{0.753} & +35 \\
+S2 & 30  & 25 & 0.568 & 0.567 & 0.053 & \textbf{0.877} & +54 \\
+S3 & 50  & 35 & 0.553 & 0.552 & 0.153 & \textbf{0.990} & +79 \\
+S4 & 70  & 35 & 0.545 & 0.544 & 0.122 & \textbf{0.980} & +80 \\
+S5 & 70  & 45 & 0.667 & 0.659 & 0.365 & \textbf{0.980} & +47 \\
+S6 & 100 & 35 & 0.464 & 0.462 & 0.099 & \textbf{0.980} & +111 \\
+S7 & 100 & 50 & 0.669 & 0.684 & 0.448 & \textbf{0.980} & +43 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Les tableaux suivants présentent les métriques de performance détaillées et les métriques de faisabilité pour chacun des sept scénarios.
+
+\subsection*{Scénario~1~: $n = 20$, $R = 25$\,m}
+
+\begin{table}[htb]
+\centering
+\caption{Métriques de performance --- Scénario~1 ($n{=}20$, $R{=}25$\,m)}
+\label{tab:perf_s1}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Métrique} & \textbf{QMIX} & \textbf{QTRAN} & \textbf{QPSOFL} & \textbf{GAPF} \\
+\midrule
+PDR                   & $0.559 \pm 0.257$ & $0.558 \pm 0.258$ & $0.075 \pm 0.107$ & $\mathbf{0.753 \pm 0.161}$ \\
+Débit (paq./pas)      & $0.127 \pm 0.146$ & $0.128 \pm 0.155$ & $0.118 \pm 0.039$ & $\mathbf{0.215 \pm 0.396}$ \\
+Latence moy.\ (pas)   & $3.787 \pm 2.530$ & $3.756 \pm 2.182$ & $\mathbf{1.327 \pm 0.974}$ & $4.876 \pm 2.672$ \\
+Énergie totale (J)    & $0.093 \pm 0.055$ & $0.093 \pm 0.055$ & $\mathbf{0.052 \pm 0.049}$ & $0.075 \pm 0.044$ \\
+Écart-type énergie rés.& $0.008 \pm 0.006$ & $0.008 \pm 0.006$ & $0.006 \pm 0.005$ & $\mathbf{0.004 \pm 0.002}$ \\
+Mém.\ pic (Mo)        & $3\,160 \pm 304$   & $4\,233 \pm 449$   & $\mathbf{178 \pm 7}$ & $712 \pm 45$ \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\noindent\textit{Faits saillants~:} GAPF atteint un PDR de 75.3\% ($+35\%$ vs QMIX/QTRAN à 55.9\%), avec un équilibre énergétique 43\% meilleur et la mémoire la plus basse parmi les algorithmes MARL (712\,Mo vs 3.2--4.2\,Go).
+
+\subsection*{Scénario~2~: $n = 30$, $R = 25$\,m}
+
+\begin{table}[htb]
+\centering
+\caption{Métriques de performance --- Scénario~2 ($n{=}30$, $R{=}25$\,m)}
+\label{tab:perf_s2}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Métrique} & \textbf{QMIX} & \textbf{QTRAN} & \textbf{QPSOFL} & \textbf{GAPF} \\
+\midrule
+PDR                   & $0.568 \pm 0.179$ & $0.567 \pm 0.174$ & $0.053 \pm 0.046$ & $\mathbf{0.877 \pm 0.159}$ \\
+Débit (paq./pas)      & $0.215 \pm 0.160$ & $0.211 \pm 0.142$ & $0.152 \pm 0.040$ & $\mathbf{0.523 \pm 0.612}$ \\
+Latence moy.\ (pas)   & $3.956 \pm 1.280$ & $4.027 \pm 1.360$ & $\mathbf{0.931 \pm 0.253}$ & $4.917 \pm 2.182$ \\
+Énergie totale (J)    & $0.165 \pm 0.054$ & $0.166 \pm 0.054$ & $\mathbf{0.102 \pm 0.050}$ & $0.102 \pm 0.070$ \\
+Écart-type énergie rés.& $0.011 \pm 0.005$ & $0.011 \pm 0.005$ & $0.009 \pm 0.004$ & $\mathbf{0.004 \pm 0.002}$ \\
+Mém.\ pic (Mo)        & $5\,837 \pm 170$   & $5\,684 \pm 28$    & $\mathbf{179 \pm 7}$ & $719 \pm 39$ \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\noindent\textit{Faits saillants~:} GAPF atteint 87.7\% PDR ($+54\%$), consomme la même énergie que QPSOFL (0.102\,J) mais livre $16\times$ plus de paquets, et distribue la charge $3\times$ plus uniformément.
+
+\subsection*{Scénario~3~: $n = 50$, $R = 35$\,m}
+
+\begin{table}[htb]
+\centering
+\caption{Métriques de performance --- Scénario~3 ($n{=}50$, $R{=}35$\,m)}
+\label{tab:perf_s3}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Métrique} & \textbf{QMIX} & \textbf{QTRAN} & \textbf{QPSOFL} & \textbf{GAPF} \\
+\midrule
+PDR                   & $0.553 \pm 0.248$ & $0.552 \pm 0.250$ & $0.153 \pm 0.092$ & $\mathbf{0.990 \pm 0.088}$ \\
+Débit (paq./pas)      & $0.883 \pm 0.674$ & $0.877 \pm 0.667$ & $0.389 \pm 0.058$ & $\mathbf{2.194 \pm 1.324}$ \\
+Latence moy.\ (pas)   & $3.120 \pm 1.591$ & $3.123 \pm 1.863$ & $\mathbf{0.497 \pm 0.291}$ & $3.027 \pm 0.967$ \\
+Énergie totale (J)    & $0.423 \pm 0.152$ & $0.422 \pm 0.153$ & $\mathbf{0.113 \pm 0.072}$ & $0.202 \pm 0.131$ \\
+Écart-type énergie rés.& $0.026 \pm 0.011$ & $0.027 \pm 0.011$ & $0.008 \pm 0.005$ & $\mathbf{0.004 \pm 0.002}$ \\
+Mém.\ pic (Mo)        & $11\,212 \pm 37$   & $11\,339 \pm 57$   & $\mathbf{181 \pm 8}$ & $684 \pm 18$ \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\noindent\textit{Faits saillants~:} GAPF atteint un PDR quasi parfait de 99.0\% ($+79\%$), utilise la moitié de l'énergie de QMIX/QTRAN, et maintient un équilibre énergétique $7\times$ meilleur. La mémoire de QMIX/QTRAN explose à 11\,Go.
+
+\subsection*{Scénario~4~: $n = 70$, $R = 35$\,m (configuration de référence)}
+
+\begin{table}[htb]
+\centering
+\caption{Métriques de performance --- Scénario~4 ($n{=}70$, $R{=}35$\,m)}
+\label{tab:perf_s4}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Métrique} & \textbf{QMIX} & \textbf{QTRAN} & \textbf{QPSOFL} & \textbf{GAPF} \\
+\midrule
+PDR                   & $0.545 \pm 0.242$ & $0.545 \pm 0.243$ & $0.122 \pm 0.090$ & $\mathbf{0.980 \pm 0.119}$ \\
+Débit (paq./pas)      & $1.108 \pm 0.939$ & $1.053 \pm 0.853$ & $0.507 \pm 0.091$ & $\mathbf{2.869 \pm 2.219}$ \\
+Latence moy.\ (pas)   & $2.522 \pm 1.781$ & $2.336 \pm 1.000$ & $\mathbf{0.380 \pm 0.245}$ & $2.503 \pm 0.830$ \\
+Énergie totale (J)    & $0.600 \pm 0.204$ & $0.603 \pm 0.200$ & $\mathbf{0.198 \pm 0.116}$ & $0.283 \pm 0.213$ \\
+Écart-type énergie rés.& $0.032 \pm 0.012$ & $0.032 \pm 0.012$ & $0.011 \pm 0.006$ & $\mathbf{0.005 \pm 0.002}$ \\
+Mém.\ pic (Mo)        & $11\,058 \pm 78$   & $10\,985 \pm 64$   & $\mathbf{192 \pm 7}$ & $848 \pm 24$ \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\noindent\textit{Faits saillants~:} GAPF maintient 98.0\% PDR ($+80\%$) au scénario de référence, avec $2.1\times$ moins d'énergie, $6.5\times$ meilleur équilibre, et $13\times$ moins de mémoire que QTRAN.
+
+\subsection*{Scénario~5~: $n = 70$, $R = 45$\,m}
+
+\begin{table}[htb]
+\centering
+\caption{Métriques de performance --- Scénario~5 ($n{=}70$, $R{=}45$\,m)}
+\label{tab:perf_s5}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Métrique} & \textbf{QMIX} & \textbf{QTRAN} & \textbf{QPSOFL} & \textbf{GAPF} \\
+\midrule
+PDR                   & $0.667 \pm 0.246$ & $0.659 \pm 0.256$ & $0.365 \pm 0.092$ & $\mathbf{0.980 \pm 0.124}$ \\
+Débit (paq./pas)      & $1.739 \pm 1.203$ & $1.724 \pm 1.196$ & $0.668 \pm 0.035$ & $\mathbf{3.740 \pm 3.344}$ \\
+Latence moy.\ (pas)   & $2.180 \pm 0.646$ & $2.189 \pm 0.942$ & $\mathbf{0.347 \pm 0.058}$ & $2.159 \pm 0.717$ \\
+Énergie totale (J)    & $0.687 \pm 0.265$ & $0.692 \pm 0.274$ & $\mathbf{0.040 \pm 0.040}$ & $0.334 \pm 0.272$ \\
+Écart-type énergie rés.& $0.038 \pm 0.016$ & $0.038 \pm 0.016$ & $\mathbf{0.002 \pm 0.003}$ & $0.006 \pm 0.003$ \\
+Mém.\ pic (Mo)        & $9\,335 \pm 129$   & $9\,931 \pm 53$    & $\mathbf{188 \pm 8}$ & $951 \pm 28$ \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\noindent\textit{Faits saillants~:} Un rayon de couverture plus large réduit l'écart ($+47\%$ vs $+80\%$), confirmant que l'avantage de GAPF est maximal dans les réseaux \emph{épars} où la coordination de relais multi-saut est critique.
+
+\subsection*{Scénario~6~: $n = 100$, $R = 35$\,m}
+
+\begin{table}[htb]
+\centering
+\caption{Métriques de performance --- Scénario~6 ($n{=}100$, $R{=}35$\,m)}
+\label{tab:perf_s6}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Métrique} & \textbf{QMIX} & \textbf{QTRAN} & \textbf{QPSOFL} & \textbf{GAPF} \\
+\midrule
+PDR                   & $0.464 \pm 0.270$ & $0.462 \pm 0.261$ & $0.099 \pm 0.080$ & $\mathbf{0.980 \pm 0.124}$ \\
+Débit (paq./pas)      & $1.304 \pm 1.181$ & $1.202 \pm 1.033$ & $0.703 \pm 0.130$ & $\mathbf{3.740 \pm 3.344}$ \\
+Latence moy.\ (pas)   & $2.333 \pm 1.176$ & $2.618 \pm 2.224$ & $\mathbf{0.294 \pm 0.226}$ & $2.159 \pm 0.717$ \\
+Énergie totale (J)    & $1.010 \pm 0.295$ & $1.017 \pm 0.282$ & $\mathbf{0.312 \pm 0.171}$ & $0.334 \pm 0.272$ \\
+Écart-type énergie rés.& $0.046 \pm 0.015$ & $0.046 \pm 0.014$ & $0.014 \pm 0.007$ & $\mathbf{0.006 \pm 0.003}$ \\
+Mém.\ pic (Mo)        & $10\,738 \pm 46$   & $13\,757 \pm 84$   & $\mathbf{195 \pm 9}$ & $951 \pm 28$ \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\noindent\textit{Faits saillants~:} L'avantage de GAPF culmine à $+111\%$ de PDR --- le plus grand écart observé. QMIX/QTRAN dégradent à $<47\%$ tandis que GAPF reste à 98\%. GAPF utilise $3\times$ moins d'énergie et $14\times$ moins de mémoire que QTRAN.
+
+\subsection*{Scénario~7~: $n = 100$, $R = 50$\,m}
+
+\begin{table}[htb]
+\centering
+\caption{Métriques de performance --- Scénario~7 ($n{=}100$, $R{=}50$\,m)}
+\label{tab:perf_s7}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Métrique} & \textbf{QMIX} & \textbf{QTRAN} & \textbf{QPSOFL} & \textbf{GAPF} \\
+\midrule
+PDR                   & $0.669 \pm 0.266$ & $0.684 \pm 0.270$ & $0.448 \pm 0.057$ & $\mathbf{0.980 \pm 0.124}$ \\
+Débit (paq./pas)      & $2.316 \pm 1.582$ & $2.257 \pm 1.490$ & $0.986 \pm 0.027$ & $\mathbf{3.740 \pm 3.344}$ \\
+Latence moy.\ (pas)   & $1.977 \pm 0.593$ & $2.024 \pm 0.902$ & $\mathbf{0.265 \pm 0.030}$ & $2.159 \pm 0.717$ \\
+Énergie totale (J)    & $1.181 \pm 0.413$ & $1.180 \pm 0.412$ & $\mathbf{0.026 \pm 0.025}$ & $0.334 \pm 0.272$ \\
+Écart-type énergie rés.& $0.056 \pm 0.020$ & $0.056 \pm 0.020$ & $\mathbf{0.001 \pm 0.002}$ & $0.006 \pm 0.003$ \\
+Mém.\ pic (Mo)        & $12\,102 \pm 138$  & $13\,204 \pm 230$  & $\mathbf{194 \pm 7}$ & $951 \pm 28$ \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\noindent\textit{Faits saillants~:} Au scénario le plus grand et le plus connecté, GAPF maintient 98\% PDR ($+43\%$), à $3.5\times$ moins d'énergie et $9\times$ meilleur équilibre. L'avantage est moindre en réseau dense, confirmant la règle~: la fusion de politiques basée sur la topologie est la plus précieuse là où le routage est le plus difficile.
+
+
+%% ============================================================
+%%  E.5  Table comparative des approches récentes
+%% ============================================================
+\section*{E.5~~Analyse comparative des approches de routage récentes (2024--2025)}
+
+Le Tableau~\ref{tab:comparative_recent} positionne GAPF par rapport aux approches récentes identifiées lors du processus de révision.
+
+\begin{table}[htb]
+\centering
+\caption{Analyse comparative des algorithmes de routage récents (2024--2025)}
+\label{tab:comparative_recent}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lp{3cm}cccc}
+\toprule
+\textbf{Référence} & \textbf{Approche} & \textbf{Énergie} & \textbf{PDR} & \textbf{Latence} & \textbf{Mobilité} \\
+\midrule
+Prakash et al.~\cite{prakash2025enhanced}  & SHO-CH (Spotted Hyena Optimizer) & Élevée & Non évalué & Non analysée & Non \\
+Ataoua et al.~\cite{ataoua_chernobyl_2025} & CDO (Chernobyl Disaster Optimizer) & Élevée & Non évalué & Non analysée & Non \\
+Qamar et al.~\cite{qamar_hybrid_2025}      & Réseau de neurones + clustering & Élevée & Amélioré & Non quantifiée & Non \\
+Rahman et al.~\cite{rahman_distributed_2025}& Blockchain + PoI & Non abordée & Élevé (97.4\%) & Modérée & Non \\
+Rao et al.~\cite{rao_optimized_2024}        & Blockchain légère + clustering & Modérée & Amélioré & Légèrement accrue & Limitée \\
+Sefati et al.~\cite{sefati_federated_2025}  & RL fédéré (AFRL-HGS) & Élevée & Élevé & Basse & Partielle \\
+\midrule
+\textbf{GAPF (Article~1)} & Fusion de politiques GCN + MARL & $2$--$3.5\times$ meilleure & $\geq$98\% & $<$\,29\,ms p99 & Oui \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+
+%% ============================================================
+%%  ANNEXE F: Matériel supplémentaire CALASH (Article 2)
+%% ============================================================
+
+\Annexe{Matériel supplémentaire de CALASH (Article~2)}\label{ann:calash-suppl}
+
+Cette annexe contient le matériel supplémentaire de l'Article~2 (Chapitre~\ref{sec:Theme2}), soumis à IEEE Transactions on Green Communications and Networking. Elle regroupe les hyperparamètres complets, la preuve du théorème CDL, les résultats détaillés par scénario, les analyses de sensibilité et les profils carbone.
+
+\section*{F.1~~Preuve du Théorème CDL (Pareto carbon-delivery)}
+
+\begin{proof}[Preuve du Théorème~\ref{art2:thm:cdl}]
+Considérons la fonction de Lyapunov $L(t) = \frac{1}{2}Z(t)^2$ où $Z(t)$ est la file d'attente virtuelle de carbone.
+La dérive conditionnelle à un pas satisfait~:
+\[
+\Delta(t) = \mathbb{E}[L(t+1) - L(t) \mid Z(t)] \le B + Z(t)\bigl(C_{\text{tot}}(t) - \bar{c}\bigr)
+\]
+où $B = \frac{1}{2}(C_{\max}^2 + \bar{c}^2)$ est une constante finie.
+
+En ajoutant la pénalité $V \cdot (-D(t))$ et en notant que CALASH minimise goulûment le membre de droite à chaque saut via l'Éq.~\eqref{art2:eq:lyapunov_decision} avec le facteur lifecycle $\ell_j$, la borne dérive-plus-pénalité devient~:
+\[
+\Delta(t) - V \cdot D(t) \le B - V \cdot D^*(t)
+\]
+
+En télescopant sur $T$ rondes et utilisant $L(T) \ge 0$, on obtient~:
+\[
+\bar{D} \ge \bar{D}^* - B/V \quad \text{(livraison quasi-optimale)}
+\]
+
+La stabilité de la file ($\bar{Z} = O(V)$) donne~:
+\[
+\bar{C}_{\text{tot}} \le \bar{c} + B/V \quad \text{(budget carbone lifecycle)}
+\]
+
+Le compromis $V$ contrôle l'échange livraison--carbone~: un $V$ grand favorise la livraison au prix d'un dépassement transitoire du budget carbone.
+\end{proof}
+
+\section*{F.2~~Hyperparamètres complets de CALASH}
+
+\begin{table}[htb]
+\centering
+\caption{Hyperparamètres de l'agent DQN de CALASH}
+\begin{tabular}{lc}
+\toprule
+\textbf{Paramètre} & \textbf{Valeur} \\
+\midrule
+Architecture & MLP à 2 couches cachées (9--64--32--1) \\
+Fonction d'activation & ReLU \\
+Optimiseur & Adam \\
+Taux d'apprentissage & $10^{-3}$ \\
+Facteur de rabais $\gamma$ & 0.99 \\
+Taille du buffer de replay & 10\,000 \\
+Taille du mini-batch & 64 \\
+Fréquence de mise à jour cible & 100 pas \\
+$\epsilon$-greedy initial / final & 1.0 / 0.01 \\
+Décroissance de $\epsilon$ & Linéaire sur 500 épisodes \\
+Paramètre Lyapunov $V$ & 100 \\
+Budget carbone $\bar{c}$ & 0.5 gCO$_2$eq/paquet \\
+Seuil de self-healing $\tau_{\text{heal}}$ & 0.3 (énergie résiduelle) \\
+Ratio de compression (CS) & 0.25 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section*{F.3~~Profils d'intensité carbone}
+
+Les simulations utilisent les facteurs d'intensité carbone suivants (gCO$_2$eq/kWh) issus de données publiques~:
+\begin{itemize}
+    \item \textbf{France}~: 56 (dominance nucléaire)
+    \item \textbf{Allemagne}~: 385 (mix charbon/renouvelable)
+    \item \textbf{Pologne}~: 773 (dominance charbon)
+    \item \textbf{Norvège}~: 26 (dominance hydroélectrique)
+    \item \textbf{États-Unis (moyenne)}~: 417 (mix gaz/charbon/renouvelable)
+\end{itemize}
+
+\noindent L'analyse de sensibilité (Section~\ref{art2:sec:ci_sensitivity}) montre que les gains relatifs de CALASH sont robustes à travers les grilles nationales, avec un avantage LCI plus prononcé dans les grilles à forte intensité carbone.

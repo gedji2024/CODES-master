@@ -1,0 +1,560 @@
+\Chapter{DÉMARCHE DE L'ENSEMBLE DU TRAVAIL DE RECHERCHE}\label{sec:Demarche}
+
+Ce chapitre établit le lien entre la revue de littérature (Chapitre~\ref{sec:RevLitt}), qui a identifié les lacunes de l'état de l'art, et les trois articles qui constituent le c\oe{}ur de cette thèse. Son objectif est de présenter la logique d'ensemble de la démarche de recherche, d'expliciter comment chaque article s'inscrit dans cette démarche, et de préparer le lecteur à la lecture des trois contributions en clarifiant les liens qui les unissent. La Figure~\ref{fig:demarche-globale} illustre cette démarche.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    block/.style={draw, rounded corners=4pt, minimum width=5cm, minimum height=1.5cm, align=center, font=\small},
+    phase/.style={draw, rounded corners=4pt, minimum width=3cm, minimum height=0.9cm, align=center, font=\footnotesize\bfseries, fill=yellow!20},
+    arr/.style={-{Stealth[length=3mm]}, thick},
+    darr/.style={-{Stealth[length=2.5mm]}, thick, dashed, blue!60}
+]
+% Phase labels
+\node[phase] (p1) at (-5.5,0) {Phase 1\\Fondation};
+\node[phase] (p2) at (-5.5,-3) {Phase 2\\Extension};
+\node[phase] (p3) at (-5.5,-6) {Phase 3\\Protection};
+
+% Blocks
+\node[block, fill=blue!12] (a1) at (1.5,0) {\textbf{Article 1 --- GAPF}\\Routage écoénergétique\\Fusion MARL via GCN};
+\node[block, fill=green!12] (a2) at (1.5,-3) {\textbf{Article 2 --- CALASH}\\Durabilité carbone cycle de vie\\Auto-guérison + couche 6G};
+\node[block, fill=red!12] (a3) at (1.5,-6) {\textbf{Article 3 --- CASTER-ZT}\\Sécurité zéro-confiance\\Bouclier déterministe gradué};
+
+% Outputs
+\node[draw, dashed, rounded corners=3pt, minimum width=3.8cm, minimum height=1.2cm, align=center, font=\footnotesize, fill=gray!8] (o1) at (7.5,0) {PDR $\geq$ 98\%\\Énergie 2--3.5$\times$ $\downarrow$\\1\,473 param.};
+\node[draw, dashed, rounded corners=3pt, minimum width=3.8cm, minimum height=1.2cm, align=center, font=\footnotesize, fill=gray!8] (o2) at (7.5,-3) {LCI $-$33\%\\Durée de vie +60\%\\PDR 82.9\%};
+\node[draw, dashed, rounded corners=3pt, minimum width=3.8cm, minimum height=1.2cm, align=center, font=\footnotesize, fill=gray!8] (o3) at (7.5,-6) {Détection 74--98\%\\0 faux positif\\3.07\,ms/décision};
+
+% Arrows
+\draw[arr] (a1) -- (o1);
+\draw[arr] (a2) -- (o2);
+\draw[arr] (a3) -- (o3);
+\draw[arr] (a1) -- (a2) node[midway, right=3pt, font=\footnotesize] {Fonde};
+\draw[arr] (a2) -- (a3) node[midway, right=3pt, font=\footnotesize] {Étend};
+\draw[darr] (a3.west) -- ++(-1.5,0) |- (a1.west) node[midway, left=3pt, font=\footnotesize, align=center] {Protège};
+\end{tikzpicture}
+\caption{Vue d'ensemble de la démarche de recherche~: les trois phases construisent progressivement la pile protocolaire complète. Les flèches continues montrent la progression logique; la flèche en pointillé illustre la protection rétroactive de la couche de sécurité.}
+\label{fig:demarche-globale}
+\end{figure}
+
+
+%%
+%%  LOGIQUE GLOBALE
+%%
+\section{Logique d'ensemble de la recherche}\label{sec:demarche-logique}
+
+La revue de littérature (Chapitre~\ref{sec:RevLitt}) a révélé que les approches existantes pour le routage dans les WSN de surveillance des catastrophes présentent des lacunes significatives, résumées dans le Tableau~\ref{tab:gap-analysis}~: aucune approche ne couvre plus de quatre des douze critères identifiés. Cette thèse propose de combler ces lacunes par une démarche en trois phases successives, chacune matérialisée par un article de recherche soumis à une revue à comité de lecture.
+
+La logique d'ensemble repose sur un principe de \textbf{construction incrémentale}~: chaque phase construit sur les acquis de la précédente, ajoutant une dimension supplémentaire au problème. Cette progression suit la hiérarchie naturelle des besoins d'un réseau de capteurs déployé en environnement critique~:
+
+\begin{enumerate}
+    \item \textbf{D'abord fonctionner efficacement} (Phase~1) --- un réseau qui gaspille son énergie ne peut ni être durable ni être sécurisé.
+    \item \textbf{Ensuite être durable} (Phase~2) --- une fois l'efficacité acquise, la durabilité carbone et la résilience aux catastrophes étendent l'horizon d'optimisation.
+    \item \textbf{Enfin être sécurisé} (Phase~3) --- les gains des deux premières phases n'ont de valeur que s'ils sont protégés contre les compromissions.
+\end{enumerate}
+
+Cette hiérarchie n'est pas arbitraire~: elle reflète une dépendance fonctionnelle entre les couches. La sécurité ne peut pas fonctionner sans un réseau opérationnel à protéger, et la durabilité n'a de sens que pour un réseau qui fonctionne suffisamment bien pour livrer des paquets utiles.
+
+
+%%
+%%  CADRE MÉTHODOLOGIQUE
+%%
+\section{Cadre méthodologique}\label{sec:demarche-cadre}
+
+Cette thèse adopte une approche de \textbf{recherche en science de la conception} (\emph{Design Science Research}, DSR) \cite{Hevner2004DesignScience, Peffers2007DSRM}, particulièrement adaptée aux contributions qui produisent des artefacts logiciels et des méthodologies pour résoudre des problèmes pratiques. Le modèle DSR de Hevner et al.\ structure la recherche autour de deux axes~: (1)~la \textbf{pertinence} --- l'artefact répond-il à un besoin réel~? --- et (2)~la \textbf{rigueur} --- l'artefact est-il fondé sur des connaissances scientifiques solides et évalué de manière crédible~? Le processus DSRM de Peffers et al.\ \cite{Peffers2007DSRM} raffine cette approche en six étapes~: (i)~identification du problème, (ii)~définition des objectifs, (iii)~conception de l'artefact, (iv)~démonstration, (v)~évaluation et (vi)~communication.
+
+Dans le contexte de cette thèse~:
+\begin{itemize}
+    \item \textbf{Artefacts produits}~: trois cadres logiciels (GAPF, CALASH, CASTER-ZT) et une métrique (LCI).
+    \item \textbf{Pertinence}~: les problèmes adressés (efficacité énergétique, durabilité carbone, sécurité) sont motivés par des données réelles (UNDRR, IPCC) et des lacunes identifiées dans l'état de l'art (Tableau~\ref{tab:gap-analysis}).
+    \item \textbf{Rigueur}~: chaque artefact est évalué par des campagnes de simulation exhaustives (21\,000 + 390 + 2\,420 exécutions) avec des protocoles statistiques rigoureux (Section~\ref{sec:demarche-stats}).
+\end{itemize}
+
+
+%%
+%%  PROTOCOLE EXPÉRIMENTAL
+%%
+\section{Protocole expérimental commun}\label{sec:demarche-protocole}
+
+Bien que les trois articles utilisent des environnements de simulation distincts, ils partagent un \textbf{protocole expérimental commun} qui garantit la cohérence et la comparabilité des résultats.
+
+\subsection{Modèle énergétique de premier ordre}
+
+Les trois articles utilisent le modèle énergétique de premier ordre de Heinzelman et al.\ \cite{heinzelman2000leach}, qui constitue le standard de facto dans la communauté WSN. Ce choix est délibéré~: il permet une comparaison directe avec les dizaines de protocoles évalués sous ce modèle dans la littérature, tout en capturant les phénomènes physiques essentiels (dépendance quadratique/quartique en la distance, coût d'amplification, énergie de circuit). Les paramètres sont fixés~: $E_{\text{elec}} = 50$~nJ/bit, $\varepsilon_{\text{fs}} = 10$~pJ/bit/m$^2$, $\varepsilon_{\text{mp}} = 0.0013$~pJ/bit/m$^4$, $d_0 = 87.7$~m.
+
+\subsection{Modèle de catastrophe}
+
+Le modèle de catastrophe, utilisé dans les Articles~2 et~3, suit un profil gaussien isotrope calibré sur les données sismiques réelles du séisme Turquie-Syrie 2023 (Mw~7.8, données ShakeMap USGS). La probabilité de destruction d'un n\oe{}ud à distance $d$ de l'épicentre est~:
+\begin{equation}\label{eq:disaster-model}
+    P_{\text{dest}}(d) = \exp\!\left(-\frac{d^2}{2\sigma_{\text{cat}}^2}\right)
+\end{equation}
+où $\sigma_{\text{cat}}$ est calibré pour que 30--50\% des n\oe{}uds soient détruits dans le rayon d'impact, un taux cohérent avec les analyses de survivabilité de Abu-Ghazaleh et al.\ \cite{AbuGhazaleh2007WSNSurvivability} et les données d'endommagement sismique du séisme Turquie-Syrie 2023 (USGS ShakeMap). Ce modèle, bien que simplifié (isotrope, instantané), capture l'essence du problème~: destruction massive et soudaine de n\oe{}uds, forçant une reconfiguration rapide du réseau.
+
+\subsection{Données de référence}
+
+Trois sources de données réelles ancrent les simulations dans des conditions représentatives~:
+\begin{enumerate}
+    \item \textbf{Intel Berkeley Research Lab} \cite{intel_lab_data}~: traces de capteurs (température, humidité, lumière) collectées par 54 n\oe{}uds Mica2 sur 36 jours. Ces traces fournissent des profils réalistes de génération de données pour calibrer les taux de génération de paquets.
+    \item \textbf{UK Carbon Intensity API} \cite{uk_carbon_api}~: intensité carbone du réseau électrique britannique à résolution de 30 minutes. Ces données permettent de simuler la modulation temporelle du ratio de détection comprimée dans CADR (Article~2).
+    \item \textbf{USGS ShakeMap}~: cartes d'intensité sismique pour le séisme Turquie-Syrie du 6 février 2023. Ces données calibrent le paramètre $\sigma_{\text{cat}}$ du modèle de catastrophe.
+\end{enumerate}
+
+\subsection{Protocoles de référence (\emph{baselines})}
+
+Chaque article est évalué contre un ensemble de protocoles de référence choisis pour représenter différentes familles d'approches~: protocoles classiques (LEACH, EE-LEACH), métaheuristiques (QPSO-FL), MARL (QMIX, QTRAN individuels), Safe RL (CPO), et boucliers binaires. Le choix des références vise à couvrir l'éventail complet des approches existantes tout en restant reproductible --- tous les protocoles de référence sont soit implémentés selon les détails publiés, soit issus de bibliothèques open-source (EPyMARL pour QMIX/QTRAN).
+
+
+%%
+%%  FONDEMENTS THEORIQUES (condensé --- détails dans les articles)
+%%
+\section{Fondements théoriques de la formulation}\label{sec:demarche-theoretical}
+
+Les trois articles partagent un socle théorique commun dont les détails formels sont présentés dans chaque article et dans le Chapitre~\ref{sec:RevLitt}. Nous en rappelons ici les éléments essentiels.
+
+Le routage dans un WSN est modélisé comme un \textbf{Dec-POMDP}~\cite{Bernstein2002DecPOMDP, OliehoekAmato2016}, un problème NEXP-complet résolu de manière approchée par le paradigme \textbf{CTDE} (\emph{Centralized Training with Decentralized Execution})~\cite{OliehoekAmato2016}~: entraînement centralisé hors ligne, exécution décentralisée sur le terrain. L'Article~1 instancie CTDE via les experts QMIX~\cite{rashid2018qmix} et QTRAN~\cite{son2019qtran}, dont la complémentarité (monotonicité vs.\ relaxation additive) est exploitée par le méta-contrôleur GCN~; l'Article~2 via un DQN centralisé~; l'Article~3 via un évaluateur de confiance indépendant.
+
+Le problème est intrinsèquement \textbf{multi-objectifs} (PDR, énergie, carbone, sécurité). Cette thèse adopte une scalarisation linéaire~\cite{Hayes2022MOMARL}, l'Article~1 apprenant les poids adaptivement via un réseau d'attention Q$\cdot$K, tandis que l'Article~2 impose des contraintes dures sur le carbone via l'\textbf{optimisation de Lyapunov}~\cite{neely2010lyapunov} (compromis $[O(1/V), O(V)]$).
+
+Les Articles~1 et~3 exploitent des \textbf{GNN} pour encoder la topologie dynamique~: un GCN~\cite{kipf2017semi} à 2~couches ($d = 16$) dans GAPF et un GraphSAGE~\cite{hamilton2017graphsage} à 2~couches ($d = 64$) dans CASTER-ZT, le passage à des plongements plus riches reflétant la complexité accrue de la tâche de détection de politique voyou.
+
+
+%%
+%%  CADRE STATISTIQUE
+%%
+\section{Cadre statistique et reproductibilité}\label{sec:demarche-stats}
+
+L'évaluation rigoureuse des performances de protocoles stochastiques nécessite un cadre statistique explicite. Conformément aux recommandations du programme de reproductibilité NeurIPS \cite{Pineau2021Reproducibility}, nous adoptons les pratiques suivantes~:
+
+\subsection{Graines aléatoires et répétitions}
+
+Chaque expérience est répétée avec des graines aléatoires fixes et documentées~:
+\begin{itemize}
+    \item \textbf{Article~1 (GAPF)}~: 3 graines (42, 123, 456) $\times$ 7 scénarios $\times$ 1\,000 épisodes = 21\,000 épisodes de test.
+    \item \textbf{Article~2 (CALASH)}~: 30 graines Monte Carlo $\times$ 13 variantes de protocoles = 390 exécutions indépendantes.
+    \item \textbf{Article~3 (CASTER-ZT)}~: campagne de 2\,420 exécutions (11 méthodes, 4 conditions d'attaque, 3 échelles réseau, 20 graines).
+\end{itemize}
+La fixation des graines permet la \textbf{reproductibilité exacte} des résultats~: toute exécution avec la même graine et les mêmes paramètres produit des résultats identiques.
+
+\subsection{Tests statistiques}
+
+Les comparaisons de performance utilisent des tests non paramétriques adaptés aux distributions potentiellement non gaussiennes des métriques de réseau~:
+\begin{itemize}
+    \item \textbf{Test de Wilcoxon-Mann-Whitney}~: pour les comparaisons par paires entre deux méthodes. Ce test, basé sur les rangs, ne suppose pas la normalité des distributions et est robuste aux valeurs aberrantes.
+    \item \textbf{Test de Kruskal-Wallis}~: pour les comparaisons multiples entre $k > 2$ méthodes, suivi d'un test post-hoc de Dunn avec correction de Bonferroni pour les comparaisons par paires.
+    \item \textbf{Niveau de signification}~: $\alpha = 0.05$ pour tous les tests, avec indication des $p$-valeurs exactes lorsqu'elles sont disponibles. Article~2 rapporte systématiquement $p < 10^{-5}$ sur tous les tests.
+\end{itemize}
+
+\subsection{Intervalles de confiance et métriques rapportées}
+
+Toutes les métriques sont rapportées avec moyenne $\pm$ écart-type sur les graines aléatoires. Pour les métriques clés (PDR, énergie, LCI), des intervalles de confiance à 95\% sont calculés par bootstrap non paramétrique (1\,000 ré-échantillonnages) lorsque le nombre de répétitions le permet ($\geq 30$ graines dans l'Article~2).
+
+\subsection{Reproductibilité}
+
+Conformément à la liste de vérification de reproductibilité NeurIPS \cite{Pineau2021Reproducibility}, les éléments suivants sont documentés pour chaque article~:
+\begin{itemize}
+    \item Tous les hyperparamètres d'entraînement (taux d'apprentissage, taille de lot, nombre d'époques, architecture du réseau) --- cf.\ Annexe~\ref{ann:gapf-suppl} pour l'Article~1.
+    \item Les graines aléatoires utilisées.
+    \item Le matériel de simulation (GPU/CPU, mémoire).
+    \item Les bibliothèques et versions logicielles (PyTorch, PyTorch Geometric, EPyMARL).
+    \item Le nombre total d'heures GPU et l'énergie de calcul estimée.
+\end{itemize}
+
+Le Tableau~\ref{tab:simulation-summary} synthétise les campagnes de simulation des trois articles.
+
+\begin{table}[htbp]
+\centering
+\caption{Synthèse des campagnes de simulation des trois articles.}
+\label{tab:simulation-summary}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l c c c c c}
+\toprule
+\textbf{Article} & \textbf{Exécutions} & \textbf{Graines} & \textbf{Références} & \textbf{Tests stat.} & \textbf{Données réelles} \\
+\midrule
+Art.~1 (GAPF) & 21\,000 épisodes & 3 (42, 123, 456) & LEACH, QMIX, QTRAN, QPSOFL & Wilcoxon & --- \\
+Art.~2 (CALASH) & 390 exécutions & 30 Monte Carlo & 7 proto. + 5 ablations & Kruskal-Wallis & Intel Lab, UK CI, USGS \\
+Art.~3 (CASTER-ZT) & 2\,420 exécutions & 20 & CPO, Shield, Anomaly Det. & Wilcoxon & --- \\
+\midrule
+\textbf{Total} & \textbf{$>$ 23\,800} & & \textbf{$>$ 20 références} & & \textbf{3 sources} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+
+%%
+%%  STRATÉGIE DE VALIDATION
+%%
+\section{Stratégie de validation et calibration}\label{sec:demarche-validation}
+
+La validation par simulation adopte trois niveaux complémentaires~: (1)~\textbf{vérification} (tests unitaires, reproduction des résultats LEACH~\cite{heinzelman2000leach}, vérification des invariants physiques tels que la conservation de l'énergie)~; (2)~\textbf{validation} (calibration sur données réelles --- Intel Lab~\cite{intel_lab_data}, UK Carbon Intensity API~\cite{uk_carbon_api}, USGS ShakeMap --- et analyse de sensibilité via les études d'ablation des Articles~2 et~3)~; (3)~\textbf{reconnaissance des limites} (canal radio simplifié sans évanouissement, synchronisation TDMA parfaite, catastrophe instantanée isotrope), discutées en détail aux Sections~\ref{sec:disc-limites} et~\ref{sec:concl-limitations}.
+
+
+%%
+%%  MODELE DE MENACES
+%%
+\section{Modèle de menaces et hypothèses de sécurité}\label{sec:demarche-threat}
+
+Trois niveaux de puissance adversariale sont considérés~: (1)~adversaire \textbf{passif} $\mathcal{A}_1$ (écoute clandestine), (2)~adversaire \textbf{actif} $\mathcal{A}_2$ (modification et injection de messages, drain de batterie, brouillage), et (3)~adversaire \textbf{interne} $\mathcal{A}_3$ (compromission de n\oe{}uds, manipulation de politique~\cite{Gleave2020AdvPolicies, Kiourti2021BackdoorDRL}). L'Article~1 suppose l'absence d'adversaire~; l'Article~2 gère les défaillances physiques ($\mathcal{A}_2$) via SHDR~; l'Article~3 adresse les trois niveaux via le principe zéro-confiance~\cite{rose2020nist}. Le Tableau~\ref{tab:attack-vectors} résume les vecteurs d'attaque et défenses.
+
+\begin{table}[htbp]
+\centering
+\caption{Vecteurs d'attaque considérés dans les trois articles et mécanismes de défense correspondants.}
+\label{tab:attack-vectors}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{3.2cm}p{2.0cm}p{4.5cm}p{4.0cm}}
+\toprule
+\textbf{Vecteur d'attaque} & \textbf{Niveau} & \textbf{Impact sur la pile} & \textbf{Défense (Article)} \\
+\midrule
+Compromission de n\oe{}ud & $\mathcal{A}_3$ & Politique voyou~: routage vers trou noir, drain énergétique ciblé, données falsifiées & Évaluateur double-hypothèse + bouclier gradué (Art.~3) \\
+\addlinespace
+Injection de données & $\mathcal{A}_2$ & Fausses lectures de capteurs $\Rightarrow$ décisions de routage erronées, fausse alerte de catastrophe & MC-Dropout détecte incohérence épistémique (Art.~3) \\
+\addlinespace
+Manipulation de politique & $\mathcal{A}_3$ & Perturbation adversariale des poids du GCN ou du mélangeur QMIX & Vérification pré-actuation par seuils du bouclier (Art.~3) \\
+\addlinespace
+Replay de messages & $\mathcal{A}_2$ & Anciennes tables de routage réinjectées $\Rightarrow$ boucles, incohérence topologique & Cohérence temporelle vérifiée par GraphSAGE (Art.~3) \\
+\addlinespace
+Drain de batterie & $\mathcal{A}_2$ & Requêtes excessives forçant un n\oe{}ud à épuiser son énergie & File Lyapunov détecte déviations de budget (Art.~2), bouclier bloque actuations excessives (Art.~3) \\
+\addlinespace
+Empoisonnement du canal & $\mathcal{A}_2$ & Brouillage ou interférence ciblée sur les liens sub-THz & Reconfiguration SHDR via MAPE-K (Art.~2), escalade automatique (Art.~3) \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Les hypothèses de sécurité maintenues sont~: (1)~station de base inaltérable~\cite{heinzelman2000leach}~; (2)~entraînement hors ligne sécurisé~; (3)~intégrité du bouclier (14~paramètres en ROM)~; (4)~canal radio ouvert (la confidentialité n'est pas un objectif, seules l'intégrité et la disponibilité le sont).
+
+
+%%
+%%  PRESENTATION ARTICLE 1
+%%
+\section{Article 1 --- GAPF~: les fondations du routage intelligent}\label{sec:demarche-art1}
+
+GAPF (Graph-Attentive Policy Fusion) est un cadre de méta-apprentissage léger qui encode la topologie du WSN via un GCN à 2~couches ($d = 16$), sélectionne contextuellement l'expert MARL optimal (QMIX ou QTRAN) via un contrôleur CAS et scalarise les récompenses multi-objectifs via un réseau d'attention monotone Q$\cdot$K --- le tout avec seulement 1\,473 paramètres, soit $26\times$ moins qu'un seul agent RNN. L'évaluation sur 7 scénarios (20--100 capteurs) et 21\,000 épisodes de test démontre~: PDR $\geq$ 98\%, énergie 2--3.5$\times$ inférieure aux références et empreinte mémoire 13$\times$ moindre. Ces résultats établissent la fondation énergétique sur laquelle CALASH construit.
+
+
+%%
+%%  ENVIRONNEMENT DE SIMULATION
+%%
+\section{Environnement de simulation}\label{sec:demarche-env}
+
+Les trois articles utilisent un environnement de simulation Python développé spécifiquement pour cette thèse, basé sur le cadre OpenAI Gym \cite{brockman2016gym} pour l'interface d'apprentissage par renforcement et PyTorch / PyTorch Geometric pour les composants GNN et DRL. Cette section détaille les choix de conception de l'environnement.
+
+\subsection{Architecture logicielle}
+
+L'environnement de simulation est structuré en trois couches~:
+\begin{enumerate}
+    \item \textbf{Couche physique}~: modèle énergétique de premier ordre, modèle de propagation sub-THz (Article~2), modèle RIS (Article~2), modèle de catastrophe gaussien. Cette couche est indépendante de l'algorithme de routage.
+    \item \textbf{Couche réseau}~: gestion des grappes, élection des CH, routage multi-sauts, agrégation de données, comptabilité énergétique et carbone. Cette couche implémente l'interface Gym (\texttt{reset()}, \texttt{step()}, \texttt{render()}).
+    \item \textbf{Couche de décision}~: agents MARL (QMIX, QTRAN via EPyMARL), méta-contrôleur GAPF, piliers CALASH, évaluateur-bouclier CASTER-ZT. Cette couche interagit avec l'environnement via l'interface Gym.
+\end{enumerate}
+
+\subsection{Paramétrage des scénarios}
+
+Les scénarios de simulation couvrent une variété de conditions représentatives des déploiements réels~:
+\begin{itemize}
+    \item \textbf{Taille du réseau}~: 20, 50, 75, 100, 150, 200 n\oe{}uds capteurs, déployés aléatoirement dans une zone carrée de côté $L$.
+    \item \textbf{Rayon de couverture}~: 25~m, 35~m, 50~m, définissant le voisinage $\mathcal{N}(v)$ de chaque n\oe{}ud.
+    \item \textbf{Position de la BS}~: centrée ($L/2, L/2$), en coin ($0, 0$) ou en bord ($L/2, 0$), testant l'impact de la géométrie sur les performances.
+    \item \textbf{Énergie initiale}~: 0.5~J par n\oe{}ud (standard de la littérature), avec possibilité d'hétérogénéité énergétique.
+    \item \textbf{Catastrophe}~: absence (régime nominal), gaussienne isotrope (Éq.~\ref{eq:disaster-model}), avec intensité variable ($\sigma_{\text{cat}} \in \{10, 25, 50\}$~m).
+\end{itemize}
+
+\subsection{Analyse de complexité algorithmique}
+
+Le Tableau~\ref{tab:complexity} détaille la complexité temporelle et spatiale de chaque composant principal des trois articles.
+
+\begin{table}[htbp]
+\centering
+\caption{Analyse de complexité algorithmique des composants principaux. $n$~: n\oe{}uds, $|E|$~: arêtes, $d$~: dimension des plongements, $K$~: couches GNN, $T$~: passes MC-Dropout.}
+\label{tab:complexity}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llcc}
+\toprule
+\textbf{Article} & \textbf{Composant} & \textbf{Complexité temporelle} & \textbf{Complexité spatiale} \\
+\midrule
+\multirow{3}{*}{Art.~1 (GAPF)} & Encodeur GCN ($K = 2$) & $O(K \cdot |E| \cdot d)$ & $O(n \cdot d + |E|)$ \\
+ & Contrôleur CAS & $O(d)$ & $O(d)$ \\
+ & Attention Q$\cdot$K & $O(M \cdot d)$ & $O(M \cdot d)$ \\
+\midrule
+\multirow{4}{*}{Art.~2 (CALASH)} & CADR (ratio CS) & $O(1)$ & $O(1)$ \\
+ & CARE (file Lyapunov) & $O(n)$ & $O(n)$ \\
+ & SHDR (reconfiguration) & $O(n \log n)$ & $O(n)$ \\
+ & LSE (comptabilité LCI) & $O(n)$ & $O(n)$ \\
+\midrule
+\multirow{4}{*}{Art.~3 (CASTER-ZT)} & Encodeur GraphSAGE ($K = 2$) & $O(K \cdot S^K \cdot d)$ & $O(n \cdot d + S^K \cdot d)$ \\
+ & Évaluateur double-hypothèse & $O(d^2)$ & $O(d^2)$ \\
+ & MC-Dropout ($T$ passes) & $O(T \cdot d^2)$ & $O(T \cdot d)$ \\
+ & Bouclier déterministe & $O(1)$ & $O(1)$ (14 scalaires) \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\noindent La complexité totale d'une décision de la pile complète est dominée par l'encodeur GraphSAGE de CASTER-ZT~: $O(K \cdot S^K \cdot d + T \cdot d^2)$ où $S$ est le nombre de voisins échantillonnés, $K = 2$ les couches et $T = 20$ les passes MC-Dropout. Pour les paramètres utilisés ($S = 10$, $K = 2$, $d = 64$, $T = 20$), cela donne $\sim$82\,000 opérations en virgule flottante. Sur un accélérateur Google Coral Edge TPU (4~TOPS, 2\,W), cette charge correspond à une latence d'inférence bien inférieure à 1\,ms.
+
+
+\subsection{Espaces d'état, d'action et de récompense}
+
+La formulation du routage comme un problème de Dec-POMDP requiert la définition précise des espaces d'état, d'action et de récompense pour chaque article. Le Tableau~\ref{tab:spaces} synthétise ces définitions.
+
+\begin{table}[htbp]
+\centering
+\caption{Espaces d'état, d'action et de récompense pour les trois articles. $n$~: nombre de n\oe{}uds, $|\mathcal{N}(v)|$~: taille du voisinage du n\oe{}ud $v$.}
+\label{tab:spaces}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llp{6.5cm}p{4.5cm}p{5.5cm}}
+\toprule
+\textbf{Article} & \textbf{Agent} & \textbf{Observation $o_i$} & \textbf{Action $a_i$} & \textbf{Récompense $r$} \\
+\midrule
+\multirow{3}{*}{Art.~1 (GAPF)} & N\oe{}ud capteur $i$ & $[E_i^{\text{res}}, d_i^{\text{BS}}, |\mathcal{N}(v)|, \bar{E}_{\mathcal{N}(v)}, \text{role}_i, \text{alive}_{\mathcal{N}(v)}]$ $\in \mathbb{R}^{6 + |\mathcal{N}(v)|}$ & Sélection du prochain saut parmi $\mathcal{N}(v) \cup \{\text{BS}\}$ & $r = \alpha_1 \cdot \text{PDR} + \alpha_2 \cdot (1 - \sigma_E / \bar{E}) + \alpha_3 \cdot \text{alive\_ratio}$ \\
+\addlinespace
+\multirow{3}{*}{Art.~2 (CALASH)} & CH $j$ & $[E_j^{\text{res}}, \text{CI}(t), \text{LCI}_j, Q_j^{\text{carb}}, |\text{cluster}_j|, d_j^{\text{BS}}, \text{RIS}_{j,\text{gain}}]$ $\in \mathbb{R}^{7}$ & Ratio CS $\rho_j \in [0.3, 1.0]$ et sélection de bande (sub-THz / micro-onde) & $r = -\Delta\text{LCI} + \beta_1 \cdot \text{PDR} - \beta_2 \cdot Q_j^{\text{carb}}$ (Lyapunov drift-plus-penalty) \\
+\addlinespace
+\multirow{3}{*}{Art.~3 (CASTER-ZT)} & Cellule réseau $c$ & Graphe local $G_c = (V_c, E_c, X_c)$ avec $X_c \in \mathbb{R}^{|V_c| \times f}$ (caractéristiques de n\oe{}uds) & Décision $\in \{\text{autoriser, réduire, différer, escalader, bloquer}\}$ & $r = \omega_1 \cdot \text{détection} + \omega_2 \cdot (1 - \text{FP}) + \omega_3 \cdot \text{récupération}$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\textbf{Observations clés sur les espaces~:}
+\begin{itemize}
+    \item L'observation de GAPF est \textbf{locale} (voisinage à 1 saut), tandis que le GCN agrège l'information à 2 sauts pour enrichir la représentation. Le méta-contrôleur CAS opère sur le plongement global du graphe (moyenne des plongements de n\oe{}uds), capturant indirectement l'état global du réseau.
+    \item L'observation de CALASH inclut l'intensité carbone $\text{CI}(t)$ et la file carbone virtuelle $Q_j^{\text{carb}}$, qui n'existent pas dans les formulations classiques de routage. La file carbone est l'innovation clé qui permet les garanties de Lyapunov.
+    \item L'observation de CASTER-ZT est un \textbf{graphe local} plutôt qu'un vecteur, exploité directement par l'encodeur GraphSAGE. Cette représentation structurée capture les relations de voisinage que les vecteurs aplatis perdraient.
+\end{itemize}
+
+
+\subsection{Procédure d'entraînement et convergence}
+
+L'entraînement des trois cadres suit des procédures distinctes adaptées à leurs architectures respectives~:
+
+\textbf{Article~1 (GAPF)~:} Optimisation bi-niveau en deux boucles~:
+\begin{enumerate}
+    \item \textbf{Boucle interne}~: entraînement standard des experts QMIX et QTRAN via EPyMARL pendant 200 épisodes avec $\epsilon$-greedy ($\epsilon$~: $1.0 \to 0.05$ sur 50\,000 pas). Taux d'apprentissage~: $5 \times 10^{-4}$, taille du batch~: 32, mémoire de replay~: 5\,000 épisodes.
+    \item \textbf{Boucle externe}~: optimisation du méta-contrôleur GCN+CAS et du réseau d'attention Q$\cdot$K par stratégies évolutionnaires (ES) de Salimans et al.\ \cite{salimans2017evolution}. Population~: 50, $\sigma_{\text{noise}} = 0.02$, taux d'apprentissage ES~: $0.01$, 100 générations.
+\end{enumerate}
+La convergence est monitorée par le PDR cumulé sur 100 épisodes d'évaluation. Le critère d'arrêt est atteint lorsque la variance du PDR sur les 10 dernières générations ES est $<$ 0.5\%.
+
+\textbf{Article~2 (CALASH)~:} Entraînement séquentiel des quatre piliers~:
+\begin{enumerate}
+    \item Le pilier CADR est optimisé par recherche de grille sur le ratio CS initial $\rho_0 \in \{0.3, 0.4, \ldots, 1.0\}$.
+    \item Le pilier CARE est entraîné par DQN avec les paramètres~: $\gamma = 0.99$, taille du batch~: 64, réseau cible mis à jour toutes les 200 étapes.
+    \item Le pilier SHDR utilise un automate MAPE-K déterministe (pas d'entraînement).
+    \item Le pilier LSE est un calcul analytique (pas d'entraînement).
+\end{enumerate}
+
+\textbf{Article~3 (CASTER-ZT)~:} Entraînement de l'évaluateur neuronal uniquement~:
+\begin{enumerate}
+    \item L'encodeur GraphSAGE et l'évaluateur double-hypothèse sont entraînés conjointement par rétro-propagation sur des paires $(a, s, \text{label})$ où le label est ``légitime'' ou ``voyou''.
+    \item Taux d'apprentissage~: $10^{-3}$ avec décroissance cosinus, 50 époques, dropout $p = 0.2$ (réutilisé pour MC-Dropout à l'inférence).
+    \item Le bouclier déterministe (14 paramètres) est fixé par conception --- aucun entraînement.
+\end{enumerate}
+
+Le Tableau~\ref{tab:training-budget} résume les budgets d'entraînement des trois articles.
+
+\begin{table}[htbp]
+\centering
+\caption{Budgets d'entraînement des trois articles. Les heures GPU sont mesurées sur NVIDIA A100 40~GB.}
+\label{tab:training-budget}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Article} & \textbf{Algorithme} & \textbf{Épisodes} & \textbf{Pas totaux} & \textbf{GPU} & \textbf{Heures GPU} & \textbf{RAM max.} \\
+\midrule
+Art.~1 (GAPF) & ES + QMIX/QTRAN & 200 $\times$ 100 gén. & $\sim$2M & A100 & $\sim$48\,h & 13.2\,GB (QTRAN) \\
+Art.~2 (CALASH) & DQN + grille & 30 $\times$ 1\,000 & $\sim$3M & A100 & $\sim$72\,h & 4.2\,GB \\
+Art.~3 (CASTER-ZT) & SGD & 50 époques & $\sim$500K & A100 & $\sim$24\,h & 2.1\,GB \\
+\midrule
+\textbf{Total} & & & $\sim$5.5M & & $\sim$144\,h & \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+
+%%
+%%  JUSTIFICATION HYPERPARAMETRES
+%%
+\section{Justification des choix d'hyperparamètres}\label{sec:demarche-hyperparam}
+
+Le Tableau~\ref{tab:hyperparams} synthétise les hyperparamètres clés des trois articles, leur plage de recherche et leur justification.
+
+\begin{table}[htbp]
+\centering
+\caption{Hyperparamètres clés des trois articles~: valeur retenue, plage de recherche et justification.}
+\label{tab:hyperparams}
+\footnotesize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{3.5cm}ccp{1.2cm}p{5.5cm}}
+\toprule
+\textbf{Hyperparamètre} & \textbf{Valeur} & \textbf{Plage explorée} & \textbf{Article} & \textbf{Justification} \\
+\midrule
+\multicolumn{5}{l}{\textit{Architecture GNN}} \\
+\addlinespace
+Couches GCN ($K$) & 2 & $\{1, 2, 3, 4\}$ & Art.~1 & $K > 2$ provoque le sur-lissage \cite{Chen2020OverSmoothing} \\
+Dimension plongement GCN ($d$) & 16 & $\{8, 16, 32, 64\}$ & Art.~1 & Compromis budget paramètres / expressivité \\
+Couches GraphSAGE ($K$) & 2 & $\{1, 2, 3\}$ & Art.~3 & Même contrainte de sur-lissage \\
+Dimension GraphSAGE ($d$) & 64 & $\{32, 64, 128\}$ & Art.~3 & $d = 64$ suffisant pour discrimination ami/ennemi \\
+Voisins échantillonnés ($S$) & 10 & $\{5, 10, 20\}$ & Art.~3 & $S = 10$ couvre le degré moyen des topologies évaluées \\
+\midrule
+\multicolumn{5}{l}{\textit{Stratégies évolutionnaires (Article~1)}} \\
+\addlinespace
+Taille de population & 50 & $\{20, 50, 100\}$ & Art.~1 & Recommandation Salimans et al.\ \cite{salimans2017evolution} \\
+Écart-type du bruit ($\sigma$) & 0.02 & $\{0.005, 0.01, 0.02, 0.05\}$ & Art.~1 & $\sigma = 0.02$ balancé entre exploration et gradient \\
+Taux d'apprentissage ES ($\alpha_{\text{ES}}$) & 0.01 & $\{0.001, 0.01, 0.05\}$ & Art.~1 & Convergence stable sur 100 générations \\
+Nombre de générations & 100 & $\{50, 100, 200\}$ & Art.~1 & Plateau de PDR atteint $\leq$ 80 générations \\
+\midrule
+\multicolumn{5}{l}{\textit{Experts MARL (Article~1)}} \\
+\addlinespace
+Taux d'apprentissage MARL ($\alpha$) & $5 \times 10^{-4}$ & $\{10^{-4}, 5 \times 10^{-4}, 10^{-3}\}$ & Art.~1 & Standard EPyMARL pour QMIX/QTRAN \\
+Taille du batch & 32 & $\{16, 32, 64\}$ & Art.~1 & Compromis variance / coût mémoire \\
+Mémoire de replay & 5\,000 ép. & $\{2000, 5000, 10000\}$ & Art.~1 & Suffisant pour couvrir la diversité scénaristique \\
+$\epsilon$ exploration (final) & 0.05 & $\{0.01, 0.05, 0.1\}$ & Art.~1 & 5\% d'exploration résiduelle évite la convergence locale \\
+\midrule
+\multicolumn{5}{l}{\textit{Piliers CALASH (Article~2)}} \\
+\addlinespace
+Paramètre de Lyapunov ($V$) & 100 & $\{10, 50, 100, 500, 1\,000\}$ & Art.~2 & Compromis $O(1/V)$ optimalité vs.\ $O(V)$ taille de file \cite{neely2010lyapunov} \\
+Ratio CS initial ($\rho_0$) & 0.5 & $\{0.3, 0.4, \ldots, 1.0\}$ & Art.~2 & Recherche de grille; $\rho_0 = 0.5$ optimal sur Intel Lab \\
+Facteur d'escompte DQN ($\gamma$) & 0.99 & $\{0.95, 0.99, 0.999\}$ & Art.~2 & Horizon long nécessaire pour cycles carbone \\
+Fréquence mise à jour cible & 200 pas & $\{100, 200, 500\}$ & Art.~2 & Stabilité d'entraînement DQN \\
+\midrule
+\multicolumn{5}{l}{\textit{Évaluateur CASTER-ZT (Article~3)}} \\
+\addlinespace
+Passes MC-Dropout ($T$) & 20 & $\{5, 10, 20, 50\}$ & Art.~3 & Convergence de la variance épistémique \\
+Taux de dropout ($p$) & 0.1 & $\{0.1, 0.2, 0.3, 0.5\}$ & Art.~3 & $p = 0.1$ calibré pour couverture conforme \\
+Taux d'apprentissage initial & $10^{-3}$ & $\{10^{-4}, 10^{-3}, 10^{-2}\}$ & Art.~3 & Décroissance cosinus sur 50 époques \\
+Paramètres du bouclier & 14 scalaires & --- & Art.~3 & Fixés par conception, non appris \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Les hyperparamètres les plus sensibles ($>5\%$ d'impact sur les métriques) sont le paramètre de Lyapunov $V$, l'écart-type du bruit ES $\sigma$, le nombre de couches GNN $K$ et le taux d'apprentissage MARL $\alpha$. Les interactions notables incluent $K$-$d$ (augmenter $K$ nécessite de réduire $d$ pour éviter le sur-lissage), $V$-$\rho_0$ (un $V$ élevé compense un $\rho_0$ sous-optimal) et $T$-$p$ (un $p$ plus élevé nécessite davantage de passes MC-Dropout).
+
+
+%%
+%%  PRESENTATION ARTICLE 2
+%%
+\section{Article 2 --- CALASH~: l'extension vers la durabilité carbone}\label{sec:demarche-art2}
+
+CALASH (Carbon-Aware Lifecycle-Autonomous Self-Healing) étend l'optimisation au-delà de l'énergie vers le carbone du cycle de vie complet. C'est le premier protocole de routage WSN à définir la métrique LCI (ISO~14040), moduler la détection comprimée selon l'intensité carbone en temps réel (CADR), optimiser le routage avec garanties de Lyapunov (CARE), régénérer le réseau après catastrophe via MAPE-K (SHDR) et opérer sur couche physique 6G. L'évaluation sur 30~graines Monte Carlo et 13~variantes démontre~: durée de vie $+$60\%, PDR 82.9\%, LCI $-$33\%, $p < 10^{-5}$ sur tous les tests. CALASH reste cependant vulnérable si ses politiques DQN sont compromises, motivant directement CASTER-ZT.
+
+
+%%
+%%  PRESENTATION ARTICLE 3
+%%
+\section{Article 3 --- CASTER-ZT~: la couche de sécurité zéro-confiance}\label{sec:demarche-art3}
+
+CASTER-ZT (Zero-Trust Shielded Decision Control) protège chaque actuation de GAPF et CALASH contre les compromissions. Via un encodeur GraphSAGE ($d = 64$), un évaluateur neuronal double-hypothèse avec MC-Dropout ($T = 20$) et un bouclier déterministe à 14~paramètres non apprenables émettant des décisions graduées (5~niveaux), CASTER-ZT fournit dix~propositions formelles. La campagne de 2\,420 exécutions démontre~: détection 74.2--98.3\% avec zéro faux positif, $\omega_{\text{rec}} = 0.733$ ($3.7$--$5.2\times$ supérieur aux références), latence 3.07\,ms (budget O-RAN~: 10\,ms). Avec CASTER-ZT, la pile couvre les 12~critères du Tableau~\ref{tab:gap-analysis} (E1--E4 par GAPF, D1--D4 par CALASH, S1--S4 par CASTER-ZT). Le Chapitre~\ref{sec:Discussion} effectue l'analyse transversale.
+
+
+%%
+%%  PROTOCOLE D'INTEGRATION INTER-ARTICLES
+%%
+\section{Protocole d'intégration inter-articles}\label{sec:demarche-integration}
+
+Bien que les trois articles aient été développés et évalués de manière séquentielle, ils sont conçus pour s'intégrer dans une \textbf{pile protocolaire unifiée} déployable sur un réseau de capteurs en environnement de catastrophe. Cette section spécifie les interfaces, les flux de données, les budgets de latence et de mémoire de la pile complète, ainsi que les scénarios de déploiement partiel.
+
+\subsection{Flux de données de bout en bout}
+
+Le traitement d'un paquet de données dans la pile complète suit une chaîne séquentielle en quatre étapes~:
+
+\begin{enumerate}
+    \item \textbf{Acquisition et pré-traitement} (couche physique)~: un n\oe{}ud capteur $i$ génère une mesure brute $x_i(t)$ (température, accélération sismique, etc.). Si le pilier CADR de CALASH est actif, le ratio de détection comprimée $\rho_j$ du CH parent détermine si la donnée est transmise intégralement ou comprimée. La sortie de cette étape est un paquet $p_i(t)$ de taille $\rho_j \cdot |x_i(t)|$.
+    \item \textbf{Routage intelligent} (GAPF, Article~1)~: le méta-contrôleur GAPF encode la topologie courante via le GCN à 2~couches et sélectionne l'expert MARL (QMIX ou QTRAN) optimal pour le régime topologique courant. L'expert sélectionné détermine le prochain saut pour chaque n\oe{}ud. La sortie est une table de routage $\mathcal{R}(t) = \{(i, \text{next}(i))\}_{i \in V_t}$.
+    \item \textbf{Optimisation carbone et résilience} (CALASH, Article~2)~: les piliers CARE et LSE ajustent les décisions de routage en fonction des files virtuelles de carbone $Q_j(t)$ et de l'intensité carbone $\text{CI}(t)$. En cas de catastrophe détectée, le pilier SHDR déclenche la reconfiguration autonomique (MAPE-K). La sortie est une table de routage carbone-optimisée $\mathcal{R}'(t)$ et les compteurs LCI mis à jour.
+    \item \textbf{Vérification zéro-confiance} (CASTER-ZT, Article~3)~: chaque actuation de routage dans $\mathcal{R}'(t)$ est évaluée par l'encodeur GraphSAGE et l'évaluateur double-hypothèse. Le MC-Dropout quantifie l'incertitude épistémique, et le bouclier déterministe émet une décision graduée parmi $\{\text{autoriser, réduire, différer, escalader, bloquer}\}$. Seules les actuations autorisées ou réduites sont exécutées. La sortie finale est la table de routage vérifiée $\mathcal{R}^*(t)$.
+\end{enumerate}
+
+\subsection{Spécifications des interfaces}
+
+Les interfaces entre les composants sont définies par les structures de données échangées~:
+
+\begin{itemize}
+    \item \textbf{GAPF $\to$ CALASH}~: la table de routage $\mathcal{R}(t)$ (vecteur de $n$ entiers, chacun indexant le prochain saut), le plongement global du graphe $\bar{h}^{(K)} \in \mathbb{R}^d$ ($d = 16$), et les métriques d'énergie agrégées $(\bar{E}, \sigma_E, E_{\min})$. Le plongement global permet à CALASH de contextualiser ses décisions carbone sans recalculer la topologie.
+    \item \textbf{CALASH $\to$ CASTER-ZT}~: la table de routage ajustée $\mathcal{R}'(t)$, les ratios de détection comprimée $\{\rho_j\}_{j=1}^{M}$, les files de carbone $\{Q_j(t)\}_{j=1}^{M}$, le drapeau de catastrophe et les métriques LCI courantes. Les files de carbone permettent à CASTER-ZT de détecter des manipulations du budget carbone (un adversaire pourrait tenter de forcer un $V$ artificiellement élevé pour contourner les contraintes).
+    \item \textbf{CASTER-ZT $\to$ actuation}~: la table de routage finale $\mathcal{R}^*(t)$ avec les décisions graduées associées, le score de confiance $\in [0, 1]$ et l'incertitude épistémique $\sigma_{\text{MC}}$ pour chaque n\oe{}ud. Les actuations bloquées ou différées sont remplacées par une politique de repli sûre (routage glouton vers le CH le plus proche).
+\end{itemize}
+
+\subsection{Analyse de latence de bout en bout}
+
+La latence totale d'une décision de routage dans la pile complète est la somme des latences de chaque étape. Le Tableau~\ref{tab:latency-budget} détaille le budget de latence mesuré sur un accélérateur de bord représentatif (Google Coral Edge TPU, 4~TOPS, 2~W).
+
+\begin{table}[htbp]
+\centering
+\caption{Budget de latence de bout en bout de la pile protocolaire complète. Mesures sur Google Coral Edge TPU pour un réseau de 100~n\oe{}uds.}
+\label{tab:latency-budget}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Composant} & \textbf{Latence} & \textbf{Fraction} \\
+\midrule
+Encodeur GCN (GAPF, 2 couches, $d=16$) & $\sim$0.3~ms & 6.5\% \\
+Contrôleur CAS + attention Q$\cdot$K & $\sim$0.2~ms & 4.3\% \\
+Piliers CALASH (CADR + CARE + LSE) & $\sim$1.0~ms & 21.7\% \\
+Encodeur GraphSAGE (CASTER-ZT, 2 couches, $d=64$) & $\sim$0.8~ms & 17.4\% \\
+Évaluateur double-hypothèse & $\sim$0.2~ms & 4.3\% \\
+MC-Dropout ($T=20$ passes) & $\sim$1.50~ms & 34.5\% \\
+Bouclier déterministe (14 comparaisons scalaires) & $<$0.01~ms & $<$0.2\% \\
+Surcoût de communication inter-composants & $\sim$0.3~ms & 6.5\% \\
+\midrule
+\textbf{Total} & $\sim$\textbf{4.3~ms} & \textbf{100\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent La latence totale de $\sim$4.3~ms est significativement inférieure au budget de 10~ms spécifié par l'architecture O-RAN pour les boucles de contrôle en quasi-temps réel (near-RT RIC). Cette marge de $\sim$5.7~ms absorbe les variations dues aux conditions de charge et laisse de la capacité pour les surcoûts de communication radio. La composante dominante est le MC-Dropout (34.5\%), ce qui confirme la pertinence du choix $T = 20$ passes.
+
+\subsection{Budget mémoire de la pile complète}
+
+L'empreinte mémoire totale de la pile protocolaire est un facteur critique pour le déploiement sur des plateformes embarquées à ressources contraintes. Le budget mémoire se décompose comme suit~:
+
+\begin{itemize}
+    \item \textbf{GAPF}~: 1\,473 paramètres (GCN~: $\sim$600, CAS~: $\sim$200, attention~: $\sim$673) $\approx$ 5.8~Ko en FP32.
+    \item \textbf{CALASH}~: $\sim$5\,000 paramètres (DQN CARE~: $\sim$4\,500, automate SHDR~: $\sim$500 octets d'état) $\approx$ 20~Ko en FP32.
+    \item \textbf{CASTER-ZT}~: $\sim$20\,000 paramètres (GraphSAGE~: $\sim$12\,000, évaluateur~: $\sim$8\,000, bouclier~: 14 scalaires) $\approx$ 78~Ko en FP32.
+    \item \textbf{Total pile}~: $\sim$26\,500 paramètres $\approx$ \textbf{104~Ko} en FP32, ou $\sim$\textbf{52~Ko} en FP16 avec quantification post-entraînement.
+\end{itemize}
+
+Cette empreinte de $\sim$100~Ko est compatible avec les microcontrôleurs à faible puissance couramment utilisés dans les WSN (par exemple, ARM Cortex-M4 avec 256~Ko de SRAM). À titre de comparaison, un seul agent QTRAN standard occupe $\sim$39\,000 paramètres ($\sim$152~Ko), soit plus que la pile complète GAPF+CALASH+CASTER-ZT réunis. La compression à $26\times$ démontrée par l'Article~1 est donc amplifiée au niveau de la pile intégrée.
+
+\subsection{Scénarios de déploiement}
+
+La pile protocolaire est conçue pour un déploiement modulaire~: les trois composants peuvent être activés indépendamment selon les exigences du scénario.
+
+\begin{itemize}
+    \item \textbf{Déploiement complet} (GAPF + CALASH + CASTER-ZT)~: scénarios de surveillance de catastrophe en zone hostile, où l'efficacité, la durabilité et la sécurité sont toutes critiques. Latence~: $\sim$4.3~ms, mémoire~: $\sim$104~Ko.
+    \item \textbf{Déploiement sans sécurité} (GAPF + CALASH)~: déploiements en environnement contrôlé où la menace adversariale est faible (par exemple, surveillance environnementale en zone protégée). La suppression de CASTER-ZT réduit la latence à $\sim$1.5~ms et la mémoire à $\sim$26~Ko.
+    \item \textbf{Déploiement minimal} (GAPF seul)~: déploiements à contraintes extrêmes de ressources où seule l'efficacité énergétique est prioritaire. Latence~: $\sim$0.5~ms, mémoire~: $\sim$6~Ko. Ce mode est particulièrement adapté aux n\oe{}uds alimentés par récupération d'énergie (\emph{energy harvesting}).
+    \item \textbf{Rétro-ajout de sécurité} (réseau existant + CASTER-ZT)~: CASTER-ZT peut être déployé comme couche de vérification au-dessus de n'importe quel protocole de routage existant (LEACH, QMIX, etc.), pas seulement GAPF et CALASH. Le bouclier évalue les actuations indépendamment de l'algorithme qui les a générées.
+\end{itemize}
+
+Cette modularité est un avantage architectural majeur~: elle permet une adoption progressive de la pile protocolaire, chaque couche ajoutant de la valeur de manière incrémentale sans invalider les couches précédentes. La rétro-compatibilité de CASTER-ZT avec des protocoles arbitraires en fait un composant de sécurité réutilisable au-delà du cadre spécifique de cette thèse.
+
+
+%%
+%%  SYNTHESE DE LA DEMARCHE
+%%
+\section{Synthèse de la démarche}
+
+Le Tableau~\ref{tab:demarche-synthese} résume la correspondance entre les lacunes identifiées, les questions de recherche, les articles et les principaux résultats.
+
+\begin{table}[htbp]
+\centering
+\caption{Synthèse de la démarche de recherche~: des lacunes aux résultats.}
+\label{tab:demarche-synthese}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{3cm}p{2.5cm}p{3cm}p{4.5cm}}
+\toprule
+\textbf{Lacune identifiée} & \textbf{Question} & \textbf{Article} & \textbf{Principaux résultats} \\
+\midrule
+Absence de fusion MARL+GNN pour le routage & Q1 & Art.~1 --- GAPF & PDR $\geq$ 98\%, énergie 2--3.5$\times$ $\downarrow$, 1\,473 param. \\
+\addlinespace
+Absence de routage conscient du carbone du cycle de vie & Q2 & Art.~2 --- CALASH & LCI $-$33\%, durée de vie +60\%, PDR 82.9\% \\
+\addlinespace
+Absence de contrôle zéro-confiance pour réseaux AI & Q3 & Art.~3 --- CASTER-ZT & Détection 74--98\%, 0 FP, 3.07\,ms/décision \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Les chapitres suivants (Chapitres~\ref{sec:Theme1}, \ref{sec:Theme2} et~\ref{sec:Theme3}) présentent les trois articles dans leur version intégrale, tels que soumis aux revues respectives.
