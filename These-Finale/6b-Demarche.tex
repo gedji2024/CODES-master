@@ -306,7 +306,7 @@ La formulation du routage comme un problème de Dec-POMDP requiert la définitio
 \toprule
 \textbf{Article} & \textbf{Agent} & \textbf{Observation $o_i$} & \textbf{Action $a_i$} & \textbf{Récompense $r$} \\
 \midrule
-\multirow{3}{*}{Art.~1 (GAPF)} & N\oe{}ud capteur $i$ & $[E_i^{\text{res}}, d_i^{\text{BS}}, |\mathcal{N}(v)|, \bar{E}_{\mathcal{N}(v)}, \text{role}_i, \text{alive}_{\mathcal{N}(v)}]$ $\in \mathbb{R}^{6 + |\mathcal{N}(v)|}$ & Sélection du prochain saut parmi $\mathcal{N}(v) \cup \{\text{BS}\}$ & $r = \alpha_1 \cdot \text{PDR} + \alpha_2 \cdot (1 - \sigma_E / \bar{E}) + \alpha_3 \cdot \text{alive\_ratio}$ \\
+\multirow{3}{*}{Art.~1 (GAPF)} & N\oe{}ud capteur $i$ & $[RE_i, CE_i, x_i, y_i, N_i]$ $\in \mathbb{R}^{5}$ (énergie résiduelle, énergie consommée, position $x$-$y$, nombre de paquets) & Sélection du prochain saut parmi $\mathcal{N}(v) \cup \{\text{BS}\}$ & $r = \alpha_1 \cdot \text{PDR} + \alpha_2 \cdot (1 - \sigma_E / \bar{E}) + \alpha_3 \cdot \text{alive\_ratio}$ \\
 \addlinespace
 \multirow{3}{*}{Art.~2 (CALASH)} & CH $j$ & $[E_j^{\text{res}}, \text{CI}(t), \text{LCI}_j, Q_j^{\text{carb}}, |\text{cluster}_j|, d_j^{\text{BS}}, \text{RIS}_{j,\text{gain}}]$ $\in \mathbb{R}^{7}$ & Ratio CS $\rho_j \in [0.3, 1.0]$ et sélection de bande (sub-THz / micro-onde) & $r = -\Delta\text{LCI} + \beta_1 \cdot \text{PDR} - \beta_2 \cdot Q_j^{\text{carb}}$ (Lyapunov drift-plus-penalty) \\
 \addlinespace
@@ -328,12 +328,13 @@ La formulation du routage comme un problème de Dec-POMDP requiert la définitio
 
 L'entraînement des trois cadres suit des procédures distinctes adaptées à leurs architectures respectives~:
 
-\textbf{Article~1 (GAPF)~:} Optimisation bi-niveau en deux boucles~:
+\textbf{Article~1 (GAPF)~:} Optimisation bi-niveau en trois composantes~:
 \begin{enumerate}
-    \item \textbf{Boucle interne}~: entraînement standard des experts QMIX et QTRAN via EPyMARL pendant 200 épisodes avec $\epsilon$-greedy ($\epsilon$~: $1.0 \to 0.05$ sur 50\,000 pas). Taux d'apprentissage~: $5 \times 10^{-4}$, taille du batch~: 32, mémoire de replay~: 5\,000 épisodes.
-    \item \textbf{Boucle externe}~: optimisation du méta-contrôleur GCN+CAS et du réseau d'attention Q$\cdot$K par stratégies évolutionnaires (ES) de Salimans et al.\ \cite{salimans2017evolution}. Population~: 50, $\sigma_{\text{noise}} = 0.02$, taux d'apprentissage ES~: $0.01$, 100 générations.
+    \item \textbf{Entraînement des experts}~: QMIX et QTRAN sont entraînés indépendamment via EPyMARL pendant ${\sim}2\,000$ épisodes (200\,000 pas) avec $\epsilon$-greedy ($\epsilon$~: $0.5 \to 0.01$ sur 150\,000 pas). Taux d'apprentissage~: $3 \times 10^{-4}$, taille du batch~: 32, mémoire de replay~: 15\,000 épisodes. Les paramètres sont ensuite gelés.
+    \item \textbf{Boucle externe (attention Q$\cdot$K)}~: optimisation du réseau d'attention monotone par stratégies évolutionnaires (ES) de Salimans et al.\ \cite{salimans2017evolution}. Bruit $\sigma_{\text{ES}} = 0.01$, taux d'apprentissage ES~: $0.01$, référence EMA ($\beta = 0.9$).
+    \item \textbf{Méta-contrôleur GCN+CAS}~: entraîné par REINFORCE~\cite{williams1992simple} avec référence EMA ($\beta = 0.95$), optimiseur Adam ($\alpha = 3 \times 10^{-3}$), gradient clipping $\|\nabla_\theta\|_2 \leq 1.0$, pendant 2\,000 épisodes en mode on-policy.
 \end{enumerate}
-La convergence est monitorée par le PDR cumulé sur 100 épisodes d'évaluation. Le critère d'arrêt est atteint lorsque la variance du PDR sur les 10 dernières générations ES est $<$ 0.5\%.
+La convergence est monitorée par le PDR cumulé sur 100 épisodes d'évaluation. Le critère d'arrêt est atteint lorsque la variance du PDR sur les 10 dernières évaluations est $<$ 0.5\%.
 
 \textbf{Article~2 (CALASH)~:} Entraînement séquentiel des quatre piliers~:
 \begin{enumerate}
@@ -361,7 +362,7 @@ Le Tableau~\ref{tab:training-budget} résume les budgets d'entraînement des tro
 \toprule
 \textbf{Article} & \textbf{Algorithme} & \textbf{Épisodes} & \textbf{Pas totaux} & \textbf{GPU} & \textbf{Heures GPU} & \textbf{RAM max.} \\
 \midrule
-Art.~1 (GAPF) & ES + QMIX/QTRAN & 200 $\times$ 100 gén. & $\sim$2M & A100 & $\sim$48\,h & 13.2\,GB (QTRAN) \\
+Art.~1 (GAPF) & REINFORCE + ES + QMIX/QTRAN & ${\sim}$2K + 2K (méta) & $\sim$2M & A100 & $\sim$48\,h & 13.2\,GB (QTRAN) \\
 Art.~2 (CALASH) & DQN + grille & 30 $\times$ 1\,000 & $\sim$3M & A100 & $\sim$72\,h & 4.2\,GB \\
 Art.~3 (CASTER-ZT) & SGD & 50 époques & $\sim$500K & A100 & $\sim$24\,h & 2.1\,GB \\
 \midrule
@@ -397,19 +398,25 @@ Couches GraphSAGE ($K$) & 2 & $\{1, 2, 3\}$ & Art.~3 & Même contrainte de sur-l
 Dimension GraphSAGE ($d$) & 64 & $\{32, 64, 128\}$ & Art.~3 & $d = 64$ suffisant pour discrimination ami/ennemi \\
 Voisins échantillonnés ($S$) & 10 & $\{5, 10, 20\}$ & Art.~3 & $S = 10$ couvre le degré moyen des topologies évaluées \\
 \midrule
-\multicolumn{5}{l}{\textit{Stratégies évolutionnaires (Article~1)}} \\
+\multicolumn{5}{l}{\textit{Stratégies évolutionnaires --- réseau Q$\cdot$K (Article~1)}} \\
 \addlinespace
-Taille de population & 50 & $\{20, 50, 100\}$ & Art.~1 & Recommandation Salimans et al.\ \cite{salimans2017evolution} \\
-Écart-type du bruit ($\sigma$) & 0.02 & $\{0.005, 0.01, 0.02, 0.05\}$ & Art.~1 & $\sigma = 0.02$ balancé entre exploration et gradient \\
-Taux d'apprentissage ES ($\alpha_{\text{ES}}$) & 0.01 & $\{0.001, 0.01, 0.05\}$ & Art.~1 & Convergence stable sur 100 générations \\
-Nombre de générations & 100 & $\{50, 100, 200\}$ & Art.~1 & Plateau de PDR atteint $\leq$ 80 générations \\
+Écart-type du bruit ($\sigma_{\text{ES}}$) & 0.01 & $\{0.005, 0.01, 0.02, 0.05\}$ & Art.~1 & $\sigma = 0.01$ balancé entre exploration et gradient \\
+Taux d'apprentissage ES ($\eta_{\text{ES}}$) & 0.01 & $\{0.001, 0.01, 0.05\}$ & Art.~1 & Convergence stable; mise à jour par épisode \\
+Référence EMA ES ($\beta$) & 0.9 & $\{0.8, 0.9, 0.95\}$ & Art.~1 & Réduction de variance \\
+\midrule
+\multicolumn{5}{l}{\textit{Méta-contrôleur REINFORCE --- GCN+CAS (Article~1)}} \\
+\addlinespace
+Taux d'apprentissage méta ($\alpha$) & $3 \times 10^{-3}$ & $\{10^{-3}, 3 \times 10^{-3}, 10^{-2}\}$ & Art.~1 & Convergence rapide sur 2\,000 épisodes on-policy \\
+Référence EMA méta ($\beta$) & 0.95 & $\{0.9, 0.95, 0.99\}$ & Art.~1 & Baseline stable pour REINFORCE \\
+Gradient clipping & 1.0 & $\{0.5, 1.0, 5.0\}$ & Art.~1 & Prévention d'explosion du gradient \\
 \midrule
 \multicolumn{5}{l}{\textit{Experts MARL (Article~1)}} \\
 \addlinespace
-Taux d'apprentissage MARL ($\alpha$) & $5 \times 10^{-4}$ & $\{10^{-4}, 5 \times 10^{-4}, 10^{-3}\}$ & Art.~1 & Standard EPyMARL pour QMIX/QTRAN \\
+Taux d'apprentissage MARL ($\alpha$) & $3 \times 10^{-4}$ & $\{10^{-4}, 3 \times 10^{-4}, 10^{-3}\}$ & Art.~1 & Standard EPyMARL pour QMIX/QTRAN \\
 Taille du batch & 32 & $\{16, 32, 64\}$ & Art.~1 & Compromis variance / coût mémoire \\
-Mémoire de replay & 5\,000 ép. & $\{2000, 5000, 10000\}$ & Art.~1 & Suffisant pour couvrir la diversité scénaristique \\
-$\epsilon$ exploration (final) & 0.05 & $\{0.01, 0.05, 0.1\}$ & Art.~1 & 5\% d'exploration résiduelle évite la convergence locale \\
+Mémoire de replay & 15\,000 ép. & $\{5000, 10000, 15000\}$ & Art.~1 & Couverture de la diversité scénaristique \\
+$\epsilon$ exploration (final) & 0.01 & $\{0.01, 0.05, 0.1\}$ & Art.~1 & 1\% d'exploration résiduelle évite la convergence locale \\
+Pas d'annulation $\epsilon$ & 150\,000 & $\{50K, 100K, 150K\}$ & Art.~1 & Annulation progressive sur 150K pas \\
 \midrule
 \multicolumn{5}{l}{\textit{Piliers CALASH (Article~2)}} \\
 \addlinespace

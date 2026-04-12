@@ -254,3 +254,25 @@ $RECYCLE.BIN/
 # Ignore darts_logs folder inside the epymarl folder since they are large
 /Users/djime/Documents/PHD/THESIS/CODES/RL_Routing/epymarl/darts_logs/*
 # End of https://www.gitignore.io/api/linux,python,windows,pycharm+all,visualstudiocode
+
+### macOS ###
+.DS_Store
+
+### Python virtual environments ###
+.venv/
+
+### LaTeX build artifacts ###
+*.aux
+*.log
+*.bbl
+*.blg
+*.nav
+*.snm
+*.toc
+*.out
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.app

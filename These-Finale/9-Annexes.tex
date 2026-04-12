@@ -51,11 +51,12 @@ L'architecture GAPF comprend 1\,473 paramètres répartis comme suit~:
 \toprule
 \textbf{Composant} & \textbf{Dimensions} & \textbf{Paramètres} \\
 \midrule
-GCN couche 1 ($W^{(1)}$) & $F_{\text{in}} \times 32$ & $F_{\text{in}} \times 32$ \\
-GCN couche 2 ($W^{(2)}$) & $32 \times 16$ & 512 \\
-Réseau Q$\cdot$K (clé) & $16 \times 8$ & 128 \\
-Réseau Q$\cdot$K (requête) & $16 \times 8$ & 128 \\
-CAS (projection de sortie) & $16 \times K$ & $16K$ \\
+GCN couche 1 ($\mathbf{W}_1$) & $4 \times 16$ & 64 \\
+GCN couche 2 ($\mathbf{W}_2$) & $16 \times 16$ & 256 \\
+CAS $\mathbf{W}_c$ & $16 \times 64$ & 1\,024 \\
+CAS $\mathbf{b}_c$ & $64$ & 64 \\
+CAS $\mathbf{w}_2$ & $64 \times 1$ & 64 \\
+CAS $b_2$ & $1$ & 1 \\
 \midrule
 \textbf{Total} & & \textbf{1\,473} \\
 \bottomrule

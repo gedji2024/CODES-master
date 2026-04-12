@@ -199,8 +199,8 @@
   \begin{block}{\faLightbulb\; C1: Energy}
     \begin{itemize}\footnotesize\setlength{\itemsep}{1pt}
       \item Routing = \#1 factor for lifetime
-      \item LEACH/QMIX/QTRAN: heuristics or $\sim$39K params/agent
-      \item No MARL policy fusion exists
+      \item QMIX/QTRAN: $\sim$39K params/agent; QPSOFL: collapses at scale
+      \item No topology-aware MARL policy fusion exists
     \end{itemize}
   \end{block}
 \end{column}
@@ -226,21 +226,27 @@
 \end{frame}
 
 % ============================================================
-\begin{frame}[shrink=5]{Research Questions and Objectives}
+\begin{frame}[shrink=8]{Research Questions and Objectives}
 \begin{block}{Main Research Question}
   \emph{How to design a complete intelligent routing protocol stack --- energy-efficient, carbon-sustainable, and secure --- for AI-native 6G-integrated disaster-monitoring sensor networks?}
 \end{block}
 
 \vspace{4pt}
-\small
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{@{}p{0.03\textwidth}p{0.43\textwidth}p{0.47\textwidth}@{}}
+\footnotesize
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}p{0.02\textwidth}p{0.44\textwidth}p{0.44\textwidth}@{}}
   \toprule
   & \textbf{Specific Question} & \textbf{Specific Objective} \\
   \midrule
-  \textbf{Q1} & PDR $\geq$ 98\% via MARL + GNN fusion with $<$ 2,000 params? & \textbf{SO1} --- GAPF: GCN+CAS fusion \\
-  \textbf{Q2} & Significant LCI reduction via 4 pillars + 6G PHY? & \textbf{SO2} --- CALASH: carbon-aware routing \\
-  \textbf{Q3} & Detection with 0 false positives + graduated decisions $\leq$ 10\,ms? & \textbf{SO3} --- CASTER-ZT: zero-trust shield \\
+  \textbf{Q1} &
+    Can a lightweight GNN encoder fuse complementary MARL policies to achieve a packet delivery ratio $\geq$ 98\% with fewer than 2\,000 trainable parameters on embedded platforms? &
+    \textbf{SO1:} Develop GAPF, a GCN-based contextual algorithm selector that dynamically fuses QMIX and QTRAN experts with $<$ 2\,000 parameters, achieving PDR $\geq$ 98\% at 2--3.5$\times$ lower energy. \\
+  \textbf{Q2} &
+    To what extent can a four-pillar carbon-aware protocol, combined with 6G physical-layer capabilities, reduce the lifecycle carbon intensity of a disaster-monitoring WSN? &
+    \textbf{SO2:} Devise CALASH, a four-pillar lifecycle-aware routing protocol (CADR, CARE, SHDR, LSE) with formal carbon-budget guarantees via Lyapunov optimisation over a 6G physical layer. \\
+  \textbf{Q3} &
+    Is a zero-trust decision shield able to detect compromised or hallucinating routing policies with zero false positives and enforce graduated responses within the 10\,ms O-RAN real-time budget? &
+    \textbf{SO3:} Propose CASTER-ZT, a GraphSAGE-based trust-risk evaluator coupled with a deterministic five-level graduated-decision shield, guaranteeing zero false positives within the 10\,ms O-RAN near-RT RIC latency budget. \\
   \bottomrule
 \end{tabular}
 \end{frame}
@@ -353,7 +359,7 @@
 \begin{column}{0.48\textwidth}
   \begin{itemize}
     \item Monotonic Q$\cdot$K Attention Network for multi-objective reward scalarization
-    \item Bi-level optimization: ES (outer loop) + MARL (inner)
+    \item Tri-component: REINFORCE (GCN+CAS) + ES (Q$\cdot$K attention) outer; MARL inner
   \end{itemize}
 \end{column}
 \end{columns}
@@ -397,7 +403,7 @@
   \toprule
   \textbf{Metric} & \textbf{Baseline (QMIX)} & \textbf{GAPF} & \textbf{Gain} \\
   \midrule
-  PDR (delivery ratio) & 85--92\% & $\geq$ \textbf{98\%} & +6--13 pts \\
+  PDR (delivery ratio) & 46--67\% & $\geq$ \textbf{98\%} & +43--111\% $\uparrow$ \\
   Energy per packet & $1.0\times$ & $0.29$--$0.50\times$ & \textbf{2--3.5$\times$ $\downarrow$} \\
   Trainable parameters & $\sim$39K/agent & \textbf{1,473} & 26$\times$ $\downarrow$ \\
   Training memory & 3.2--13.8\,GB & \textbf{951\,MB} & 3.4--14.5$\times$ $\downarrow$ \\
@@ -419,9 +425,9 @@
 \begin{column}{0.48\textwidth}
   \begin{block}{Validated on}
     \begin{itemize}\small
-      \item 7 scenarios (50--200 nodes)
-      \item 21,000 runs
-      \item Compared to LEACH, QMIX, QTRAN, ABC, PSO
+      \item 7 scenarios (20--100 sensors)
+      \item 21,000 test episodes
+      \item Compared to QMIX, QTRAN, QPSOFL
     \end{itemize}
   \end{block}
 \end{column}
@@ -440,23 +446,46 @@
 \end{block}
 \vspace{1pt}
 \centering
-\begin{tikzpicture}[scale=0.68, every node/.style={scale=0.68},
-    pillar/.style={draw, rounded corners, minimum width=2.8cm, minimum height=1.4cm, align=center, font=\normalsize}]
-  \node[pillar, fill=blue!12] (cadr) at (-4.5,0) {\textbf{CADR}\\Carbon-aware\\data reduction};
-  \node[pillar, fill=green!22] (care) at (-1.2,0) {\textbf{CARE}\\Lyapunov--DQN\\Carbon budget};
-  \node[pillar, fill=orange!12] (shdr) at (2.1,0) {\textbf{SHDR}\\Self-healing\\MAPE-K};
-  \node[pillar, fill=red!12] (lse) at (5.4,0) {\textbf{LSE}\\Lifecycle\\ISO 14040};
-
-  % LCI
-  \node[draw, fill=polyyellow!30, rounded corners, minimum width=11cm, minimum height=0.6cm, align=center, font=\normalsize\bfseries] (lci) at (0.45,-1.8) {LCI = (C\textsubscript{emb.} + C\textsubscript{oper.} + C\textsubscript{EoL}) / useful packets};
-
-  \draw[-{Stealth},thick] (cadr.south) -- ++(0,-0.4) -| (lci.north -| cadr);
-  \draw[-{Stealth},thick] (care.south) -- ++(0,-0.4) -| (lci.north -| care);
-  \draw[-{Stealth},thick] (shdr.south) -- ++(0,-0.4) -| (lci.north -| shdr);
-  \draw[-{Stealth},thick] (lse.south) -- ++(0,-0.4) -| (lci.north -| lse);
-
-  % 6G
-  \node[draw, fill=gray!10, rounded corners, minimum width=11cm, minimum height=0.5cm, align=center, font=\normalsize] (phy) at (0.45,-2.8) {\textbf{6G Dual-Band PHY:} sub-THz + sub-6\,GHz \quad|\quad RIS \quad|\quad ISAC};
+\begin{tikzpicture}[scale=0.65, every node/.style={scale=0.65},
+    phase/.style={draw, thick, rounded corners=3pt,
+      minimum width=8.5cm, minimum height=0.7cm,
+      align=center, font=\small},
+    arr/.style={-{Stealth[length=2.5mm]}, thick},
+    phlbl/.style={font=\tiny, text=gray!60}]
+  % --- Per-round vertical flow (faithful to article figure) ---
+  \node[phase, fill=gray!15] (round) at (0,0)
+    {\textbf{Round $t$ begins}};
+  \node[phase, fill=orange!12] (shdr) at (0,-1.1)
+    {\textbf{SHDR:} Heartbeat Monitor (MAPE-K autonomic loop)};
+  \node[phase, fill=blue!12] (cadr) at (0,-2.2)
+    {\textbf{CADR:} Adaptive Compression\quad
+     $\rho(t) = f\!\big(\text{CI}(t)\big)$};
+  \node[phase, fill=green!22] (care) at (0,-3.3)
+    {\textbf{CARE:} DQN + Lyapunov Routing\quad
+     $j^{\!*} \!=\! \arg\min\,[Z\!\cdot\!c + V\!\cdot\!e]\;\cdot\;\ell$};
+  \node[phase, fill=red!12] (lse) at (0,-4.4)
+    {\textbf{LSE:} Carbon Queue Update\quad
+     $Z(t{+}1) = \max\!\{0,\; Z(t) + C_{\text{op}} - \bar{c}\}$};
+  \node[phase, fill=green!10] (out) at (0,-5.5)
+    {\textbf{Packets delivered to BS}};
+  % --- Arrows ---
+  \draw[arr] (round) -- (shdr);
+  \draw[arr] (shdr)  -- (cadr);
+  \draw[arr] (cadr)  -- (care);
+  \draw[arr] (care)  -- (lse);
+  \draw[arr] (lse)   -- (out);
+  % --- Phase labels ---
+  \node[phlbl] at (5.2,-1.1) {Phase 0};
+  \node[phlbl] at (5.2,-2.2) {Phase 1--2};
+  \node[phlbl] at (5.2,-3.3) {Phase 3};
+  \node[phlbl] at (5.2,-4.4) {Phase 4};
+  % --- 6G PHY foundation layer ---
+  \node[draw, thick, fill=gray!8, rounded corners=3pt,
+        minimum width=8.5cm, minimum height=0.55cm,
+        align=center, font=\small]
+    at (0,-6.7)
+    {\textbf{6G Dual-Band PHY:}\; sub-THz + sub-6\,GHz
+     \;\textbar\; RIS \;\textbar\; ISAC};
 \end{tikzpicture}
 \end{frame}
 
@@ -543,40 +572,54 @@
 \section{Article 3 --- CASTER-ZT}
 % ============================================================
 
-\begin{frame}{CASTER-ZT: Zero-Trust Shielded Decision Control}
+\begin{frame}[shrink=5]{CASTER-ZT: Zero-Trust Shielded Decision Control}
 {\small\color{polyblue} \textbf{G.\,P.\ Djimefo Kapen}, \textbf{R.\ Al Mallah}, \textbf{S.\ Pierre} --- \textit{IEEE Trans.\ Mobile Computing}}
-\vspace{2pt}
+\vspace{1pt}
 \begin{block}{Observation}
   AI in the control loop creates a \textbf{new attack surface}. Existing mechanisms (CPO, binary shielding) only offer \emph{allow} or \emph{block} --- unsuitable for critical missions.
 \end{block}
 
-\vspace{4pt}
+\vspace{1pt}
 \centering
-\begin{tikzpicture}[scale=0.75, every node/.style={scale=0.75},
-    box/.style={draw, rounded corners, minimum width=2.6cm, minimum height=1.1cm, align=center, font=\small},
+\begin{tikzpicture}[scale=0.55, every node/.style={scale=0.55},
+    blk/.style={draw, thick, rounded corners=3pt,
+      minimum width=2.8cm, minimum height=0.85cm,
+      align=center, font=\small},
+    shd/.style={blk, fill=orange!10, line width=1.5pt},
+    dec/.style={draw, thick, rounded corners=2pt,
+      minimum width=1.5cm, minimum height=0.45cm,
+      align=center, font=\scriptsize},
     arr/.style={-{Stealth[length=2.5mm]}, thick}]
-  % Pipeline
-  \node[box, fill=blue!12] (gs) at (-4.5,0) {\textbf{GraphSAGE}\\2 layers\\Encoder};
-  \node[box, fill=orange!12] (mc) at (-1,0) {\textbf{MC-Dropout}\\Epistemic\\uncertainty};
-  \node[box, fill=green!22] (ev) at (2.5,0) {\textbf{Evaluator}\\Trust-risk\\dual-hypothesis};
-  \node[box, fill=red!15, line width=1.5pt] (sh) at (6.2,0) {\textbf{Shield}\\deterministic\\14 scalar params};
-
-  \draw[arr] (gs) -- (mc);
-  \draw[arr] (mc) -- (ev);
-  \draw[arr] (ev) -- (sh);
-
-  % Decisions
-  \node[font=\footnotesize, align=center] (d1) at (6.2,-1.8) {%
-    \colorbox{green!30}{\strut Allow}\;
-    \colorbox{blue!15}{\strut Scope-reduce}\;
-    \colorbox{yellow!30}{\strut Defer}\;
-    \colorbox{orange!20}{\strut Escalate}\;
-    \colorbox{red!20}{\strut Block}};
-  \draw[arr] (sh) -- (d1);
-  \node[font=\footnotesize\bfseries, above=0.1cm of d1] {5 Graduated Decisions};
+  % === Row 1: Input → Encoder → Policy Head ===
+  \node[blk, fill=blue!5]  (inp) at (0,0)     {\textbf{Input}\\Telemetry, $G_t$};
+  \node[blk, fill=blue!12] (enc) at (3.8,0)   {\textbf{GraphSAGE}\\2 layers, $H_t$};
+  \node[blk, fill=green!12](pol) at (7.6,0)   {\textbf{Policy Head}\\Candidate $\hat{a}_t$};
+  % === Row 2: Trust-Risk ← Uncertainty ===
+  \node[blk, fill=orange!12](tr) at (7.6,-1.9)  {\textbf{Trust--Risk}\\$(\tau_t,\rho_t,\Delta_t)$};
+  \node[blk, fill=yellow!12](uc) at (3.8,-1.9)  {\textbf{MC-Dropout}\\$u_t$ ($T\!=\!20$)};
+  % === Row 3: Authorization → Shield ===
+  \node[blk, fill=purple!8] (auth) at (3.8,-3.8) {\textbf{Authorization}\\Identity $\alpha_t$};
+  \node[shd]                (sh)   at (7.6,-3.8) {\textbf{ZT Shield $\Gamma$}\\14 scalar params};
+  % === Bounded output ===
+  \node[blk, fill=blue!5]   (out)  at (7.6,-5.7) {\textbf{Bounded outcome}\\$a_t^\star$ + audit};
+  % === Arrows (faithful zigzag dataflow) ===
+  \draw[arr] (inp) -- (enc);
+  \draw[arr] (enc) -- (pol);
+  \draw[arr] (pol) -- (tr);
+  \draw[arr] (tr)  -- (uc);
+  \draw[arr] (uc)  -- (auth);
+  \draw[arr] (auth) -- (sh);
+  \draw[arr] (sh)  -- (out);
+  % === 5 graduated decisions ===
+  \node[font=\scriptsize\bfseries] at (3.8,-6.7) {$\mathcal{D}$: 5 graduated decisions};
+  \node[dec, fill=green!30]  at (0.6,-7.5)   {Allow};
+  \node[dec, fill=blue!15]   at (2.6,-7.5)   {Scope-red.};
+  \node[dec, fill=yellow!30] at (4.6,-7.5)   {Defer};
+  \node[dec, fill=orange!20] at (6.6,-7.5)   {Escalate};
+  \node[dec, fill=red!20]    at (8.6,-7.5)   {Block};
 \end{tikzpicture}
 
-\vspace{6pt}
+\vspace{3pt}
 \small
 \begin{columns}[T]
 \begin{column}{0.48\textwidth}
@@ -641,14 +684,31 @@
 \begin{frame}[t]{Protocol Stack Synergies}
 \centering
 \begin{tikzpicture}[scale=0.75, every node/.style={scale=0.75},
-    layer/.style={draw, rounded corners=5pt, minimum width=10cm, minimum height=0.9cm, align=center, font=\normalsize}]
-  \node[layer, fill=blue!12] (l1) at (0,0) {\textbf{Layer 1 --- GAPF}\quad Energy routing\quad \textit{PDR $\geq$ 98\%, 2--3.5$\times$ $\downarrow$}};
-  \node[layer, fill=green!22] (l2) at (0,-1.5) {\textbf{Layer 2 --- CALASH}\quad Carbon sustainability\quad \textit{LCI $-$33\%, lifetime +60\%}};
-  \node[layer, fill=red!12] (l3) at (0,-3.0) {\textbf{Layer 3 --- CASTER-ZT}\quad Zero-trust security\quad \textit{0\% FP, 3.07\,ms}};
+    layer/.style={draw, thick, rounded corners=5pt, minimum width=12.5cm, minimum height=0.9cm, align=center, font=\normalsize}]
+  \node[layer, fill=blue!12]  (l1) at (0,0)
+    {\textbf{Layer~1 --- GAPF}\qquad Energy-efficient routing\qquad
+     \textit{PDR~$\geq$~98\%,\; 2--3.5$\times$ energy~$\downarrow$}};
+  \node[layer, fill=green!22] (l2) at (0,-2)
+    {\textbf{Layer~2 --- CALASH}\qquad Carbon sustainability\qquad
+     \textit{LCI~$-$33\%,\; lifetime~+60\%}};
+  \node[layer, fill=red!12]   (l3) at (0,-4)
+    {\textbf{Layer~3 --- CASTER-ZT}\qquad Zero-trust security\qquad
+     \textit{0\%~FP,\; 3.07\,ms/decision}};
 
-  \draw[-{Stealth},thick,blue!60] (l1.south west) ++(0.5,0) -- ++(0,-0.35) node[midway, right, font=\small, text=black] {Efficient routing $\Rightarrow$ $\downarrow\;C_\text{oper.}$};
-  \draw[-{Stealth},thick,polygreen] (l2.south west) ++(0.5,0) -- ++(0,-0.35) node[midway, right, font=\small, text=black] {$\downarrow$ traffic (CADR) $\Rightarrow$ $\downarrow$ attack surface};
-  \draw[-{Stealth},thick,dashed,red!60] (l3.east) -- ++(1.2,0) |- (l1.east) node[pos=0.25, right, font=\small, text=black] {Protects the gains};
+  % --- Down arrows anchored to box borders ---
+  \draw[-{Stealth[length=3mm]}, thick, blue!70]
+    ([xshift=-4cm]l1.south) -- ([xshift=-4cm]l2.north)
+    node[midway, right, font=\small, text=black, xshift=2pt]
+      {Efficient routing $\Rightarrow$ lower $C_{\text{oper.}}$};
+  \draw[-{Stealth[length=3mm]}, thick, green!60!black]
+    ([xshift=-4cm]l2.south) -- ([xshift=-4cm]l3.north)
+    node[midway, right, font=\small, text=black, xshift=2pt]
+      {$\downarrow$ traffic (CADR) $\Rightarrow$ $\downarrow$ attack surface};
+  % --- Feedback arrow: L3 right → up → L1 right ---
+  \draw[-{Stealth[length=3mm]}, thick, dashed, red!60]
+    (l3.east) -- ++(1.5,0) |- (l1.east)
+    node[pos=0.25, right, font=\small, text=black]
+      {Security protects efficiency gains};
 \end{tikzpicture}
 
 \vspace{1pt}
@@ -676,16 +736,16 @@
   \toprule
   \textbf{Metric} & \textbf{Best baseline} & \textbf{Baseline val.} & \textbf{Our result} & \textbf{Gain} \\
   \midrule
-  PDR & QMIX & 85--92\% & $\geq$ \textbf{98\%} & +6--13 pts \\
+  PDR & QMIX & 46--67\% & $\geq$ \textbf{98\%} & +43--111\% $\uparrow$ \\
   Energy / packet & QMIX & $1.0\times$ & $0.29$--$0.50\times$ & 2--3.5$\times$ $\downarrow$ \\
   Parameters & RNN agent & $\sim$39K & \textbf{1,473} & 26$\times$ $\downarrow$ \\
   Training memory & QMIX & 3.2--13.8\,GB & \textbf{951\,MB} & 3.4--14.5$\times$ $\downarrow$ \\
   Network lifetime & LEACH & 931 rounds & \textbf{1,486 rounds} & +60\% \\
   LCI (CO$_2$/pkt) & LEACH & 13.42 & \textbf{8.99} & $-$33\% \\
-  Rogue detection & Binary shield & 60--70\% & \textbf{74--98\%} & +14--28 pts \\
-  False positives & CPO & 2--8\% & \textbf{0\%} & Full elim. \\
-  Latency / decision & CPO & $\sim$15\,ms & \textbf{3.07\,ms} & 4.9$\times$ $\downarrow$ \\
-  Criteria covered (/12) & Best & 4 & \textbf{12} & 3$\times$ $\uparrow$ \\
+  Rogue det.\ (0\% FP) & Best 0-FP & 0\% & \textbf{74--98\%} & +74--98 pts \\
+  False positives & Shield-Binary & 48.8\% & \textbf{0\%} & Full elim. \\
+  Latency / decision & O-RAN budget & 10\,ms & \textbf{3.07\,ms} & 3.3$\times$ $\downarrow$ \\
+  Criteria covered (/12) & Best existing & 1 & \textbf{12} & 12$\times$ $\uparrow$ \\
   \midrule
   \multicolumn{4}{l}{\textbf{Total test runs}} & $>$ \textbf{23,800} \\
   \bottomrule

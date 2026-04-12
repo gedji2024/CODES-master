@@ -1,0 +1,274 @@
+%% ============================================================================
+%%  CV – Georges Parfait Djimefo Kapen
+%%  Industry-standard LaTeX CV  |  Last updated: April 2026
+%% ============================================================================
+\documentclass[10pt,a4paper,sans]{moderncv}
+
+\moderncvstyle{banking}
+\moderncvcolor{blue}
+
+\usepackage[scale=0.88, top=1.0cm, bottom=1.0cm]{geometry}
+\setlength{\hintscolumnwidth}{2.8cm}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue!70!black}
+
+% ============================================================================
+%  PERSONAL DATA
+% ============================================================================
+\name{Georges Parfait}{Djimefo Kapen}
+\title{Computer Scientist \textbar{} AI Researcher}
+\address{Montréal, Québec, Canada}{}{}
+\phone[mobile]{+1~514-245-3182}
+\email{gpdk2025@gmail.com}
+
+% ============================================================================
+\begin{document}
+\makecvtitle
+\vspace{-1.8em}
+
+% ============================================================================
+%  PROFILE
+% ============================================================================
+\section{Profile}
+Computer scientist with expertise in \textbf{AI}, \textbf{Machine Learning},
+\textbf{Multi-Agent Reinforcement Learning}, \textbf{cybersecurity},
+and \textbf{6G network systems}.
+PhD expected Summer~2026. Strong background in software engineering, data
+science, cloud computing, and applied statistics. Proven ability to design novel
+AI architectures, author peer-reviewed research, teach at the university level, and
+deliver production-grade ML systems on AWS. Innovation, teamwork, leadership,
+and results-oriented.
+
+% ============================================================================
+%  SKILLS
+% ============================================================================
+\section{Technical Skills}
+\cvitem{Languages}{Python, Java, C++, PHP, SQL, R, JavaScript, TypeScript}
+\cvitem{LLM\,/\,Agents}{LangChain, LangGraph, LangSmith, MCP, RAG (FAISS), CRAG, RAGAS, Claude (Haiku, Opus), Kiro}
+\cvitem{AI\,/\,ML}{PyTorch, TensorFlow, Scikit-Learn, MARL (QMIX, QTRAN), GNN, DQN, NLP, Computer Vision, LLMs}
+\cvitem{Data}{PySpark, Databricks, Snowflake, Delta Lake, Relational Databases, ETL/ELT}
+\cvitem{Cloud}{AWS (SageMaker, Bedrock, EKS, Lambda, CloudWatch, S3, ECR, CloudFormation), OpenStack, Kubernetes, Docker}
+\cvitem{DevOps}{CI/CD (GitHub Actions, CodeBuild, OIDC), Git, Jenkins, GitLab, Terraform}
+\cvitem{Web\,/\,Mobile}{React, Angular, Node.js, FastAPI, Streamlit, D3.js, Plotly, Dash, Power~BI, Tableau}
+\cvitem{Methods}{Agile/Scrum, TDD, Design Patterns, Statistical Modeling, MLOps, Infrastructure as Code}
+
+% ============================================================================
+%  PUBLICATIONS
+% ============================================================================
+\section{Publications}
+
+\textbf{[1]} \textit{Energy-Efficient and Near Real-Time Routing Algorithm for
+Disaster Monitoring in Wireless Sensor Networks}\\
+G.\,P.~Djimefo~Kapen, R.~Al~Mallah, S.~Pierre --- Polytechnique
+Montréal \hfill \textit{(Submitted)}
+\begin{itemize}[leftmargin=1.5em, topsep=2pt, itemsep=0pt, parsep=0pt]
+  \item Designed \textbf{GAPF}, a novel \textbf{meta-learning} framework fusing
+        MARL policies (QMIX \& QTRAN) via a \textbf{GCN encoder} with only
+        \textbf{1\,473 parameters}.
+  \item Achieved $\geq$98\% packet delivery, 2--3.5$\times$ less energy,
+        13$\times$ less memory than baselines.
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{[2]} \textit{Carbon-Aware Autonomous Data Reduction and Self-Healing
+Routing for 6G-Integrated Disaster Sensor Networks}\\
+G.\,P.~Djimefo~Kapen, R.~Al~Mallah, S.~Pierre --- Polytechnique
+Montréal \hfill \textit{(Submitted)}
+\begin{itemize}[leftmargin=1.5em, topsep=2pt, itemsep=0pt, parsep=0pt]
+  \item Proposed \textbf{CALASH}, the \textbf{first protocol} jointly optimizing
+        Lifecycle Carbon Intensity via a hybrid \textbf{Lyapunov--DQN} engine,
+        \textbf{MAPE-K} self-healing, and ISO\,14040 lifecycle analysis over 6G.
+  \item Achieved 60\% longer network lifetime and 33\% lower LCI than baselines.
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{[3]} \textit{Zero-Trust Shielded Graph-Structured Decision Control for
+Secure Autonomous Recovery in AI-Native 6G Networks}\\
+G.\,P.~Djimefo~Kapen, R.~Al~Mallah, S.~Pierre --- Polytechnique
+Montréal \hfill \textit{(Submitted)}
+\begin{itemize}[leftmargin=1.5em, topsep=2pt, itemsep=0pt, parsep=0pt]
+  \item Designed \textbf{CASTER-ZT}, the \textbf{first framework} combining
+        \textbf{GNN-based} decision making with a formally bounded
+        \textbf{zero-trust} admissibility shield (10 proven properties).
+  \item Achieved 74--98\% rogue detection with \textbf{zero false positives},
+        3\,ms latency within O-RAN 10\,ms budget.
+\end{itemize}
+
+% ============================================================================
+%  EXPERIENCE
+% ============================================================================
+\section{Professional Experience}
+
+\cventry{2025--2026}{Lecturer}{Polytechnique Montréal}{Montréal}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item Teach the Python procedural programming course.
+\end{itemize}}
+
+\cventry{2022--2024}{AI Developer~I}{Intact Financial Corporation}{Montréal}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item Ingest and process large-scale data.
+  \item Monitor pipelines and develop automated testing solutions.
+  \item \textit{Stack:} PySpark, SQL, Databricks, Snowflake, AWS, Shell, Git.
+\end{itemize}}
+
+\cventry{2022--2023}{Lecturer}{Polytechnique Montréal}{Montréal}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item Teach the Python procedural programming course.
+\end{itemize}}
+
+\cventry{2021--2022}{Scientific Assistant --- MOOC AI}{Université de Montréal}{Montréal}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item Design courses and practical work in supervised learning (Python).
+\end{itemize}}
+
+\cventry{2012--2014}{Contractual Statistical Economist Engineer}{Ministry of Tourism and Recreation}{Cameroon}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item Analyze data
+\end{itemize}}
+
+\cventry{2010--2012}{Associate Professor of Statistics \& Probability}{Protestant University of Central Africa}{Cameroon}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item Teach statistics and probability courses.
+\end{itemize}}
+
+\cventry{2009--2010}{Part-time Lecturer in Data Analysis}{ISSEA (Sub-regional Institute of Statistics and Applied Economics)}{Cameroon}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item Teach the Data Analysis course (R).
+\end{itemize}}
+
+% ============================================================================
+%  INTERNSHIPS & PROJECTS
+% ============================================================================
+\section{Internships \& Selected Projects}
+
+\cventry{2026}{Machine Learning Intern}{Ericsson}{Montréal}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item Designed and deployed a \textbf{production RAG Autonomous Agentic AI system} for telecom radio unit log anomaly detection, serving Ericsson's enterprise clients.
+  \item Trained a custom \textbf{Dual-Attention SLM} achieving \textbf{F1 90.6\%}, 99.97\% accuracy, and \textbf{1\,ms/log} inference latency on AWS SageMaker.
+  \item Built a \textbf{6-tool ReAct agent} orchestrated by Claude Haiku~4.5 on Bedrock: SageMaker scoring, FAISS RAG, RF physics world model, pattern classification, CloudWatch health monitoring.
+  \item Implemented \textbf{self-correcting RAG (CRAG)} with quality grading, \textbf{RAGAS} faithfulness/relevancy evaluation, and evidence-based \textbf{meta-cognition} confidence scoring (HIGH/MEDIUM/LOW).
+  \item Engineered a \textbf{production-scale map-reduce pipeline}: triage $\rightarrow$ cluster by failure signature $\rightarrow$ parallel agent investigation $\rightarrow$ adaptive cross-cluster synthesis. Handles 120+ anomalies in $\sim$12\,min.
+  \item Deployed the agent as a \textbf{K8s pod on EKS} exposed via Cloudflare tunnel with a Streamlit UI accessible from any device on the corporate network (phone, laptop, browser).
+  \item Built an \textbf{industry-standard event pipeline}: S3 upload $\rightarrow$ Lambda $\rightarrow$ SQS $\rightarrow$ K8s worker (full agent) $\rightarrow$ results in S3 $\rightarrow$ SNS email alerts on critical anomalies.
+  \item Designed a \textbf{fully autonomous retraining loop}: drift-triggered + weekly retraining via EventBridge, with auto-promotion only when the new model's F1 exceeds the current production model.
+  \item Implemented a \textbf{7-stage CI/CD pipeline} (GitHub Actions + AWS CodeBuild with OIDC): test $\rightarrow$ OWASP security scan $\rightarrow$ CloudFormation infra $\rightarrow$ staging gate $\rightarrow$ deploy $\rightarrow$ smoke test $\rightarrow$ auto-rollback. Zero static IAM keys.
+  \item Authored \textbf{131 automated tests} with an AST-based adaptive test guardian ensuring 100\% production function coverage.
+  \item \textit{Stack:} Python, AWS (SageMaker, Bedrock, EKS, Lambda, SQS, SNS, S3, ECR, CloudFormation, CloudWatch), LangChain, LangGraph, LangSmith, FAISS, MCP, Claude, Kiro, Docker, Kubernetes, CI/CD, Terraform.
+\end{itemize}}
+
+\cventry{2022}{Data Engineering Intern}{Intact Financial Corporation}{Montréal}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item Manipulate data (PySpark, SQL, Databricks, Snowflake, AWS).
+\end{itemize}}
+
+\cventry{2020--2021}{Undergraduate Research Initiation Intern}{Polytechnique Montréal}{Montréal}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item ``Modeling of Voice Recognition in Android systems to secure bank
+        payments.''
+  \item Model with Deep Learning (Python); implement and deploy on Android
+        mobile (Java).
+\end{itemize}}
+
+\cventry{2020}{Entrepreneur / Research Initiation Intern}{Polytechnique Montréal}{Montréal}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item ``Face Recognition modeling integrating racial and gender bias.''
+  \item Model with Deep Learning (Python).
+\end{itemize}}
+
+\cventry{2021}{Integrator Project --- IATA}{Polytechnique Montréal}{Montréal}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item ``Flight Data eXchange --- Develop an initial and contextual flight data
+        assessment tool.''
+  \item Contribute to software implementation (Dash, Python, React, Electron,
+        Axios).
+\end{itemize}}
+
+\cventry{2021}{NLP Project}{Polytechnique Montréal}{Montréal}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item ``Extraction of keywords from texts as well as their type'' (Python).
+\end{itemize}}
+
+\cventry{2021}{Data Visualization Project --- Chaire de recherche en fiscalité et en finances publiques}{Polytechnique Montréal}{Montréal}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item ``Develop a web application to compare taxes and provincial and federal
+        tax rates by year.''
+  \item Implement a mockup with Plotly.js, D3.
+\end{itemize}}
+
+\cventry{2019--2020}{Programming Intern}{FLEX GROUP}{Laval}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item ``Modeling of Automatic Optical Character Recognition.''
+  \item Implement models in Python, PHP.
+\end{itemize}}
+
+\cventry{2006}{Intern for the Master's in Applied Statistics}{International Bank of Cameroon for Savings and Credit}{Cameroon}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item ``Initiation of mathematical models in forecasting a bank's income and
+        expenses'' (R).
+\end{itemize}}
+
+% ============================================================================
+%  EDUCATION
+% ============================================================================
+\section{Education}
+
+\cventry{Summer 2026}{PhD in Computer Engineering}{Polytechnique Montréal}{Montréal, Canada}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item AI-driven routing, carbon-aware networking, and zero-trust security
+        for 6G sensor networks.
+\end{itemize}}
+
+\cventry{}{Engineering Diploma in Software Engineering}{Polytechnique Montréal}{Montréal, Canada}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item Concentration: Artificial Intelligence --- Data Sciences.
+\end{itemize}}
+
+\cventry{}{Master's Degree in Applied Statistics}{Advanced National School of Engineering (ENSPY)}{Yaoundé, Cameroon}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item Equivalency: Master's in Probability --- Statistics.
+\end{itemize}}
+
+\cventry{}{Master's Degree in Mathematics}{University of Yaoundé~I}{Yaoundé, Cameroon}{}{%
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=0pt, parsep=0pt]
+  \item Equivalency: Specialized Higher Studies Diploma (DESS) in Mathematics.
+\end{itemize}}
+
+% ============================================================================
+%  CERTIFICATIONS
+% ============================================================================
+\section{Licenses \& Certifications}
+
+\cvlistitem{AWS Certified Cloud Practitioner (CLF-C01)\newline
+\textit{Certification Prep Path (Pluralsight), Montréal}}
+\cvlistitem{Program Management Professional (PgMP)\newline
+\textit{Certification Prep Path (Pluralsight), Montréal}}
+\cvlistitem{AWS Certified Developer --- Associate (DVA-C02)\newline
+\textit{Certification Prep Path (Pluralsight), Montréal}}
+
+% ============================================================================
+%  CONFERENCES
+% ============================================================================
+\section{Conferences \& Seminars}
+
+\cventry{Mar--Apr 2026}{Oral Presentation}{PolyCongrès 2026, Polytechnique Montréal}{Montréal, Canada}{}{``Energy-Efficient and Near Real-Time Routing for Disaster Monitoring in Wireless Sensor Networks --- Graph-Attentive Policy Fusion (GAPF).'' Georges Parfait Djimefo, Ranwa Al Mallah, Samuel Pierre.}
+
+\cventry{Oct 2013}{Oral Presentation}{20th Conf.\ African Assoc.\ of Insect Scientists}{Yaoundé, Cameroon}{}{Djimefo~P., Tchuente~M. \& Le~Gall~P. --- ``Biogeography of communities of insects using clustering methods.'' Theme: ``Global change and impacts on insect biodiversity: Integrated pest and disease vectors management in Africa.''}
+
+\cventry{Aug 2008}{Poster}{29th Annual Conf.\ Int.\ Society for Clinical Biostatistics}{Copenhagen, Denmark}{}{``HIV incidence estimation from repeated cross-sectional surveys: a comparative study of parametric and non-parametric approaches by simulation.'' Joint work: H.~Gwet, R.~Pouillot, Y.~Le~Strat, A.~Alioum, J.-C.~Thalabard.}
+
+\cventry{Jan 2008}{Oral Presentation}{ANMSA (African Network of Mathematical Statistics and its Applications)}{Franceville, Gabon}{}{Université des Sciences et Techniques de Masuku (USTM). ``Épidémiologie du VIH au Cameroun: Estimation de l'incidence à partir des données de prévalence.''}
+
+% ============================================================================
+%  VOLUNTEERING
+% ============================================================================
+\section{Volunteering}
+\cvlistitem{Volunteer at the IEEE branch of Polytechnique Montréal, Montréal, 2018.}
+\cvlistitem{Volunteer at the ConFoo conference, Montréal, 2018.}
+
+% ============================================================================
+\end{document}

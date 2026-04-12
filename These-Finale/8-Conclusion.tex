@@ -174,16 +174,16 @@ Le Tableau~\ref{tab:bilan-global} récapitule les résultats quantitatifs clés 
 \toprule
 \textbf{Métrique} & \textbf{Meilleure référence} & \textbf{Valeur réf.} & \textbf{Notre résultat} & \textbf{Gain} \\
 \midrule
-PDR (taux de livraison) & QMIX & 85--92\% & $\geq$ 98\% & +6--13 pts \\
+PDR (taux de livraison) & QMIX & 46--67\% & $\geq$ 98\% & +43--111\% $\uparrow$ \\
 Énergie par paquet & QMIX & 1.0$\times$ & 0.29--0.50$\times$ & 2--3.5$\times$ $\downarrow$ \\
 Paramètres entraînables & Agent RNN & $\sim$39K/agent & 1\,473 (GAPF) & 26$\times$ $\downarrow$ \\
 Mémoire d'entraînement & QMIX/QTRAN & 3.2--13.8\,GB & 951\,MB & 3.4--14.5$\times$ $\downarrow$ \\
 Durée de vie réseau & LEACH & 931 tours & 1\,486 tours & +60\% \\
 LCI (carbone/paquet) & LEACH & 13.42 & 8.99 & $-$33\% \\
-Détection politiques voyous & Shield binaire & 60--70\% & 74.2--98.3\% & +14--28 pts \\
-Faux positifs & CPO & 2--8\% & \textbf{0\%} & Élimination totale \\
-Latence par décision & CPO & $\sim$15\,ms & 3.07\,ms & 4.9$\times$ $\downarrow$ \\
-Critères couverts (/12) & Meilleur concurrent & 4 & \textbf{12} & 3$\times$ $\uparrow$ \\
+Détect.\ voyous (0\% FP) & Meilleur 0-FP & 0\% & 74.2--98.3\% & +74--98 pts \\
+Faux positifs & Shield-Binary & 48.8\% & \textbf{0\%} & Élimination totale \\
+Latence par décision & Budget O-RAN & 10\,ms & 3.07\,ms & 3.3$\times$ $\downarrow$ \\
+Critères couverts (/12) & Meilleur concurrent & 1 & \textbf{12} & 12$\times$ $\uparrow$ \\
 Exécutions totales de test & --- & --- & $>$ 23\,800 & --- \\
 \bottomrule
 \end{tabular}%
