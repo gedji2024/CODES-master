@@ -51,10 +51,10 @@
 
 % \documentclass[journal,transmag]{IEEEtran}
 \documentclass[journal]{IEEEtran}
-%\usepackage[margin=1in]{geometry} % review only
-%\usepackage{setspace} % review only
-%\usepackage{times} % review only
-%\doublespacing % review only
+\usepackage[margin=1in]{geometry} % 1-inch margins on all sides
+\usepackage{setspace} % Package for line spacing
+\usepackage{times} % Use Times New Roman font
+\doublespacing % Set double line spacing
 %
 % If IEEEtran.cls has not been installed into the LaTeX system files,
 % manually specify the path to it like:
@@ -460,14 +460,6 @@
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
-% Float placement tuning (formatting only, no content change)
-\setcounter{topnumber}{4}
-\setcounter{dbltopnumber}{4}
-\renewcommand{\topfraction}{0.95}
-\renewcommand{\dbltopfraction}{0.95}
-\renewcommand{\textfraction}{0.05}
-\addtolength{\textfloatsep}{-4pt}
-\addtolength{\dbltextfloatsep}{-4pt}
 
 \begin{document}
 %
@@ -789,7 +781,6 @@ Table~\ref{tab:comparative_metrics} shows a comparative Analysis of Selected Rou
 
 \begin{table*}[!t]
 \caption{Comparative Analysis of Selected Routing Algorithms (2024–2025)}
-\renewcommand{\arraystretch}{1.0}
 \resizebox{\textwidth}{!}{
 \begin{tabular}{|p{4cm}|p{3.2cm}|c|c|c|c|}
 \hline
@@ -1156,11 +1147,10 @@ Let $n$ denote the number of sensor agents, $h = 64$ the RNN hidden dimension, $
 
 At each routing step, only the frozen expert executes; across all $n$ agents the per-step cost is $\mathcal{O}_{\text{step}} = \mathcal{O}(n^2 h + n h^2)$, \textbf{identical for QMIX, QTRAN, and GAPF}. GAPF adds a one-time per-episode overhead for adjacency construction ($\mathcal{O}(n^2)$), a two-layer GCN forward pass ($\mathcal{O}(n^2 d + n d^2)$), and the CAS MLP ($\mathcal{O}(dm)$), yielding $\mathcal{O}_{\text{GAPF-init}} = \mathcal{O}(n^2 d)$. For an episode of $T$ steps the total is $\mathcal{O}(Tn^2 h + Tnh^2 + n^2 d)$; since $Th \gg d$ the GCN overhead is amortised and the dominant term $\mathcal{O}(Tn^2 h)$ matches standalone QMIX/QTRAN.
 
-\begin{table}[!ht]
-\caption{Time complexity comparison. $n$: sensors, $T$: steps/episode, $h$: RNN hidden dim (64), $d$: GNN embed dim (16), $N_p$: PSO particles (32), $I$: PSO iterations (50).}
+\begin{center}
+\captionof{table}{Time complexity comparison. $n$: number of sensors, $T$: steps per episode, $h$: RNN hidden dimension (64), $d$: GNN embedding dimension (16), $N_p$: PSO particles (32), $I$: PSO iterations (50).}
 \label{tab:complexity}
-\renewcommand{\arraystretch}{1.0}
-\resizebox{\linewidth}{!}{%
+\resizebox{\linewidth}{!}{
 \begin{tabular}{lcc}
 \toprule
 Algorithm & Per-Step & Per-Episode \\
@@ -1171,7 +1161,7 @@ QPSOFL  & $\mathcal{O}(N_p \cdot n^2)$ & $\mathcal{O}(T \cdot I \cdot N_p \cdot 
 \bottomrule
 \end{tabular}
 }
-\end{table}
+\end{center}
 
 \noindent GAPF adds only $\mathcal{O}(n^2 d)$ per episode, where $d = 16 \ll h = 64$, making its per-step complexity identical to standalone QMIX/QTRAN. In contrast, QPSOFL's cost grows as $\mathcal{O}(T \cdot I \cdot N_p \cdot n^2)$ due to repeated swarm optimisation at every step, explaining its longer wall-clock times despite having no neural network.
 
@@ -1181,11 +1171,10 @@ QPSOFL  & $\mathcal{O}(N_p \cdot n^2)$ & $\mathcal{O}(T \cdot I \cdot N_p \cdot 
 
 Table~\ref{table_setting} presents the custom Gym environment setting.
 
-\begin{table}[!ht]
-\caption{Custom Gym Environment setting.}
+\begin{center}
+\captionof{table}{Custom Gym Environment setting.}
 \label{table_setting}
-\renewcommand{\arraystretch}{1.0}
-\resizebox{\linewidth}{!}{%
+\resizebox{\linewidth}{!}{
 \begin{tabular}{|>{\columncolor{gray!50}}c|>{\columncolor{gray!10}}c|}
 \hline
 \textbf{Key} & \textbf{Value} \\
@@ -1208,7 +1197,7 @@ Total timesteps / Max per episode & 200,000 / 100 \\
 \hline
 \end{tabular}
 }
-\end{table}
+\end{center}
 
 Table~\ref{tab:hyperparameters} displays the training hyperparameters. QMIX and QTRAN are trained independently as separate expert policies; their parameters are then frozen, and only the lightweight GAPF meta-controller (${\sim}1{,}473$ parameters) is trained to dynamically select between them based on network topology.
 
@@ -1245,18 +1234,17 @@ Evaluation & Test episodes / eval $\varepsilon$ & 1,000 / 0.01 & 1,000 / 0.01 & 
 \end{tabular}
 }
 \end{table*}
-\renewcommand{\arraystretch}{1.0}
 
 Our evaluation includes QPSOFL~\cite{hu_energy_2024}, a metaheuristic baseline using Quantum PSO with Sobol-initialized particles and L'evy flight for cluster-head selection, followed by Mamdani-type Fuzzy Inference for relay selection.
 
 \paragraph{Execution-time instrumentation.}
 The framework records per-step wall-clock times (mean, p95, p99) as versioned \texttt{.npy} arrays. A standalone benchmark tool measures latency over 30 iterations (3 warmup), peak RAM via \texttt{tracemalloc}, analytical MACs/FLOPs, and estimated energy per inference ($\mu$J). Table~\ref{tab:reviewer7_latency} reports results for the worst case ($N{=}70$).
 
-\begin{table}[!ht]
-\caption{Inference metrics (Apple M-series CPU, 0.1\,W reference). All algorithms achieve sub-millisecond latency.}
+\begin{center}
+\captionof{table}{Inference metrics (Apple M-series CPU, 0.1,W reference). All algorithms achieve sub-millisecond latency.}
 \label{tab:reviewer7_latency}
-\renewcommand{\arraystretch}{1.0}
-\resizebox{\linewidth}{!}{%
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\linewidth}{!}{
 \begin{tabular}{@{}lcccc@{}}
 \toprule
 \textbf{Algorithm} & \textbf{Latency p95 (ms)} & \textbf{Peak RAM (KB)} & \textbf{MACs} & \textbf{Energy ($\mu$J)} \\
@@ -1269,17 +1257,16 @@ Agent only (deployed)    & $<$1 & $\sim$2 & $\sim$29K  & $<$10 \\
 \bottomrule
 \end{tabular}
 }
-\end{table}
+\end{center}
 
 Even scaling by $50\times$ for a resource-constrained ARM Cortex-M4 at 80,MHz, the per-step decision time remains under 15,ms---well within real-time WSN budgets.
 
 Seven scenarios (Table~\ref{tab:scenarios}) systematically vary network density ($n$) and coverage radius ($R$), each evaluated over three random seeds (42, 123, 456).
 
-\begin{table}[!ht]
-\caption{Overview of the seven evaluation scenarios.}
+\begin{center}
+\captionof{table}{Overview of the seven evaluation scenarios.}
 \label{tab:scenarios}
-\renewcommand{\arraystretch}{1.0}
-\resizebox{\linewidth}{!}{%
+\resizebox{\linewidth}{!}{
 \begin{tabular}{cccl}
 \hline
 \textbf{\#} & $n$ & $R$ (m) & \textbf{Rationale} \\
@@ -1294,7 +1281,7 @@ Seven scenarios (Table~\ref{tab:scenarios}) systematically vary network density 
 \hline
 \end{tabular}
 }
-\end{table}
+\end{center}
 
 \subsubsection{Consolidated Results Across All Scenarios}
 
@@ -1303,7 +1290,6 @@ Table~\ref{tab:consolidated_perf} presents key performance metrics for all seven
 \begin{table*}[!t]
 \caption{Performance metrics across all scenarios (three seeds, test set). Best values per scenario in \textbf{bold}.}
 \label{tab:consolidated_perf}
-\renewcommand{\arraystretch}{1.0}
 \resizebox{\textwidth}{!}{
 \begin{tabular}{cc|cccc|cccc}
 \toprule
@@ -1325,7 +1311,6 @@ $n$ & $R$ & QMIX & QTRAN & QPSOFL & \textbf{GAPF} & QMIX & QTRAN & QPSOFL & \tex
 \begin{table*}[!t]
 \caption{Energy balance ($\sigma_E$) and feasibility compliance across all scenarios.}
 \label{tab:consolidated_balance}
-\renewcommand{\arraystretch}{1.0}
 \resizebox{\textwidth}{!}{
 \begin{tabular}{cc|cccc|cc|cc}
 \toprule
@@ -1371,8 +1356,8 @@ The CTDE paradigm~\cite{kraemer2016multi,lowe2017multi} decouples training from 
 \begin{table*}[!t]
 \caption{Component deployment map under CTDE. Only the per-sensor agent and GAPF controller are active at inference.}
 \label{tab:deployment_components}
-\renewcommand{\arraystretch}{1.0}
-\resizebox{\textwidth}{!}{%
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{
 \begin{tabular}{@{}lccc@{}}
 \toprule
 \textbf{Component} & \textbf{Runs on} & \textbf{Deployed?} & \textbf{Size} \\
@@ -1412,6 +1397,8 @@ Despite GAPF's strong empirical performance, several limitations warrant discuss
     
     \item \textbf{Homogeneous sensor assumption.} All sensors are identical in hardware capability and initial energy. Heterogeneous deployments with mixed sensor types, varying transmission power, or asymmetric energy budgets are not evaluated. However, the architecture accommodates heterogeneity with minimal changes: the node feature vector (Eq.~\ref{eq:node_features}) extends from $\mathbb{R}^4$ to $\mathbb{R}^{4+k}$ by appending sensor-specific attributes (battery capacity, transmission power, sensor type), requiring only a resized $\mathbf{W}_1 \in \mathbb{R}^{(4+k) \times d}$; the CAS controller and readout are unchanged. Heterogeneous radii yield an asymmetric adjacency handled by row-normalised propagation. For $k{=}4$ additional features the parameter increase is 64 (4\% of 1{,}473), confirming no significant redesign is needed.
 \end{enumerate}
+
+\FloatBarrier
 
 
 
@@ -1527,12 +1514,12 @@ We identify five directions for future research, ordered by expected impact:
 %\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{mshell}}]{Michael Shell}
 % or if you just want to reserve a space for a photo:
 
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{Photo_Georges_300dpi.jpg}}]{Georges Parfait Djimefo Kapen}
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{Photo_Georges_Djimefo_resized.JPG}}]{Georges Parfait Djimefo Kapen}
 He received a bachelor's degree in software engineering from Polytechnique Montréal in $2021$. He holds a Master's degree in Statistics from the University of Yaoundé I. He also holds another Master's degree in Mathematics from the same university.
 \end{IEEEbiography}
 
 % if you will not have a photo at all:
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{Photo_Ranwa_300dpi.jpg}}]{Dr Ranwa AL MALLAH}
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{Photo_Mme_Ranwa.jpg}}]{Dr Ranwa AL MALLAH}
 Dr. Ranwa Al Mallah received her Ph.D. degree in computer and software engineering from Polytechnique Montreal in $2018$.  She then joined the Security laboratory of Polytechnique Montréal as a research assistant. Shortly after, she was a Postdoctoral fellow at Toronto Metropolitan University. She was an Assistant Professor in the Department of Electrical and Computer Engineering at the Royal Military College of Canada and is now an associate professor at Polytechnique Montreal. Ms. Al Mallah has over eight years of industry experience in IT, cybersecurity and telecommunications project management. She works in the fields of artificial intelligence, adversarial machine learning, computer networks and cybersecurity.
 \end{IEEEbiography}
 
@@ -1540,7 +1527,7 @@ Dr. Ranwa Al Mallah received her Ph.D. degree in computer and software engineeri
 % biographies
 %\newpage
 
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{Photo_Samuel_300dpi.jpg}}]{Pr Samuel Pierre} SAMUEL PIERRE (Senior Member, IEEE) received the Ph.D. degree (Hons.) from Université du Quebec à Trois-Rivieres (UQTR), in May $2014$, and the Ph.D. degree (Hons.) from Université du Quebec en Outaouais (UQO), in November $2016$. He is currently a Professor with the Department of Computer and Software Engineering, Polytechnique Montréal, and the Director of the Mobile Computing and Networking Research Laboratory (LARIM). He has authored or coauthored more than $550$ technical publications, including articles in refereed archival journals, textbooks, patents, and book chapters. His research interests include wired and wireless communications, mobile computing and networking, cloud computing, and e-learning. He was a fellow of The Engineering Institute of Canada, in $2003$, and The Canadian Academy of Engineering, in $2008$. He was appointed as a member of the Order of Canada, in December $2011$. He has received several awards, including the Prix Poly $1873$ for Excellence in Teaching and Training, in $2001$ and $2005$, and the Knight of the National Order of Quebec, in $2009$. He also received the El Fasi Prize from the Agence Universitaire de la Francophonie (AUF) to highlight the action of a person who has exerted a significant influence through the quality of his expertise and the innovative nature of his achievements at the international level in the fields of research, training, development and international cooperation, governance and/or transfer of knowledge or skills, in $2017$, the Grand Prize for Professional Excellence from the Order of Engineers of Quebec (OIQ), in $2020$, and the Gold Medal from Engineers Canada, in $2021$, the promotion of Officer of the National Order of Quebec in $2022$, the JM Ham Award from IEEE Canada ($2023$) for "outstanding contributions to training the next generation of scientists and engineers in the areas of mobile computing, networking and e-learning", and the Julian C. Smith Medal of the Engineering Institute of Canada "for distinguished achievements in the development of Canada" ($2024$).
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{samuel-pierre1.jpg}}]{Pr Samuel Pierre} SAMUEL PIERRE (Senior Member, IEEE) received the Ph.D. degree (Hons.) from Université du Quebec à Trois-Rivieres (UQTR), in May $2014$, and the Ph.D. degree (Hons.) from Université du Quebec en Outaouais (UQO), in November $2016$. He is currently a Professor with the Department of Computer and Software Engineering, Polytechnique Montréal, and the Director of the Mobile Computing and Networking Research Laboratory (LARIM). He has authored or coauthored more than $550$ technical publications, including articles in refereed archival journals, textbooks, patents, and book chapters. His research interests include wired and wireless communications, mobile computing and networking, cloud computing, and e-learning. He was a fellow of The Engineering Institute of Canada, in $2003$, and The Canadian Academy of Engineering, in $2008$. He was appointed as a member of the Order of Canada, in December $2011$. He has received several awards, including the Prix Poly $1873$ for Excellence in Teaching and Training, in $2001$ and $2005$, and the Knight of the National Order of Quebec, in $2009$. He also received the El Fasi Prize from the Agence Universitaire de la Francophonie (AUF) to highlight the action of a person who has exerted a significant influence through the quality of his expertise and the innovative nature of his achievements at the international level in the fields of research, training, development and international cooperation, governance and/or transfer of knowledge or skills, in $2017$, the Grand Prize for Professional Excellence from the Order of Engineers of Quebec (OIQ), in $2020$, and the Gold Medal from Engineers Canada, in $2021$, the promotion of Officer of the National Order of Quebec in $2022$, the JM Ham Award from IEEE Canada ($2023$) for "outstanding contributions to training the next generation of scientists and engineers in the areas of mobile computing, networking and e-learning", and the Julian C. Smith Medal of the Engineering Institute of Canada "for distinguished achievements in the development of Canada" ($2024$).
 \end{IEEEbiography}
 
 % You can push biographies down or up by placing
