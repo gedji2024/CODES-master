@@ -1,1144 +1,1503 @@
-# CASTER-ZT — Complete Deep Explainer Guide
+# CASTER-ZT: Complete Deep Explainer for a First-Year Software Engineering Student
 
-> **Purpose:** After reading this document from start to finish, you should be able to explain every concept, every design decision, every number, every theorem, every motivation, and every technical word in the article — clearly, deeply, and confidently — to any expert panel.
-
----
-
-## TABLE OF CONTENTS
-
-1. [What is the paper about — The 60-second elevator pitch](#1-elevator-pitch)
-2. [The real-world problem and why it matters](#2-the-problem)
-3. [Every technical term explained](#3-glossary)
-4. [The title — word by word](#4-the-title)
-5. [The research gap — what was missing before this paper](#5-the-gap)
-6. [The four research questions — and why these four](#6-research-questions)
-7. [The five contributions — and why they matter](#7-contributions)
-8. [System model — the world the system lives in](#8-system-model)
-9. [Threat model — who is the adversary and what can they do](#9-threat-model)
-10. [The CASTER-ZT architecture — component by component](#10-architecture)
-11. [The shield algorithm — step by step with a worked example](#11-shield-algorithm)
-12. [The training pipeline — how every component learns](#12-training-pipeline)
-13. [All ten propositions — statement, intuition, and proof walkthrough](#13-propositions)
-14. [The experimental design — every choice explained](#14-experimental-design)
-15. [Where every number comes from](#15-numbers)
-16. [The baselines — what they are and why each was chosen](#16-baselines)
-17. [The results — what they mean and why](#17-results)
-18. [The ablation — what removing each component teaches us](#18-ablation)
-19. [The multi-scale evaluation — why and what it shows](#19-multiscale)
-20. [The threshold sensitivity — why it matters](#20-threshold)
-21. [Honest limitations — what the paper does NOT claim](#21-limitations)
-22. [The regulatory angle — EU AI Act, NIST, OWASP](#22-regulation)
-23. [Likely expert questions and how to answer them](#23-faq)
-24. [Quick-reference cheat sheets](#24-cheatsheets)
+> **Who is this for?** You are a first-year SE student. You may have taken one course in programming and perhaps a basic algorithms course. You have never read the paper. By the end of this document you should be able to explain every idea in CASTER-ZT to another student — not just memorize facts, but truly understand *why* each piece exists.
+>
+> **How this document is organized:** Seven pedagogical steps, always building on the previous one. If something feels unclear, go back one step — the vocabulary or context you need is probably there.
+>
+> **A promise about honesty:** This document will never claim something without telling you exactly where the evidence comes from. When something is uncertain, assumed, or limited, we say so plainly.
+>
+> **Estimated reading time:** ~3–4 hours for the full document. Steps 1–2 + the Cheat Sheets alone take ~45 minutes and give you a working vocabulary and big picture. Return to Steps 3–7 and the Appendices once you have that foundation.
 
 ---
 
-## 1. Elevator Pitch
+## Table of Contents
 
-**CASTER-ZT** is a security-first autonomous decision-control system for disaster-monitoring networks.
-
-During a disaster (earthquake, flood, wildfire), cell towers fail and a sensing/communication network must recover automatically. But an adversary can exploit the chaos: they can corrupt telemetry data (telemetry poisoning) or inject fake recovery commands using stolen identities (identity-credential abuse).
-
-The key insight is: **we separate "proposing what to do" from "deciding whether it is safe to do it."**
-
-- Five trained neural-network components (a graph encoder, a recovery policy, a trust autoencoder, a risk scorer, a contrastive safety encoder) **propose and assess** recovery actions.
-- A deterministic zero-trust shield with formal mathematical guarantees **decides** whether each action may be executed, scope-reduced, deferred, escalated, or blocked.
-
-This "policy proposes, shield disposes" design means that even if the AI components are fooled, the shield provides a provable safety boundary. The system runs in under 3.07 ms per decision, fits in 2 MB, and deploys at the network edge — all meeting 6G near-real-time requirements.
-
----
-
-## 2. The Problem
-
-### What is a disaster-monitoring sensing network?
-
-Imagine a region covered by sensor nodes (measuring temperature, water level, air quality, seismic activity), relay nodes, gateways, and small base stations — all forming a communication graph. During normal operations, they send telemetry (measurements) to a control center.
-
-When a disaster strikes (earthquake, flood), many nodes fail simultaneously. The network must **recover autonomously**: reroute traffic, activate backup nodes, reassign gateways, isolate damaged regions. Manual recovery is too slow — people are overwhelmed, roads are blocked, communication is intermittent.
-
-### Why is autonomy dangerous?
-
-The same autonomy that makes recovery faster creates a **larger attack surface**:
-- An adversary can **corrupt telemetry** — making the AI think cell A is fine when it's actually failed, or that cell B is failed when it's actually fine. This is called **telemetry poisoning**.
-- An adversary can **steal credentials** and inject fake recovery commands — like "deactivate this perfectly working cell" or "flood this cell with handover requests." This is called **identity-credential abuse**.
-- An AI that makes decisions fast also makes *bad* decisions fast if it can't detect these attacks.
-
-### Why existing solutions don't solve this
-
-The literature has strong individual ingredients:
-- **Graph neural networks** can model network topology — but they don't check whether an action is safe.
-- **Safe reinforcement learning** can enforce constraints — but those constraints are about physical safety or cost budgets, not about identity fraud or telemetry corruption.
-- **Uncertainty quantification** can tell you when the model is unsure — but being unsure doesn't mean the action is unauthorized.
-- **Agentic AI** can orchestrate network operations — but it has no formal boundary for when NOT to act.
-
-**The gap:** No existing system combines graph-structured decision making with formally bounded zero-trust admissibility for autonomous actuation under adversarial conditions.
+- [Step 1 — Vocabulary and Terminology](#step-1-vocabulary-and-terminology)
+- [Step 2 — Context and Motivation](#step-2-context-and-motivation)
+- [Step 3 — Literature Review](#step-3-literature-review)
+- [Step 4 — Methodology: How CASTER-ZT Works](#step-4-methodology-how-caster-zt-works)
+- [Step 5 — Results: Every Number Explained](#step-5-results-every-number-explained)
+- [Step 6 — Discussion and Limitations](#step-6-discussion-and-limitations)
+- [Step 7 — Conclusion](#step-7-conclusion)
+- [Appendix A — The Ten Propositions Deep-Dive](#appendix-a-the-ten-propositions-deep-dive)
+- [Appendix B — Expert Q&A](#appendix-b-expert-qa)
+- [Appendix C — Quick-Reference Cheat Sheets](#appendix-c-quick-reference-cheat-sheets)
 
 ---
 
-## 3. Every Technical Term Explained
+<a id="step-1-vocabulary-and-terminology"></a>
+## STEP 1 — Vocabulary and Terminology
 
-### Core Concepts
-
-| Term | Plain-language explanation |
-|------|---------------------------|
-| **Zero Trust** | A security paradigm from NIST SP 800-207: "never trust, always verify." Every request must be authenticated and authorized, even from inside the network. No entity gets implicit trust. |
-| **Shield** | A deterministic decision gate that wraps a learned policy. The shield uses no neural networks — it's pure if-then-else logic with fixed thresholds. This makes it formally verifiable. |
-| **Graph Neural Network (GNN)** | A neural network that operates on graph-structured data. Instead of processing flat vectors, it processes nodes and edges. Each node aggregates information from its neighbors. |
-| **GraphSAGE** | A specific GNN variant by Hamilton et al. (2017). "SAGE" = Sample and AggregatE. Each node creates its embedding by concatenating its own features with the mean of its neighbors' features, then applying a learned linear transform + nonlinearity. |
-| **Autoencoder** | A neural network trained to reconstruct its input. It compresses input → bottleneck → decompresses. If trained only on "normal" data, it reconstructs normal data well but fails on anomalies, producing high reconstruction error. |
-| **Contrastive learning** | Training a model to make embeddings of similar things close and embeddings of different things far apart. Uses a margin-based loss: if two inputs are from different classes, push their embeddings apart by at least a margin *m*. |
-| **MC-Dropout** | Monte Carlo Dropout (Gal & Ghahramani, 2016). At inference time, keep dropout ON and run the network T times with different random dropout masks. The variance in outputs estimates the model's **epistemic uncertainty** — uncertainty due to lack of knowledge, not inherent randomness. |
-| **Conformal prediction** | A distribution-free framework (Angelopoulos & Bates, 2023) that provides finite-sample coverage guarantees. If calibration data is exchangeable (a weaker condition than i.i.d.), conformal prediction guarantees that the prediction set contains the true label with probability ≥ 1−α. No parametric assumptions needed. |
-| **Admissibility** | Whether an action is "allowed to be executed autonomously." Admissibility is not about whether the action is *optimal* — it's about whether it crosses the safety boundary for autonomous execution. |
-| **Scope reduction** | Instead of fully blocking or fully allowing an action, narrowing its scope: fewer target cells, reduced strength, smaller affected region. This is graduated enforcement — the key differentiator from binary block/allow systems. |
-| **Telemetry** | Measurement data sent by network nodes: throughput, latency, packet loss rate, cell load. This is the "evidence" the AI uses to make decisions. |
-| **KPI** | Key Performance Indicator — a specific measured metric (throughput in Mbps, latency in ms, packet loss rate in %). |
-| **O-RAN** | Open Radio Access Network — an industry standard that disaggregates the cellular base station into open, interoperable components. Enables third-party AI applications (xApps) to run on the RAN Intelligent Controller (RIC). |
-| **Near-RT RIC** | Near-Real-Time RAN Intelligent Controller — the O-RAN component where AI applications (xApps) run with control loops as fast as 10 ms. This is the target deployment platform for CASTER-ZT. |
-| **xApp** | A third-party application running on the Near-RT RIC. CASTER-ZT would be deployed as an xApp. |
-| **6G** | The sixth generation of wireless technology, expected around 2030. Key feature: AI is a first-class design element at every protocol layer, not an add-on. |
-| **AI-native** | AI is incorporated "from the onset" as a core architectural element. Not retrofitted. Every functional stage (perception, reasoning, action) uses a trained ML component. |
-
-### Mathematical Notation
-
-| Symbol | Meaning | Range |
-|--------|---------|-------|
-| $G_t = (V_t, E_t, X_t)$ | The network graph at time t: nodes V, edges E, features X | — |
-| $s_t$ | Full decision state: $(G_t, z_t, b_t, h_t)$ — graph + security context + mission context + history | — |
-| $o_t$ | Observation available to the controller (may be incomplete or adversarial) | — |
-| $\mathcal{A}$ | Action space — set of possible recovery actions (finite) | 6 action types |
-| $\hat{a}_t$ | Candidate action proposed by the policy | $\hat{a}_t \in \mathcal{A}$ |
-| $\pi_\theta(a \mid s_t)$ | Policy's probability of choosing action a given state s | [0,1] |
-| $\tau_t$ | Trust score — how much we trust the telemetry | [0,1], higher = more trusted |
-| $\rho_t$ | Risk score — how risky the proposed action is | [0,1], higher = riskier |
-| $u_t$ | Uncertainty score — how unsure the model is | [0,1], higher = more uncertain |
-| $\Delta_t$ | Divergence score — how differently the action looks under benign vs adversarial hypotheses | [0,∞), higher = more suspicious |
-| $\alpha_t$ | Authorization flag — is the proposer a legitimate identity? | {0, 1} |
-| $g_t$ | Composite conservatism score — single scalar aggregating all threat signals | [0, ∞) |
-| $d_t$ | Shield decision — which of the 5 outcomes | {ALLOW, SCOPE-REDUCE, DEFER, ESCALATE, BLOCK} |
-| $\tau_{\min}$ | Dynamic minimum trust requirement (rises with risk and uncertainty) | [0, 1] |
-| $\gamma_1 < \gamma_2 < \gamma_3 < \gamma_4$ | Shield thresholds separating the 5 decision regions | 0.30, 0.50, 0.70, 0.90 |
-| $w_1, w_2, w_3, w_4$ | Weights in the conservatism score | All = 0.25 |
-| $\kappa_1, \kappa_2$ | Sensitivity coefficients for dynamic trust threshold | 0.10, 0.15 |
-| $\tau_0$ | Baseline trust floor | 0.50 |
-| $\delta_{\max}$ | Soft divergence ceiling (above this: no ALLOW) | 0.50 |
-| $\delta_{\max}^{\text{hard}}$ | Hard divergence ceiling (above this: immediate BLOCK) | 1.00 |
-| $u_{\max}$ | Uncertainty ceiling (above this: ESCALATE) | 0.80 |
-| $\theta$ | Learned weights of GNN encoder + policy head | ~13,059 params |
-| $\phi$ | Learned weights of trust autoencoder + risk scorer + contrastive encoder | ~6,960 params |
-| $\omega$ | Learned weights contributing to uncertainty (MC-Dropout masks in encoder) | Shared with $\theta$ |
-| $e_t$ | Reconstruction error from trust autoencoder | ≥ 0 |
-| $e_{\text{thresh}}$ | 95th-percentile reconstruction error on clean calibration data | 0.5914 (trained) |
-| $\beta_\tau$ | Temperature parameter in sigmoid trust computation | 5.0 |
-| $\omega_{\text{rec}}$ | Recovery quality metric: fraction of cells operational at recovery completion | [0, 1] |
-| $\eta_{\text{AI}}$ | AI-native coverage: fraction of pipeline stages that are learned | 5/6 = 0.833 |
+*Before anything else: words. You cannot understand the paper without understanding its vocabulary. Read every definition carefully. Return to this section whenever you encounter an unfamiliar term.*
 
 ---
 
-## 4. The Title — Word by Word
+### 1.1 The World of 6G and Mobile Networks
 
-**"Zero-Trust Shielded Graph-Structured Decision Control for Secure Autonomous Recovery in AI-Native 6G Disaster-Monitoring Sensing Networks"**
+**Cellular network:** A network of radio towers ("cells") that together cover a geographic area and provide wireless communication. Your phone connects to the nearest cell, which routes your data to the internet. A "cell" is both the tower and its coverage area.
 
-| Word/Phrase | Where it's substantiated in the paper |
-|-------------|--------------------------------------|
-| **Zero-Trust** | NIST SP 800-207 principle applied to actuation (Section III-A). Authorization gate checks every action (Algorithm 1, line 11). Propositions 2 and 3. |
-| **Shielded** | Deterministic shield algorithm (Algorithm 1), calibration procedure (Algorithm 2), ten theoretical properties (Section III-F). |
-| **Graph-Structured** | State represented as graph $G_t = (V_t, E_t, X_t)$. 2-layer GraphSAGE encoder (Section III-C). Multi-scale topologies 12/36/100-cell (Table 9). |
-| **Decision Control** | Five-outcome bounded decision space $\mathcal{D}$ (Definition 2). Graduated response — not just block/allow. |
-| **Secure** | Formal threat model (Section III-A), defense-in-depth bound (Proposition 6), 74.2% identity-abuse detection with zero false positives (Table 5). |
-| **Autonomous Recovery** | Recovery policy $\pi_\theta$ proposes actions autonomously. Recovery quality $\omega_{\text{rec}}$ measured. Scope-reduction enforcement (Algorithm 3). |
-| **AI-Native** | Formal Definition 5: $\eta_{\text{AI}} = 5/6$. Five of six pipeline stages are trained neural modules. Matches 6G standardization definition. |
-| **6G** | Formal Definition 4: latency ≤ 10ms, edge autonomy, model compactness ≤ 2 MB. Validated in RQ4: 3.07 ms at 12-cell. |
-| **Disaster-Monitoring** | Failure model: 40% simultaneous cell failure at tick 3. SensorScope alpine deployment grounding. |
-| **Sensing Networks** | Intel Lab 54-node topology. Telemetry KPI structure. Multi-scale sensing topologies 12–100 cells. |
+**6G:** The 6th generation of mobile wireless standards. Not yet deployed (as of 2025). Expected features: latency < 1 ms, throughput > 1 Tbps, deep AI integration ("AI-native"), massive edge computing. Think of it as 5G but 10× faster with built-in intelligence.
 
-**Key point for experts:** Every word in the title maps to a specific, verifiable component. This is not decorative — each word represents a substantive contribution.
+**O-RAN (Open Radio Access Network):** An industry initiative to "open up" the hardware and software of cellular base stations so that components from different vendors can interoperate. Traditionally a single vendor (Nokia, Ericsson) supplied the entire base station as a closed black box. O-RAN breaks it into standardized open interfaces.
+
+**Near-RT RIC (Near-Real-Time RAN Intelligent Controller):** An O-RAN component that makes decisions on a 10 ms to 1 second timescale. CASTER-ZT's shield must decide within this 10 ms window. *Evidence: O-RAN nGRG (2024) formally specifies the Near-RT RIC timescales.*
+
+**xApp:** A small software application deployed inside the Near-RT RIC. CASTER-ZT is conceptually deployed as an xApp.
+
+**Telemetry:** Measurements automatically collected and transmitted from remote equipment. In a cellular network: throughput (how fast data flows), latency (how long a packet takes), packet loss rate (fraction of packets dropped), cell load (how busy a cell is). Think of it as the "vital signs" of the network.
+
+**Zone:** A logical grouping of cells managed together. A 12-cell network has 2 zones; a 100-cell network has 8 zones.
 
 ---
 
-## 5. The Gap — What Was Missing
+### 1.2 The Disaster Scenario
 
-The literature has five strong but disconnected threads:
+**Disaster-monitoring sensing network:** A wireless network deployed in a disaster area (earthquake, flood, hurricane) to gather environmental sensor data and coordinate emergency response. In a disaster, many cell towers may fail simultaneously.
 
-1. **Graph learning** (Kipf 2017, Hamilton 2017, Veličković 2018) — can model network topology, but doesn't gate actions for safety.
-2. **Safe/shielded RL** (García 2015, Achiam 2017, Alshiekh 2018) — can enforce constraints, but those constraints are about cost budgets or state-safety invariants, not about *identity fraud* or *corrupted evidence*.
-3. **Uncertainty/calibration** (Gal 2016, Guo 2017, Angelopoulos 2023) — can quantify model confidence, but high confidence ≠ safe action (an adversary can create high-confidence corrupted inputs).
-4. **Adversarial robustness for graphs** (Zügner 2018, Bojchevski 2019) — protects model *representations*, but doesn't gate downstream *execution*.
-5. **Agentic O-RAN** (Navidan 2026, Demirel 2026) — orchestration flexibility, but no formal admissibility boundary.
+**Simultaneous failure fraction:** In the experiments, 40% of cells fail at the same time (tick 3 of each episode). This is calibrated from SensorScope alpine deployment data: during storm events, sensor dropout peaked at approximately 40% simultaneously. *Evidence: SensorScope dataset (2008), cited in the paper.*
 
-**The specific gap:** No framework combines graph-structured decision making + formal zero-trust admissibility + dual-hypothesis trust-risk evaluation + graduated five-outcome responses + identity-aware gating for autonomous actuation under adversarial conditions.
+**Recovery action:** A command sent by the AI controller to restore service. Six types are defined: CELL_RECONFIG, LOAD_REBALANCE, POWER_BOOST, HANDOVER, CELL_ISOLATION, CELL_DEACTIVATION.
 
-**Why this gap is dangerous:** In a disaster, a learned controller may identify a high-utility recovery action. But the same action becomes harmful if:
-- The telemetry it's based on is corrupted (telemetry poisoning)
-- The entity requesting it has stolen credentials (identity abuse)
-- The action's consequences are poorly understood under current stress
+**Rogue action:** A recovery-type action injected by an adversary that appears legitimate but is designed to cause harm (e.g., CELL_DEACTIVATION targeting a healthy cell).
 
-Existing systems evaluate action quality *before* defining the admissibility boundary. CASTER-ZT reverses this: admissibility is a hard boundary that must be satisfied *regardless* of the action's predicted quality.
+**Episode:** One complete simulation run lasting 30 "ticks." One tick represents one decision cycle of ~10 ms.
+
+**omega_rec (Recovery Quality):** The primary performance metric. The mean fraction of cells in the OPERATIONAL state during ticks [3, 33]. Value of 1.0 = all cells operational throughout recovery. Value of 0.0 = no cells ever recover. *Evidence: defined in Section III-B of the paper.*
 
 ---
 
-## 6. The Four Research Questions
+### 1.3 Security Concepts
 
-### RQ1: Can a zero-trust shielded policy reduce adversarial degradation?
+**Zero Trust:** A security philosophy where no entity is implicitly trusted, ever. Every request, even from inside the system, must be continuously verified. Defined in NIST Special Publication 800-207.
 
-**Why this question:** The fundamental question — does the shield actually work? Can it detect and block/mitigate rogue actions without also blocking legitimate ones?
+**Identity-credential abuse:** An attack where the adversary steals valid credentials from a legitimate operator and uses them to issue rogue commands. Because the credentials are real, standard authentication passes.
 
-**Answer:** Yes. 74.2% rogue detection with 0% false positives at 12-cell; 98.3% at 100-cell. Non-shielding baselines: 0–10.5% detection.
+**Telemetry poisoning:** An attack where the adversary manipulates the telemetry data sent by sensors (e.g., injecting false measurements).
 
-### RQ2: What are the security-utility-overhead tradeoffs?
+**Combined attack:** Both identity-credential abuse AND telemetry poisoning simultaneously. The hardest attack type.
 
-**Why this question:** Security always has a cost. How much recovery quality do we lose by adding security? Is the cost acceptable?
+**Rogue detection rate (RogueDet):** Fraction of adversary-injected rogue actions that the system correctly identifies and reacts to (blocks or scope-reduces). In the experiments: 0.742 at 12-cell = 74.2% detection.
 
-**Answer:** $\omega_{\text{rec}} = 0.733$ (73.3% cells operational) vs. 0.201 without shielding. Under clean conditions, $\omega_{\text{rec}} = 0.925$ for all methods — the shield doesn't hurt when there's no attack. The "price of safety" is bounded (Proposition 7).
+**False block rate (FalseBlk):** Fraction of hard BLOCK decisions applied to legitimate (non-rogue) actions. FalseBlk = 0.000 in CASTER-ZT means the system never wrongly issues a hard BLOCK on a legitimate action.
 
-### RQ3: Does the framework generalize?
+> ⚠️ **Important nuance:** FalseBlk only counts hard BLOCK outcomes. Under clean (no-attack) conditions, CASTER-ZT scope-reduces ~10% of legitimate actions. SCOPE-REDUCE is a softer intervention (execute with fewer target cells) but it does constrain legitimate behavior. Zero hard false-blocks does NOT mean zero impact on legitimate operations. See Section 5.8 for the full clean-condition breakdown.
 
-**Why this question:** A system that only works at one severity level, one seed, or one topology size is useless. We need robustness evidence.
+**Precision vs. Recall (for security classification):**
 
-**Answer:** Consistent across medium/high severity (RogueDet 0.742–0.806), 20 seeds, and three scales (12/36/100-cell). Threshold sensitivity shows stability across γ₁ ∈ [0.20, 0.60].
+Imagine you are a doctor doing cancer screening. You can choose:
+- **High recall:** Test positive for any suspicious sign — catch 100% of real cases, but also alarm many healthy patients.
+- **High precision:** Only declare cancer when you are very sure — very few false alarms, but may miss some real cases.
 
-### RQ4: Does it meet 6G deployment constraints?
+Applied here:
+- **Recall (= RogueDet):** Fraction of rogues caught. 74.2% = CASTER-ZT catches 74.2 out of every 100 rogues.
+- **Precision (= 1 - FalseBlk):** Fraction of blocked actions that are truly rogue. 100% precision = every block/constraint the shield imposes is on a genuinely suspicious action.
 
-**Why this question:** If it can't run in real-time at the network edge, it's a paper exercise. The O-RAN Near-RT RIC demands ≤ 10 ms control loops.
+CASTER-ZT deliberately chooses maximum precision (zero false hard-blocks) at the cost of imperfect recall (74.2%). The paper argues this is correct: falsely blocking a legitimate recovery action during a disaster directly delays restoring service and could cost lives.
 
-**Answer:** 3.07 ms at 12-cell (3× headroom), 4.38 ms at 36-cell (2.3× headroom), 10.25 ms at 100-cell (at boundary). Model: 20K params, ≤ 2 MB.
+**Mimicry attack:** A sophisticated attack where rogue actions are designed to look as much as possible like legitimate recovery actions (e.g., a rogue CELL_RECONFIG targeting a nearly-failed cell — hard to distinguish from a legitimate one). These are the hardest to detect.
 
----
-
-## 7. The Five Contributions
-
-### Contribution 1: Problem formulation
-Formulating autonomous post-disaster recovery as a **graph-structured secure decision problem** with explicit trust, risk, authorization, uncertainty, and admissibility variables. This is new — previous formulations didn't include all five dimensions.
-
-### Contribution 2: The CASTER-ZT architecture
-Five learned neural modules + one deterministic shield. The key design principle: **separation of learned intelligence from deterministic safety enforcement.** This is the "dynamic model predictive shielding" paradigm (Roderick et al., NeurIPS 2024).
-
-### Contribution 3: Ten theoretical properties
-Including three non-trivial ones:
-- **Defense-in-depth** (Proposition 6): independent gates multiplicatively reduce unsafe execution probability.
-- **Conformal coverage** (Proposition 8): distribution-free finite-sample guarantee.
-- **Calibration convergence** (Proposition 10): O(1/√n) convergence rate for threshold calibration.
-
-### Contribution 4: 2,420-run experimental campaign
-11 methods × 7 conditions × 20 seeds × 3 scales. Four external baselines from real published methods. Bootstrap CIs, Wilcoxon tests, Cliff's delta.
-
-### Contribution 5: Component-level ablation
-Proving each component is individually necessary. Trust assessment is the critical component (removing it: 0.742 → 0.524 detection, 0.733 → 0.380 recovery quality).
+**Gray-box adversary:** The paper's threat model assumes the adversary knows the system's architecture but NOT the exact threshold values of the shield. *Evidence: Section III-B of the paper.*
 
 ---
 
-## 8. System Model — The World the System Lives In
+### 1.4 Machine Learning Concepts
 
-### The network graph
+**ReLU (Rectified Linear Unit):** The most common activation function in neural networks. Formula: `ReLU(x) = max(0, x)`. In plain English: if the input is negative, output 0; if positive, output it unchanged. This introduces non-linearity (without which a stack of linear layers collapses to just one linear layer).
 
-At every decision epoch t, the network is a graph $G_t = (V_t, E_t, X_t)$:
-- **Nodes** $V_t$: cells (base stations/sensors). Each has a state: {operational, degraded, failed, recovering}.
-- **Edges** $E_t$: communication links between adjacent cells.
-- **Features** $X_t$: per-node (5 features) and per-edge (2 features).
+**Softmax:** A function that converts a vector of raw scores into a probability distribution summing to 1. Example: raw scores [2.0, 1.0, 0.1] → softmax → [0.66, 0.24, 0.10]. Used in the policy head to output "probability of each action type."
 
-Node features (5 per node):
-1. **Operational state** (one-hot fraction: what % of the node is operational)
-2. **Throughput** (current throughput normalized)
-3. **Latency** (current latency normalized)
-4. **Loss rate** (current packet loss rate)
-5. **Zone ID** (which trust zone the node belongs to)
+**One-hot encoding:** A way to represent a category as a vector of zeros with a single 1. Example: 6 action types, POWER_BOOST is type 3 → one-hot vector = [0, 0, 1, 0, 0, 0]. This lets neural networks process categorical inputs as numbers.
 
-Edge features (2 per edge):
-1. **Link capacity** (maximum bandwidth)
-2. **Link utilization** (current load fraction)
-
-### The full state
-
-$$s_t = (G_t, z_t, b_t, h_t)$$
-
-- $G_t$: the graph
-- $z_t$: security/trust context (current trust scores, recent anomaly history)
-- $b_t$: mission/resource context (recovery priority, available backup resources)
-- $h_t$: recent loop history (what actions were taken in the last few ticks)
-
-### The observation
-
-$$o_t = \mathcal{O}(s_t)$$
-
-The controller sees $o_t$, which may be **incomplete** (some nodes not reporting), **delayed** (stale data), or **adversarially perturbed** (poisoned telemetry). This is a key design constraint: the controller never sees the true state — it sees a possibly corrupted observation.
-
-### The action space
-
-Six bounded action types:
-1. **CELL_ACTIVATION** — activate a backup/reserve cell
-2. **CELL_RECONFIG** — reconfigure a cell's parameters for recovery
-3. **LOAD_REBALANCE** — redistribute traffic across cells
-4. **REROUTE** — change traffic paths
-5. **ISOLATE** — isolate a suspicious region
-6. **ESCALATE** — hand off to human operator
-
-**Why bounded?** The action space is deliberately finite and operationally meaningful. This is not open-ended — each action has a defined scope, target set, and strength. This makes formal analysis tractable.
-
-### Deployment tier
-
-The target is the **edge/gateway tier**: more powerful than individual sensors, but more constrained than centralized cloud. Think of a small computing node at or near a cell tower, with limited memory and no guaranteed cloud connectivity during a disaster.
-
-### Time structure
-
-The simulation uses **discrete ticks** (30–40 ticks per episode):
-- Tick 0–2: Normal operation
-- Tick 3: **Disaster onset** — 40% of cells fail simultaneously
-- Ticks 5–22 (or 5–28): **Attack window** — adversary injects telemetry poisoning and/or rogue actions
-- Remaining ticks: Recovery continues
-
----
-
-## 9. Threat Model — Who is the Adversary?
-
-### The adversary's four dimensions
-
-The adversary $\mathcal{ADV}$ is characterized by $(C, K, B, O)$:
-
-**C — Attack class:**
-- **Telemetry poisoning**: Corrupt KPI values (throughput, loss rate, latency) in telemetry records. Like putting a fake temperature reading on a thermometer.
-- **Identity-credential abuse**: Inject recovery-action proposals using stolen or fabricated identities. Like someone stealing your company badge and issuing orders in your name.
-- **Combined**: Both simultaneously.
-
-**K — Knowledge level:**
-- **Grey-box**: The adversary knows the system architecture (that there's a GNN, an autoencoder, a shield) but NOT the current threshold values, trust scores, or internal states. This is a realistic assumption — architecture details often leak, but operational parameters don't.
-
-**B — Budget:**
-- Telemetry poisoning budget $B_{\text{telem}}$: fraction of records that can be corrupted per tick (50% medium, 80% high)
-- Identity-abuse budget $B_{\text{ident}}$: number of rogue actions per tick (2 medium, 3 high)
-
-**O — Observable subset:** Which nodes the adversary can target. Not the entire network.
-
-### Concrete attack parameters
-
-| Parameter | Medium severity | High severity | Source |
-|-----------|----------------|---------------|--------|
-| Throughput bias | 0.30 | 0.50 | SWaT median deviation |
-| Loss bias | 0.25 | 0.50 | SWaT/WADI attacks |
-| Poison fraction | 50% of records | 80% of records | SWaT single-zone attacks |
-| Rogue actions/tick | 2 | 3 | — |
-| Uses stolen identity? | Yes | Yes | — |
-| Mimicry rate | 10% | 15% | — |
-
-**Mimicry attacks** (critical to understand): 10–15% of rogue actions *disguise themselves as legitimate recovery actions*. Instead of obviously destructive actions (CELL_DEACTIVATION), they use recovery-like types (CELL_RECONFIG, LOAD_REBALANCE) targeting degraded cells. These are the hardest to detect because they look like what a real recovery operator would do.
-
-### Where the attack parameters come from
-
-- **Bias magnitudes (0.30, 0.50)**: Extracted from the SWaT (Secure Water Treatment) testbed — a real cyber-physical security dataset with labeled attacks on water treatment infrastructure. Medium bias = median normalized sensor deviation during 36 single-point attacks. High bias = 95th percentile deviation during 15 coordinated attacks from the WADI (Water Distribution) testbed.
-- **Injection rates (50%, 80%)**: Fraction of sensors affected in real SWaT/WADI attack episodes.
-- **Failure fraction (40%)**: Observed peak simultaneous sensor dropout during alpine storm events in SensorScope.
-
-### What the adversary CANNOT do
-- Cannot modify the shield's internal parameters, threshold values, or audit log.
-- Cannot compromise more than one trust zone simultaneously.
-- Cannot observe or control the training process.
-
-### The zero-trust actuation boundary
-
-This is the paper's core security principle: **the point at which proposed actions transition from candidates to executable actions.** Everything before this boundary may be learned and probabilistic; everything crossing it must satisfy bounded admissibility conditions.
-
-Think of it like a bank vault: anyone can propose transactions, but the vault's security mechanisms decide whether each transaction actually executes. Even the bank manager can't bypass the vault door without proper authentication.
-
----
-
-## 10. The Architecture — Component by Component
-
-### The pipeline (left to right)
+**Graph Neural Network (GNN):** A type of neural network designed to process graph-structured data. A graph has nodes (cells) connected by edges (communication links). A GNN propagates information along edges: each node aggregates information from its neighbors. After L layers of propagation, each node's representation captures context from its L-hop neighborhood.
 
 ```
-Telemetry → GNN Encoder → Policy Head → Trust-Risk Evaluator → MC-Dropout → Zero-Trust Shield → Bounded Execution
-   (input)    (learned)    (learned)      (learned)            (learned)    (deterministic)      (output)
+Before GNN:                  After GNN (L=2 layers):
+Cell A knows only itself.    Cell A "knows about" its neighbors
+                              and its neighbors' neighbors.
+      [B]                           [B]
+      / \                           / \
+    [A]--[C]   →   A's embedding contains info from B, C, and D
+      \                             \
+      [D]                           [D]
 ```
 
-### Component 1: GNN Graph Encoder ($f_\theta$) — 4,544 parameters
+**Embedding:** A fixed-size vector representation of something complex. The GNN produces a 64-dimensional vector (embedding) for each cell, encoding its state, its neighbors' states, and the network context. Think of it as a 64-number "summary" of what is happening around that cell.
 
-**What it does:** Takes the raw graph state $G_t$ and produces a vector representation (embedding) for each node and for the whole graph.
+**Autoencoder (AE):** A neural network trained to reconstruct its input. It first compresses the input to a small "bottleneck" representation, then expands it back to the original size. When trained ONLY on clean (normal) data, it learns what "normal" looks like and reconstructs normal inputs well. For unusual inputs, it cannot reconstruct well — the reconstruction error is high.
 
-**Architecture:** 2-layer GraphSAGE with mean aggregation:
+```
+Autoencoder structure:
 
-$$h_v^{(\ell+1)} = \text{ReLU}\left(W^{(\ell)} \cdot \text{CONCAT}\left(h_v^{(\ell)}, \text{MEAN}(\{h_u^{(\ell)} : u \in \mathcal{N}(v)\})\right)\right)$$
+Input (7 numbers)
+    ↓  [Compress]
+  32 numbers (ReLU)
+    ↓
+  16 numbers (ReLU)
+    ↓
+   8 numbers  ← BOTTLENECK (most compressed)
+    ↓
+  16 numbers (ReLU)
+    ↓
+  32 numbers (ReLU)
+    ↓  [Expand]
+Output (7 numbers, should match input)
 
-In plain English:
-1. For each node v, look at all its neighbors' current embeddings.
-2. Take the mean of those neighbor embeddings.
-3. Concatenate the node's own embedding with the neighbor mean.
-4. Apply a learned linear transformation (matrix multiply).
-5. Apply ReLU (= max(0, x)) nonlinearity.
-6. Repeat for layer 2.
+Reconstruction error = ||Input - Output||
+                     = how different the input and output are
+```
 
-**Input:** 5 features per node → **Output:** 64-dimensional embedding per node.
+**Reconstruction error:** Formally: `e = ||x - AE(x)||_2` (Euclidean distance between input and reconstructed output). A small e means "normal input, the AE recognized it." A large e means "unusual input, the AE struggled."
 
-**Graph-level readout:** Average all node embeddings to get one 64-dimensional vector representing the entire graph: $\bar{h}_{G_t} = \text{MEAN}(\{h_v^{(L)} : v \in V_t\})$.
+**Contrastive learning:** A training approach where a model is shown pairs of examples and learns:
+- *Similar* pairs → produce *close* representations in embedding space
+- *Dissimilar* pairs → produce *far* representations in embedding space
 
-**Why GraphSAGE?** (Likely expert question)
-- **Inductive**: Can handle nodes not seen during training (new cells deployed after a disaster).
-- **Scalable**: Mean aggregation is O(|neighbors|), not O(|all nodes|).
-- **Lightweight**: 2 layers with d=64 gives only ~4.5K parameters — critical for the 6G edge deployment constraint.
-- **Why not GAT (attention)?** GAT is more expressive but slower. At 12 cells, a 2-layer GraphSAGE runs in ~0.5 ms; GAT would add ~2× latency, eating into the 10 ms budget.
+*Analogy:* Imagine a face recognition system. You show it photos of the same person (similar pair) and photos of different people (dissimilar pair). It learns to place the same person close together and different people far apart in a "face space." CASTER-ZT uses this for clean vs. adversarial telemetry.
 
-**Why only 2 layers?** For the small topologies tested (12–100 cells), 2-hop neighborhood aggregation is sufficient to capture local structure. Deeper GNNs suffer from over-smoothing (all embeddings converge to the same value) and add latency without accuracy benefit. Validation showed <0.5% accuracy gain from 3 or 4 layers.
+**MC-Dropout (Monte Carlo Dropout):** A technique for estimating how uncertain a neural network is about its prediction. Normally during inference, dropout is turned off. MC-Dropout keeps it ON and runs many forward passes. Each pass randomly disables different neurons, producing a slightly different output. The *variance* across many passes tells you how uncertain the model is.
 
-### Component 2: Recovery Policy Head ($\pi_\theta$) — 8,515 parameters
+*Analogy:* Ask 20 doctors to give a diagnosis, but each one is blindfolded to a random subset of the patient's test results. If all 20 agree → high confidence. If they give different answers → high uncertainty.
 
-**What it does:** Takes the graph embedding + action embedding and produces a probability distribution over actions.
+**The Bayesian argument behind MC-Dropout:** Gal and Ghahramani (ICML 2016) mathematically proved that a neural network with dropout, run many times with different random masks, is equivalent to sampling from a probability distribution over possible models (called a "Bayesian posterior" — literally, your best estimate of which model parameters are correct, updated after seeing data). The variance across passes therefore represents genuine probabilistic uncertainty, not just random noise. *Evidence: Gal and Ghahramani, ICML 2016 — "Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning."*
 
-**Architecture:** 2-layer MLP (Multi-Layer Perceptron):
-- Input: concatenation of action embedding $h_a$ and graph readout $\bar{h}_{G_t}$ → 64+64 = 128 dimensions
-- Hidden: 64 → ReLU → Dropout(0.1) → 64 → ReLU → Dropout(0.1) → 3 logits
-- Output: softmax → probabilities over 3 action types
+**Imitation learning:** Training a policy to copy the actions of a human expert, rather than learning by trial and error (which is Reinforcement Learning).
 
-**Training method:** Supervised imitation learning (not RL!). We have expert-annotated recovery trajectories — for each state, a domain expert labels the correct action. The policy learns to mimic the expert via cross-entropy loss.
+*Analogy:* Learning to drive by watching an experienced driver (imitation learning) versus learning by getting in a car alone and being rewarded when you don't crash (reinforcement learning). Imitation is much safer and faster when expert demonstrations exist.
 
-**Why imitation learning instead of RL?** (Likely expert question)
-- RL requires a reward function, which is hard to define for security-critical settings (what's the reward for blocking a rogue action vs. allowing a legitimate one?)
-- Imitation learning is more stable and predictable for small-scale models.
-- The paper explicitly notes that RL-based policy optimization is future work.
-- The shield's guarantees hold regardless of how the policy is trained — the shield wraps any policy.
+**Conformal prediction:** A mathematical framework for making predictions with guaranteed error rates, without assuming anything about the data distribution. The only requirement is *exchangeability*.
 
-### Component 3: Trust Autoencoder ($\text{AE}_\phi$) — 1,839 parameters
+**Exchangeability:** A sequence of data points is exchangeable if you could shuffle their order and the statistical behavior would be unchanged — i.e., no time-trend or ordering effect matters.
 
-**What it does:** Detects anomalous telemetry by measuring how well the observed data can be reconstructed by a model trained only on clean data.
+*Analogy:* A bag of marbles. If you draw 10 marbles in any order, the statistics of what you draw don't depend on the order. This is exchangeability. A time series where tomorrow depends on today is NOT exchangeable.
 
-**Architecture:**
-- **Encoder:** 7 → 32 (ReLU, Dropout 0.1) → 16 (ReLU) → 8 (bottleneck)
-- **Decoder:** 8 → 16 (ReLU) → 32 (ReLU) → 7
+**K-S test (Kolmogorov-Smirnov test):** A statistical test that checks whether a data sample matches a specified distribution. The *p-value* is the probability that you would observe data *at least as different as you observed*, if the data truly came from that distribution.
 
-**How it works:**
-1. During training: feed in only clean (non-adversarial) telemetry vectors. Train to minimize reconstruction error (MSE loss).
-2. During inference: feed in the current telemetry. Compute reconstruction error $e_t = \|x_t - \text{AE}_\phi(x_t)\|_2$.
-3. If $e_t$ is high, the telemetry doesn't match what "normal" looks like → low trust.
-4. Convert to trust score via sigmoid: $\tau_t = \frac{1}{1 + \exp(\beta_\tau \cdot (e_t - e_{\text{thresh}}))}$
+- p-value close to 0 → the data looks very different from the specified distribution (reject it).
+- p-value close to 1 → the data looks perfectly consistent with the distribution (no reason to reject).
 
-**Intuition for the sigmoid:** When $e_t \ll e_{\text{thresh}}$, the exponent is very negative, sigmoid → 1 (high trust). When $e_t \gg e_{\text{thresh}}$, exponent is very positive, sigmoid → 0 (low trust). The threshold $e_{\text{thresh}}$ is set to the 95th percentile of reconstruction error on clean calibration data (= 0.5914). The temperature $\beta_\tau = 5.0$ controls how sharply the transition happens.
-
-**The adversarial hypothesis:** The autoencoder also provides the reconstruction residual $\hat{\delta}_t = x_t - \text{AE}_\phi(x_t)$. This residual is used to construct the "adversarial hypothesis" $\tilde{x}_t^{(1)} = x_t + \hat{\delta}_t$. The idea: if the reconstruction error is due to adversarial perturbation, the residual estimates what the adversary added.
-
-**Action-consistency assessment (critical for understanding RogueDet):** Beyond simple reconstruction error, the trust module performs *action-consistency checking*:
-- For each proposed action, construct a synthetic telemetry proxy representing what telemetry *should* look like if this action is legitimate in this context.
-- Run this proxy through the autoencoder.
-- If the autoencoder produces high reconstruction error for this action-in-context pair, it means "this action doesn't make sense given what the telemetry says" → penalize trust.
-- The penalty is folded into trust: $\tau_t = \tau_t \cdot \max(0, 1 - 1.2 \cdot \text{penalty})$
-- And into divergence: $\Delta_t = \Delta_t + 0.9 \cdot \text{penalty}$
-
-This action-consistency mechanism is why CASTER-ZT can detect identity-credential abuse (rogue actions that don't match the telemetry context), even when the telemetry itself is clean.
-
-**Performance:** Precision = 0.969, Recall = 0.414, F1 = 0.580, Accuracy = 0.903. The high precision / low recall tradeoff is intentional: the system prioritizes not falsely flagging clean telemetry over catching every anomaly.
-
-### Component 4: Risk Scorer ($R_\phi$) — 1,473 parameters
-
-**What it does:** Evaluates how risky a proposed action is, given the current state.
-
-**Architecture:**
-- Input: 11 dimensions (6-dim action type one-hot + 5-dim state features)
-- Hidden: 11 → 32 (ReLU, Dropout 0.1) → 32 (ReLU) → 1 (sigmoid)
-- Output: risk score $\rho_t \in [0, 1]$
-
-**Training:** Binary cross-entropy loss on labeled episodes where ground-truth outcomes (successful/harmful) are known.
-
-**Structural adjustments (post-neural):** After the neural output, additional rule-based adjustments:
-- Scope risk: LOCAL = +0.00, ZONAL = +0.05, CROSS_ZONE = +0.10
-- Blast radius: +0.03 per additional target cell
-- Priority cell: +0.05 if targeting a priority node
-
-**AUC-ROC = 0.999, Accuracy = 0.998** — nearly perfect risk classification.
-
-### Component 5: Contrastive Safety Encoder ($q_\phi$) — 3,648 parameters
-
-**What it does:** Maps telemetry vectors to a 32-dimensional embedding space. Measures how differently an action looks under "benign" vs "adversarial" interpretations of the telemetry.
-
-**Architecture:** 7 → 64 (ReLU, Dropout 0.1) → 32 (ReLU) → 32
-
-**Divergence computation:**
-1. Benign embedding: $z_b = q_\phi(x_t)$ — embed the raw telemetry
-2. Adversarial embedding: $z_a = q_\phi(x_t + \hat{\delta}_t)$ — embed the telemetry + autoencoder residual
-3. Divergence: $\Delta_t = \|z_b - z_a\|_2$
-
-**Training:** Margin-based contrastive loss:
-$$\mathcal{L} = y \cdot \max(0, m - \Delta_t) + (1-y) \cdot \Delta_t$$
-
-Where $y=1$ if the data is adversarially perturbed, $m=1.0$ is the margin. This means:
-- If adversarial ($y=1$): loss is zero when $\Delta_t \geq m$ (already far apart), penalizes when $\Delta_t < m$ (too close).
-- If clean ($y=0$): loss = $\Delta_t$ — pushes embeddings close together.
-
-**Purpose:** Provides a second, independent anomaly signal beyond the autoencoder's reconstruction error. Even if the autoencoder doesn't flag an anomaly (low reconstruction error), the contrastive encoder might detect that the benign and adversarial embeddings diverge.
-
-### Component 6: MC-Dropout Uncertainty Estimator ($U_\omega$) — uses encoder's dropout masks
-
-**What it does:** Estimates how uncertain the model is about its decision.
-
-**How it works:**
-1. At inference time, keep dropout ON (normally dropout is turned off at inference).
-2. Run 20 forward passes through the GNN encoder, each with a different random dropout mask.
-3. Each pass produces a different action probability distribution.
-4. Compute the variance across the 20 distributions.
-5. Uncertainty: $u_t = \min(1.0, \bar{\sigma} \cdot \sqrt{n_{\text{actions}}} \cdot 5.0)$ where $\bar{\sigma}$ is the mean standard deviation.
-
-**Why this works (the Bayesian argument):** Gal & Ghahramani (2016) showed that a neural network with dropout is mathematically equivalent to an approximate Bayesian posterior. The variance across dropout-masked forward passes approximates the model's **epistemic uncertainty** — uncertainty about the model's own parameters, not about inherent randomness.
-
-**Why 20 passes?** Empirically, 20 passes provide stable uncertainty estimates. More passes increase latency; fewer give noisy estimates. 20 is a standard choice from the Gal & Ghahramani paper.
-
-### Component 7: Zero-Trust Shield ($\Gamma$) — 14 scalar parameters (NO learned weights)
-
-**What it does:** The deterministic decision gate. Receives all signals ($\tau_t, \rho_t, u_t, \Delta_t, \alpha_t$) and produces one of five bounded outcomes.
-
-**THIS IS THE MOST IMPORTANT COMPONENT.** Everything else proposes and assesses; the shield decides.
-
-**Why is it deterministic (not learned)?** Three reasons:
-1. **Formal guarantees:** The ten propositions hold precisely because the shield is fixed if-then-else logic. If the shield were learned, an adversary could potentially manipulate its training data.
-2. **Auditability:** Regulators (EU AI Act) can inspect and verify the shield's logic. A neural network's decisions are opaque.
-3. **Adversarial robustness:** The shield cannot be fooled by gradient-based attacks because it has no gradients.
+Scientists conventionally use p > 0.05 as "acceptable." A p > 0.68 means: "Even if the distributions were a perfect match, you'd see data this different 68% of the time — there is very strong agreement." *Evidence: K-S test p > 0.68 reported in the paper's Section III-C.*
 
 ---
 
-## 11. The Shield Algorithm — Step by Step
+### 1.5 Decision and Control Concepts
 
-### Step 1: Compute the composite conservatism score
+**Shield:** A safety component that wraps a controller and intercepts its output actions, overriding any action that violates a safety specification. The controller proposes; the shield decides whether to allow, modify, defer, escalate, or block.
 
-$$g_t = w_1(1 - \tau_t) + w_2 \rho_t + w_3 u_t + w_4 \Delta_t$$
+**Deterministic:** A system that, given the same input, always produces the same output. CASTER-ZT's shield is deterministic: identical values of (tau, rho, u, Delta, alpha) always produce the same decision. This is deliberately chosen — see Section 4.8 for why.
 
-With all weights = 0.25:
-$$g_t = 0.25(1 - \tau_t) + 0.25\rho_t + 0.25 u_t + 0.25\Delta_t$$
+**Five outcomes (Decision Space D):**
 
-$g_t$ is a single number that aggregates four threat signals:
-- $(1 - \tau_t)$: distrust (low trust = high distrust)
-- $\rho_t$: action risk
-- $u_t$: model uncertainty
-- $\Delta_t$: hypothesis divergence
+| Symbol | Name | Meaning |
+|--------|------|---------|
+| ALLOW | Allow | Execute the action as proposed |
+| SCOPE-REDUCE | Scope Reduction | Execute a narrowed version (fewer target cells, lower intensity) |
+| DEFER | Defer | Do not execute now; wait for more information |
+| ESCALATE | Escalate | Send to a human operator for judgment |
+| BLOCK | Block | Reject the action entirely |
 
-Higher $g_t$ = more conservative response.
+**Composite conservatism score (g_t):** A single number that aggregates all threat signals into one measure of "how cautious should the shield be." Higher g_t = more conservative shield response.
 
-### Step 2: Compute the dynamic trust minimum
+Formula: `g_t = 0.25*(1-tau) + 0.25*rho + 0.25*u + 0.25*Delta`
 
-$$\tau_{\min} = \tau_0 + \kappa_1 \rho_t + \kappa_2 u_t = 0.50 + 0.10 \rho_t + 0.15 u_t$$
+- (1-tau): distrust in telemetry (high if telemetry looks manipulated)
+- rho: risk of the proposed action
+- u: uncertainty of the AI model
+- Delta: divergence between benign and adversarial interpretations
 
-This is "adaptive trust demand": when the action is riskier or the model is more uncertain, the system demands MORE trust before allowing execution.
+Each component is in [0,1]. Delta can theoretically exceed 1.0 (it is unbounded above). Therefore **g_t can exceed 1.0**. This is not a bug — Rule 7 in the shield (`g >= 0.90 → BLOCK`) catches all high-g_t cases, including those above 1.0.
 
-### Step 3: Apply the decision rule (in priority order)
+**Dynamic trust minimum (tau_min):** The minimum trust score required for the shield to output ALLOW. It *rises* when risk or uncertainty is high.
 
-1. **If $\alpha_t = 0$:** → **BLOCK** (unauthorized entity — immediate rejection, no questions asked)
-2. **If $\Delta_t > \delta_{\max}^{\text{hard}} = 1.00$:** → **BLOCK** (extreme divergence — something is very wrong)
-3. **If $\tau_t \geq \tau_{\min}$ AND $g_t < \gamma_1 = 0.30$ AND $\Delta_t \leq \delta_{\max} = 0.50$:** → **ALLOW** (everything checks out)
-4. **If $\gamma_1 \leq g_t < \gamma_2$** (i.e., $0.30 \leq g_t < 0.50$): → **SCOPE-REDUCE** (suspicious but not clearly dangerous — narrow the scope)
-5. **If $\gamma_2 \leq g_t < \gamma_3$** (i.e., $0.50 \leq g_t < 0.70$): → **DEFER** (too uncertain — wait for more evidence)
-6. **If $\gamma_3 \leq g_t < \gamma_4$ OR $u_t > u_{\max}$** (i.e., $0.70 \leq g_t < 0.90$ or $u_t > 0.80$): → **ESCALATE** (send to human operator)
-7. **If $g_t \geq \gamma_4 = 0.90$:** → **BLOCK** (overwhelming evidence of threat)
+Formula: `tau_min = 0.50 + 0.10*rho + 0.15*u`
 
-### Worked Example 1: Legitimate action under clean conditions
-
-- Trust: $\tau_t = 0.85$ (high trust — autoencoder reconstructs telemetry well)
-- Risk: $\rho_t = 0.20$ (low risk — simple cell reconfig)
-- Uncertainty: $u_t = 0.05$ (model is confident)
-- Divergence: $\Delta_t = 0.10$ (benign and adversarial embeddings are similar)
-- Authorization: $\alpha_t = 1$ (legitimate identity)
-
-Computations:
-- $\tau_{\min} = 0.50 + 0.10(0.20) + 0.15(0.05) = 0.50 + 0.02 + 0.0075 = 0.5275$
-- $\tau_t = 0.85 \geq 0.5275$ ✓
-- $g_t = 0.25(1-0.85) + 0.25(0.20) + 0.25(0.05) + 0.25(0.10) = 0.25(0.15 + 0.20 + 0.05 + 0.10) = 0.25(0.50) = 0.125$
-- $g_t = 0.125 < 0.30 = \gamma_1$ ✓
-- $\Delta_t = 0.10 \leq 0.50 = \delta_{\max}$ ✓
-- **Decision: ALLOW** ✓
-
-### Worked Example 2: Rogue action with stolen identity
-
-- Trust: $\tau_t = 0.30$ (low trust — action-consistency check flags mismatch)
-- Risk: $\rho_t = 0.60$ (higher risk — rogue targets operational cells)
-- Uncertainty: $u_t = 0.15$ (model is somewhat uncertain)
-- Divergence: $\Delta_t = 0.45$ (embeddings diverge — suspicious)
-- Authorization: $\alpha_t = 1$ (stolen credential passes identity check)
-
-Computations:
-- $\tau_{\min} = 0.50 + 0.10(0.60) + 0.15(0.15) = 0.50 + 0.06 + 0.0225 = 0.5825$
-- $\tau_t = 0.30 < 0.5825$ ✗ (fails trust threshold — cannot be ALLOW)
-- $g_t = 0.25(0.70) + 0.25(0.60) + 0.25(0.15) + 0.25(0.45) = 0.25(1.90) = 0.475$
-- $g_t = 0.475$, which is in $[\gamma_1, \gamma_2) = [0.30, 0.50)$
-- **Decision: SCOPE-REDUCE** — the rogue action is detected and its scope is narrowed.
-
-### Worked Example 3: Rogue action with mimicry (harder to detect)
-
-- Trust: $\tau_t = 0.55$ (medium trust — mimicry makes it look more legitimate)
-- Risk: $\rho_t = 0.35$ (moderate risk)
-- Uncertainty: $u_t = 0.10$
-- Divergence: $\Delta_t = 0.20$ (mimicry reduces divergence)
-- Authorization: $\alpha_t = 1$
-
-Computations:
-- $\tau_{\min} = 0.50 + 0.10(0.35) + 0.15(0.10) = 0.50 + 0.035 + 0.015 = 0.550$
-- $\tau_t = 0.55 \geq 0.550$ ✓ (barely passes!)
-- $g_t = 0.25(0.45) + 0.25(0.35) + 0.25(0.10) + 0.25(0.20) = 0.25(1.10) = 0.275$
-- $g_t = 0.275 < 0.30 = \gamma_1$ ✓
-- $\Delta_t = 0.20 \leq 0.50$ ✓
-- **Decision: ALLOW** — this is a missed detection (false negative). The mimicry attack was sophisticated enough to evade all checks.
-
-This is exactly the 25.8% of rogue actions that CASTER-ZT misses. The paper honestly reports this and explains that these are sophisticated mimicry attacks that imitate legitimate recovery patterns.
-
-### The five outcomes explained
-
-| Outcome | What happens | When it triggers |
-|---------|-------------|-----------------|
-| **ALLOW** | Action executes as proposed | All checks pass: authorized, trusted, low risk, low uncertainty, low divergence |
-| **SCOPE-REDUCE** | Action executes but with narrowed scope | Suspicious but not clearly dangerous. Reduce target cells, lower strength. |
-| **DEFER** | Action is NOT executed; wait for more evidence | Too uncertain to act now, but not clearly malicious |
-| **ESCALATE** | Action is sent to human operator | High uncertainty ($u_t > 0.80$) or high composite threat score |
-| **BLOCK** | Action is rejected entirely | Unauthorized ($\alpha_t = 0$), extreme divergence, or overwhelming threat |
-
-**Why five outcomes instead of binary allow/block?** This is a fundamental design choice:
-- Binary shields (like Alshiekh 2018) must choose: block or allow. If they block too aggressively, they block legitimate recovery actions (high false positives). If they're too lenient, they miss rogue actions.
-- Graduated response provides proportional enforcement. A slightly suspicious action is scope-reduced (partial mitigation, partial recovery), not fully blocked or fully allowed.
-- This is why CASTER-ZT achieves zero false positives: instead of hard-blocking marginal cases (which would catch more rogues but also block legitimate actions), it scope-reduces them.
+*Intuition:* When the AI is uncertain (high u) or the action is dangerous (high rho), the system demands MORE trust evidence before allowing. If you're about to deactivate 5 cells (high rho), you need very clean telemetry to get the green light.
 
 ---
 
-## 12. The Training Pipeline — How Every Component Learns
+### 1.6 Mathematical Notation Summary
 
-### Training data
+| Symbol | What it is | Range | Meaning |
+|--------|-----------|-------|---------|
+| tau_t | Trust score | [0,1] | How much the system trusts the current telemetry |
+| rho_t | Risk score | [0,1] | How risky the proposed action is |
+| u_t | Uncertainty | [0,1] | How uncertain the AI model is |
+| Delta_t | Divergence | [0, +∞) | How different benign vs adversarial interpretations are |
+| alpha_t | Authorization | {0,1} | 1 = authorized entity, 0 = unauthorized |
+| g_t | Conservatism score | [0, +∞) | Aggregated threat signal (CAN exceed 1.0) |
+| tau_min | Minimum trust required | [0.5, 0.65] | Adaptive trust demand |
+| d_t | Decision | D | Output of the shield |
+| omega_rec | Recovery quality | [0,1] | Mean fraction of operational cells during recovery window |
+| gamma_1..4 | Shield thresholds | [0,1] | 0.30, 0.50, 0.70, 0.90 |
+| delta_max | Soft divergence limit | 0.50 | Divergence beyond which ALLOW is blocked |
+| delta_max_hard | Hard divergence limit | 1.00 | Divergence beyond which only BLOCK is possible |
+| epsilon_alpha | Auth false-neg rate | [0,1] | Probability auth gate misses an attack |
+| epsilon_tau | Trust false-neg rate | [0,1] | Probability trust-risk gate misses an attack |
+| L | GNN layers | 2 | Number of message-passing rounds |
+| d | Latent dimension | 64 | Size of each cell embedding vector |
+| T | MC-Dropout passes | 20 | Number of stochastic forward passes |
+| eta_AI | AI-native coverage | [0,1] | Fraction of 6G-AISF requirements met |
 
-- **Source:** 2,000 simulated disaster-recovery episodes
-- **Per episode:** ~30 decision steps → ~60,000 total annotated decision steps
-- **Split:** 70% train / 15% validation / 15% test, stratified by attack condition
-- **Labels per step:**
-  1. Expert action label (for policy training)
-  2. Safety label $y_t \in \{0,1\}$ (for shield calibration)
-  3. Anomaly label (for trust-assessment training)
+---
 
-### Training order and details
+<a id="step-2-context-and-motivation"></a>
+## STEP 2 — Context and Motivation
 
-| Component | Parameters | Loss | Optimizer | Learning Rate | Epochs | Early Stop |
-|-----------|-----------|------|-----------|---------------|--------|------------|
-| Trust AE | 1,839 | MSE reconstruction (clean data only) | Adam | 5×10⁻⁴ | 16 (stopped) | Patience 15 |
-| Risk scorer | 1,473 | Binary cross-entropy | Adam | 1×10⁻³ | 27 (stopped) | Patience 15 |
-| Contrastive encoder | 3,648 | Contrastive margin (m=1.0) | Adam | 1×10⁻³ | 44 (stopped) | Patience 15 |
-| GNN encoder + Policy | 13,059 | Cross-entropy (imitation) | Adam | 1×10⁻³ | 17 (stopped) | Patience 15 |
-| Shield | 14 scalars | N/A (calibration) | N/A | N/A | <1 second | N/A |
+*Why does this problem exist? Why does it matter? Why is it hard?*
 
-**Total: ~20,019 trainable parameters** across all learned components.
+---
 
-### Shield calibration (Algorithm 2)
+### 2.1 The Scenario: A Disaster Strikes
 
-The shield's 14 parameters are set by a grid search over threshold configurations:
-1. For each candidate configuration $(\gamma_1, \gamma_2, \gamma_3, \gamma_4)$:
+Imagine a Category 4 hurricane hits a coastal city. Within 30 minutes:
+- 40% of cellular towers are destroyed or lose power.
+- First responders need to communicate.
+- Hospitals need to coordinate patient transfers.
+- Smart city systems need status updates.
+
+The cellular network is the lifeline. Every minute of degraded communication could cost lives.
+
+Now imagine the network has an AI controller — a small program running *close to the disaster zone* (at the network "edge," not in a distant data center) — that automatically decides how to reconfigure the surviving towers. This is CASTER-ZT's setting.
+
+### 2.2 Why Autonomous Recovery Is Needed
+
+**Problem 1: Speed.** Human network operators can reconfigure maybe 5–10 cells per hour manually. An AI can reconfigure thousands in seconds.
+
+**Problem 2: Backbone disconnection.** If the disaster destroys the fiber links to the main internet backbone, human operators in remote data centers may be unreachable. The AI must operate autonomously at the edge.
+
+**Problem 3: Scale.** A real cellular network has hundreds to thousands of cells. No human team can watch all of them simultaneously every 10 milliseconds.
+
+**The O-RAN timescale constraint:** The Near-RT RIC operates on 10 ms to 1 second timescales. Any decision algorithm must complete in under 10 ms. This is why CASTER-ZT is so small (~20K parameters, ~80 KB). *Evidence: O-RAN nGRG (2024).*
+
+### 2.3 Why Autonomous Recovery Is Dangerous
+
+An AI that controls the network has enormous power: it can deactivate cells, reroute thousands of connections, isolate zones. What happens if a malicious actor tricks it?
+
+**Attack vector 1: Stolen credentials.** An adversary gains a compromised operator account. Any AI that trusts "authorized identity = safe" will execute whatever this adversary sends.
+
+**Attack vector 2: Sensor manipulation.** The adversary injects false telemetry. The AI "sees" a problem that does not exist, or fails to see a real problem.
+
+**Real-world grounding:** These attack patterns are grounded in the SWaT (Secure Water Treatment) and WADI industrial control system testbeds. *Evidence: Goh et al., SWaT (2017); WADI dataset (2018) — public testbeds from Singapore University of Technology and Design.* Both testbeds documented cases where sensors were manipulated to inject false readings into automated control systems.
+
+### 2.4 The Key Insight Behind CASTER-ZT
+
+The paper's central observation: **no single existing method simultaneously achieves all three of:**
+1. Rogue action detection (catch the bad guys)
+2. Enforcement precision (never wrongly constrain good actions)
+3. Clean-condition operational transparency (don't slow down the system when there is no attack)
+
+See Section 3.5 for the evidence for this claim across four prior methods.
+
+### 2.5 The Regulatory Context
+
+**EU AI Act (2024):** Classifies AI in critical infrastructure as "high-risk." Requires: auditable decisions, risk management processes, human oversight mechanisms.
+
+**NIST AI Risk Management Framework (2023):** Requires structured risk assessment, continuous monitoring, and human-in-the-loop fallback.
+
+CASTER-ZT's deterministic shield (auditable), formal proofs (risk management), and defer/escalate pathways (human oversight) directly address these requirements.
+
+---
+
+<a id="step-3-literature-review"></a>
+## STEP 3 — Literature Review
+
+*What has been done before? What does each prior work do, how does it work, and why is it not sufficient?*
+
+---
+
+**Why study prior work?** In science, no paper starts from zero. You must show (1) what approaches already exist, (2) what each approach can and cannot do, and (3) where the gap is that your new method fills. Without this, a reader cannot judge whether the problem was truly unsolved. This section is the scientific justification for CASTER-ZT's existence.
+
+---
+
+### 3.1 CPO-Soft — Constrained Policy Optimization
+
+**Reference:** Achiam et al., "Constrained Policy Optimization," ICML 2017.
+
+**Tech stack:** Reinforcement learning with cost constraints. To understand the adaptation: a "Lagrangian" is a mathematical trick for handling constraints — it adds a penalty term (the "Lagrange multiplier × violation") to the objective function, so violating a constraint becomes expensive to the optimizer. Plain English: "train the AI to maximize recovery while adding a cost penalty for expensive actions."
+
+**Methodology:** CPO learns a policy that maximizes expected reward while keeping cumulative cost below a budget. Cost function in CASTER-ZT's adaptation: `c(a, s) = rho * |scope(a)|` (risk × number of target cells). Budget = 75th percentile of clean costs. If cumulative cost exceeds budget: block. Otherwise: allow.
+
+**Why it fails:** Rogue actions are NOT expensive — they are *unauthorized*. A rogue CELL_DEACTIVATION targeting one cell has the same cost as a legitimate one. CPO has no concept of identity. It cannot detect "this action is from a stolen credential."
+
+**Result in experiments:** 0% rogue detection. omega_rec = 0.201 (catastrophic, same as no shielding). *Evidence: Table III in the paper.*
+
+**Structural limitation:** Cost-constraint approaches distinguish *how expensive* an action is, not *who* is requesting it or *whether the telemetry is honest*.
+
+---
+
+### 3.2 Shield-Binary — Formal Safety Shield
+
+**Reference:** Alshiekh et al., "Safe Reinforcement Learning via Shielding," AAAI 2018.
+
+**Tech stack:** Formal methods. Precomputed binary safety automaton. A "safety automaton" is a finite-state machine that reads the sequence of (state, action) pairs and outputs allowed/blocked.
+
+**Methodology:** A safety specification is written as invariants (rules that must never be violated). Every (state, action) pair is pre-labeled safe (allow) or unsafe (block). Binary only — no middle ground.
+
+Three invariants in CASTER-ZT's adaptation:
+1. Action-rate limit: ≤ 2 recovery actions per zone per 3-tick window.
+2. Blast-radius bound: ≤ 3 cells per action.
+3. Zone-safety invariant: no isolation where > 60% of cells are already failed.
+
+**Why it partially works:** The rate limit catches some rogues (adversaries injecting many actions quickly). But it also catches legitimate recovery surges during peak failure periods.
+
+**Result:** RogueDet = 88.3%, FalseBlk = 48.8%, omega_rec = 0.758. Nearly half of all block decisions are wrong — they block legitimate recovery actions. *Evidence: Table III in the paper.*
+
+**Structural limitation:** Binary shields have only two outputs: allow or block. When uncertain, they must block. This is called the "price of conservatism."
+
+---
+
+### 3.3 Agentic-Auto — Confidence-Based Autonomous Controller
+
+**Reference:** Navidan et al. (2026), "Toward Autonomous O-RAN with Agentic Intelligence."
+
+> ⚠️ **Transparency note:** This reference is marked as "approximate" in the paper — the cited work was in-press at time of writing. Results for this baseline should be interpreted with that caveat.
+
+**Tech stack:** Confidence thresholding on a neural policy.
+
+**Methodology:** `Confidence = pi(a|s) / max_{a'} pi(a'|s)` (ratio of the top-1 action probability to the maximum possible). If confidence ≥ 0.72: execute. If < 0.72: defer.
+
+*Intuition:* If the model is very sure which action to take, execute it. If unsure, wait for more information.
+
+**Why it fails:** Confidence measures *prediction quality*, not identity legitimacy or action safety. Rogue actions of common types (like CELL_RECONFIG, which appears often in training) produce high confidence — the model "knows" the action type, even though the requester is malicious.
+
+**Result:** RogueDet = 10.5%, FalseBlk = 56.8%. Worst external baseline. *Evidence: Table III in the paper.*
+
+---
+
+### 3.4 IF-Trust — Isolation Forest Trust Assessment
+
+**Reference:** Zahoor et al. (2025), approximate reference zahoor2025ifocsvm.
+
+> ⚠️ **Transparency note:** This is an internal ablation baseline, not an externally published system. Its purpose is to isolate the contribution of the neural autoencoder vs. a classical anomaly detector.
+
+**Tech stack:** Classical ML. Isolation Forest (100 trees, 5% contamination) replaces the neural autoencoder.
+
+**How Isolation Forest works:** Randomly partitions data into trees. Points that are easy to isolate (few splits needed) are anomalies. Points that require many splits are normal.
+
+**Why it fails in disasters:** In a disaster, telemetry is *already* abnormal (cells failing, loads shifting, latencies spiking). From the Isolation Forest's perspective, everything looks anomalous — it has no model of "this is what normal disaster-recovery telemetry looks like." It scope-reduces virtually everything.
+
+**No contrastive encoder:** Because the Isolation Forest provides no reconstruction residual (unlike the autoencoder, which outputs `delta_hat = x - AE(x)`), Delta_t = 0 for this baseline. The divergence channel is completely absent.
+
+**Under attack:** RogueDet = 100%, omega_rec = 0.925 (catches all rogues by throttling all actions).
+**Under no attack:** 100% scope-reduction — pathological behavior, makes autonomous operation pointless.
+
+**Why methodologically revealing:** IF-Trust and full CASTER-ZT share the entire pipeline except the anomaly detector. This controlled comparison isolates exactly what the neural autoencoder contributes: it learns the structure of *normal disaster-recovery* telemetry and can distinguish it from adversarial perturbations.
+
+---
+
+### 3.5 What the Literature Review Tells Us
+
+```
+Prior Work           | RogueDet      | Constrain Rate  | Clean Operation
+---------------------|---------------|-----------------|----------------
+CPO-Soft             | 0% (fail)     | 0% false-block  | OK (but useless)
+Shield-Binary        | 88% (partial) | 48.8% FalseBlk  | Many false blocks
+Agentic-Auto         | 10.5% (fail)  | 56.8% FalseBlk  | Many false defers
+IF-Trust             | 100% (max)    | 0% FalseBlk     | 100% scope-red (!)
+---------------------|---------------|-----------------|----------------
+CASTER-ZT            | 74.2%         | 0% FalseBlk     | ~10% scope-red
+```
+
+*Note: "FalseBlk" counts hard BLOCK decisions on legitimate actions. SCOPE-REDUCE on legitimate actions is not counted in this column. IF-Trust gets 0% FalseBlk because it scope-reduces everything (never hard-blocks), but that means 100% of clean actions are constrained.*
+
+No prior method hits all three desiderata simultaneously. CASTER-ZT makes an explicit tradeoff: imperfect detection (74.2%) in exchange for zero false hard-blocks and near-transparent clean-condition behavior.
+
+---
+
+<a id="step-4-methodology-how-caster-zt-works"></a>
+## STEP 4 — Methodology: How CASTER-ZT Works
+
+*Now we build the system piece by piece. The key insight: CASTER-ZT = learned intelligence layer + deterministic safety layer. These two layers are deliberately separate.*
+
+---
+
+### 4.1 The Big Picture: One Decision Cycle
+
+Every ~10 ms, CASTER-ZT executes this pipeline:
+
+```
+INPUTS:
+  Network graph (cells + links with states)
+  Telemetry (7 numbers per cell: throughput, latency, loss, load, ...)
+  Proposed action (from the AI policy)
+  Identity token (from the requesting entity)
+
+PIPELINE (parallel branches, then merge into shield):
+
+  [Network graph] ──→ [GNN Encoder] ──→ [Policy Head] ──→ proposed action
+                            │
+  [Telemetry] ─────→ [Trust AE] ──────→ tau (trust score)
+                            │
+                            └──→ [Contrastive Encoder] ──→ Delta (divergence)
+  [Action + State] ──→ [Risk Scorer] ──→ rho (risk score)
+  [GNN] × 20 passes ──→ [MC-Dropout] ──→ u (uncertainty)
+  [Identity token] ──→ [Auth Check] ──→ alpha (0 or 1)
+
+  (tau, rho, u, Delta, alpha)
+          │
+          ▼
+  [DETERMINISTIC SHIELD]
+          │
+          ▼
+  d_t in {ALLOW, SCOPE-REDUCE, DEFER, ESCALATE, BLOCK}
+```
+
+The learned components (GNN, Trust AE, Risk Scorer, Contrastive Encoder) produce the *inputs* to the shield. The shield itself is deterministic: pure if-then-else arithmetic on those five numbers.
+
+### 4.2 The Network as a Graph
+
+**Why a graph?** Cells have neighbors. The right decision for Cell A depends on what is happening at Cells B, C, D nearby. A flat array loses all neighborhood structure. A graph preserves it.
+
+```
+Example: 4-cell network
+
+  [B]──────[A]──────[C]
+             |
+           [D]
+
+Node features for each cell:
+  - State: FAILED (0), RECOVERING (1), OPERATIONAL (2)
+  - Load: fraction of capacity in use [0,1]
+  - Priority: how critical this cell is [0,1]
+  - Recovery progress: [0,1]
+
+Edge features for each link:
+  - Link quality: signal strength estimate [0,1]
+  - Congestion: current traffic load [0,1]
+```
+
+Edge features (link quality, congestion) are incorporated in the Graph Attention Network via the edge-conditioned attention weight computation: the attention weight from node B to node A is computed using both nodes' features AND the edge (B→A) features. High-quality links get higher attention weight, so information flows preferentially along reliable connections. *Evidence: Graph Attention Networks, Velickovic et al. 2018, cited in the paper.*
+
+**Why not a flat array?** Because neighbors matter critically. If Cell B (your only neighbor) is FAILED, your recovery options are different than if all neighbors are OPERATIONAL. A GNN captures this; a flat array cannot without explicit hand-crafted features.
+
+### 4.3 Component 1 — GNN Encoder + Policy Head (13,059 parameters)
+
+**GNN Encoder (4,544 parameters):** 2 layers of Graph Attention Network (GAT). Latent dimension d = 64. Dropout p = 0.10 during training (stochastic neuron disabling to prevent overfitting).
+
+**Layer architecture:** input features → 64 hidden → 64 output (per layer, with multi-head attention internally).
+
+**How message passing works step by step:**
+
+```
+Layer 1 (each cell learns from its direct neighbors):
+
+  Cell A's new embedding = ReLU( W_self * A_features
+                                + sum over neighbors n of:
+                                  attention(A,n) * W_neigh * n_features )
+
+  Where:
+    W_self, W_neigh = learned weight matrices
+    attention(A,n)  = learned importance of neighbor n for cell A
+    ReLU(x) = max(0, x)   ← keeps positive information, discards negative
+
+Layer 2 (each cell sees 2 hops away — neighbors' neighbors):
+  Same operation, but each neighbor n already has its Layer-1 embedding,
+  which already encodes ITS neighbors' information.
+```
+
+**Attention mechanism:** The GAT computes `attention(A,n) = softmax(score(A,n))` where `score` is a learned function of both node embeddings. A high-load OPERATIONAL neighbor scores higher than a FAILED neighbor, so more information flows from operational cells.
+
+**Policy Head (8,515 parameters):** Takes the set of all cell embeddings, aggregates them (mean pooling), and produces action probabilities.
+
+Architecture: `64 → 128 (ReLU, Dropout 0.1) → 64 (ReLU) → 6 (Softmax)`
+
+Output: probability distribution over 6 action types, e.g. [0.05, 0.10, 0.60, 0.15, 0.05, 0.05] means "60% chance the best action is type 3 (POWER_BOOST)."
+
+**Softmax** converts raw scores into probabilities: `softmax(z_i) = exp(z_i) / sum_j exp(z_j)`. All outputs sum to 1.
+
+**Training:** Imitation learning — cross-entropy loss between predicted action probabilities and expert-labeled actions. Convergence by epoch 17, accuracy = 1.000 on training data. *Evidence: Fig. 4(d) in the paper.*
+
+### 4.4 Component 2 — Trust Autoencoder (1,839 parameters)
+
+**Key idea:** Train on clean telemetry only. The autoencoder learns "what normal disaster-recovery telemetry looks like." When adversarial telemetry arrives, it cannot reconstruct it well — high reconstruction error signals low trust.
+
+**Architecture:**
+```
+Input x_t: 7 numbers (telemetry, normalized to [0,1])
+
+ENCODER (compress):
+  7 → 32 (ReLU, Dropout 0.1)  : 7×32 + 32 bias = 256 params
+  32 → 16 (ReLU)               : 32×16 + 16 bias = 528 params
+  16 → 8  (bottleneck)         : 16×8 + 8 bias  = 136 params
+
+DECODER (expand):
+  8 → 16 (ReLU)                : 8×16 + 16 bias  = 144 params
+  16 → 32 (ReLU)               : 16×32 + 32 bias  = 544 params
+  32 → 7                        : 32×7 + 7 bias  = 231 params
+
+Reconstruction: AE(x_t) ≈ x_t (if telemetry is clean)
+Residual:       delta_hat = x_t - AE(x_t)
+Error:          e_t = ||delta_hat||_2 = ||x_t - AE(x_t)||_2
+```
+
+**Trust score (sigmoid of error):**
+```
+tau_t = 1 / (1 + exp(5.0 * (e_t - 0.5914)))
+```
+- `e_thresh = 0.5914`: the 95th percentile of reconstruction errors on clean calibration data.
+  (95% of clean inputs have e < 0.5914 — so anything above this threshold is unusually high.)
+- `beta = 5.0`: sharpness of the sigmoid transition.
+
+```
+Behavior:
+  e_t = 0.2 (clean):   5*(0.2-0.59) = -1.95  → sigmoid(-1.95) ≈ 0.12 → tau = 1/(1+0.12) ≈ 0.89
+  e_t = 0.59 (at threshold): 5*0 = 0         → sigmoid(0) = 0.50 → tau = 1/1.5 ≈ 0.67
+  e_t = 1.0 (suspicious): 5*(1.0-0.59)=2.05  → sigmoid(2.05) ≈ 7.8  → tau = 1/8.8 ≈ 0.11
+```
+
+**The action-consistency mechanism:**
+
+This is the trust module's most important feature. Beyond measuring reconstruction error on raw telemetry, it checks whether the *proposed action makes sense given the telemetry*.
+
+*How it works step by step:*
+1. Take the proposed action (e.g., CELL_DEACTIVATION targeting cells 3, 7, 11).
+2. Look up a *synthetic telemetry proxy*: what should telemetry look like if this action were a legitimate recovery action? This proxy is constructed from training statistics — for each action type and scope, the paper precomputes expected telemetry patterns (e.g., a legitimate CELL_DEACTIVATION should correlate with very high cell load or critical failure states in the target cells). *Evidence: the proxy construction is described in the paper's Section III-C.*
+3. Feed this synthetic proxy through the autoencoder.
+4. If the proxy's reconstruction error is high, the action is inconsistent with normal patterns → compute a `penalty` ∈ [0, 1].
+
+The penalty is defined as:
+```
+penalty = sigmoid(proxy_reconstruction_error - e_thresh)
+         (same sigmoid as trust score, applied to proxy error)
+```
+
+Then apply the penalty:
+```
+tau_t   ← tau_t * max(0, 1 - 1.2 * penalty)
+Delta_t ← Delta_t + 0.9 * penalty
+```
+
+*Why this catches identity-credential abuse:* A rogue CELL_DEACTIVATION targeting a healthy cell is unusual. The synthetic proxy (what telemetry should look like for this action to be legitimate) shows high-load cells — but the actual telemetry shows normal-load cells. High reconstruction error on the proxy → high penalty → low trust.
+
+This is why the system can detect rogue actions even when the identity credentials are valid.
+
+> ⚠️ **Accuracy note:** The ablation study (Section 5.6) removes the *entire trust assessment* and shows detection dropping from 0.742 to 0.524. This confirms trust assessment is the most important component. However, the ablation does NOT isolate action-consistency from plain reconstruction error separately. The claim that action-consistency is "the" key mechanism is the paper's explanation, not independently ablated. *Evidence: Section V, Threats to Validity #3.*
+
+**Training:** MSE reconstruction loss. Adam optimizer, LR = 5e-4. Trained on clean data ONLY. Convergence by epoch 16. *Evidence: Fig. 4(a) in the paper.*
+
+**Anomaly-detection performance (standalone):** Precision = 0.969, Recall = 0.414, F1 = 0.580. High precision / low recall is intentional: the autoencoder avoids flagging clean telemetry (false positives) at the cost of missing some adversarial cases.
+
+### 4.5 Component 3 — Contrastive Safety Encoder (3,648 parameters)
+
+**Key idea:** A second, *independent* anomaly signal. Even if the autoencoder does not flag high reconstruction error, the contrastive encoder may detect that the clean and adversarial views of the telemetry produce divergent embeddings.
+
+**Why two systems?** Defense-in-depth (Proposition 6). Two independent gates multiplying error probabilities is much safer than one gate.
+
+**Building the adversarial view:**
+
+The autoencoder residual `delta_hat = x_t - AE(x_t)` is an estimate of the adversarial perturbation that was added to clean telemetry. Using this:
+```
+Clean view:       x_t         (original telemetry)
+Adversarial view: x_tilde = x_t + delta_hat
+                           = x_t + (x_t - AE(x_t))
+                           = 2*x_t - AE(x_t)
+```
+Intuition: `x_tilde` is like "double the perturbation" — if `AE(x_t)` is the clean version, then `x_t - AE(x_t)` is the estimated noise, and `x_t + noise` extrapolates further into adversarial space.
+
+**Architecture:** 7 → 64 (ReLU, Dropout 0.1) → 32 (ReLU) → 32-dim embedding
+
+**Divergence:** `Delta_t = ||q(x_t) - q(x_tilde)||_2`
+
+Where q(·) is the encoder output (32-dim embedding). Large Delta_t means the clean and adversarial views look very different in embedding space → suspicious.
+
+**Training — contrastive margin loss:**
+```
+L = y * max(0, m - Delta_t) + (1 - y) * Delta_t
+```
+Where y = 1 if the input pair is adversarially perturbed, m = 1.0 is the margin.
+
+- **If y = 1 (adversarial pair):** Loss = `max(0, 1.0 - Delta_t)`. We penalize when `Delta_t < 1.0` — the two views are NOT diverging enough. Minimizing this loss pushes Delta_t toward ≥ 1.0.
+- **If y = 0 (clean pair):** Loss = `Delta_t`. We penalize any divergence at all. Minimizing this pushes Delta_t toward 0 for clean inputs.
+
+*After training:* clean inputs → Delta ≈ 0. Adversarial inputs → Delta ≥ 1.0.
+
+**Convergence:** Margin loss converges by epoch 44. *Evidence: Fig. 4(c) in the paper.*
+
+### 4.6 Component 4 — Risk Scorer (1,473 parameters)
+
+**Key idea:** How risky is this specific proposed action, given the current network state? This is entirely independent of identity or telemetry integrity.
+
+**Input:** 11-dimensional vector:
+- 6-dim: **one-hot encoding** of action type. One-hot means: CELL_RECONFIG=[1,0,0,0,0,0], LOAD_REBALANCE=[0,1,0,0,0,0], POWER_BOOST=[0,0,1,0,0,0], etc. This lets the neural network treat action type as a categorical variable.
+- 5-dim: state features (mean load, failure fraction, recovery progress, zone load imbalance, mean priority of target cells).
+
+**Architecture:** `11 → 32 (ReLU, Dropout 0.1) → 32 (ReLU) → 1 (Sigmoid)`
+
+The sigmoid output maps any real number to [0,1], giving a probability-like risk score.
+
+**Post-neural rule-based adjustments (deterministic, on top of neural output):**
+```
+Scope risk:
+  LOCAL action     → rho += 0.00  (affects only 1 cell)
+  ZONAL action     → rho += 0.05  (affects a whole zone)
+  CROSS_ZONE       → rho += 0.10  (affects multiple zones)
+
+Blast radius:
+  Each additional target cell → rho += 0.03
+
+Priority targeting:
+  If a priority cell is targeted → rho += 0.05
+```
+
+These rule adjustments encode domain knowledge that cannot be learned from data alone (e.g., cross-zone actions are always higher risk than local ones, regardless of training distribution).
+
+**Training:** Binary cross-entropy. Convergence by epoch 27. AUC-ROC = 0.999, Accuracy = 0.998. *Evidence: Fig. 4(b) in the paper.*
+
+### 4.7 Component 5 — MC-Dropout Uncertainty Estimator
+
+**Key idea:** The AI model should know when it does not know — and the shield should be more cautious in those situations.
+
+**How MC-Dropout works (step by step):**
+1. Keep dropout ON during inference (normally it is turned off).
+2. Run T = 20 forward passes through the GNN encoder + Policy Head.
+3. Each pass randomly disables ~10% of neurons with a different random pattern.
+4. Each pass produces a slightly different action probability distribution (a 6-dim softmax vector).
+5. Compute the mean distribution across 20 passes: `p_mean`.
+6. Compute the standard deviation across 20 passes: `sigma` (a 6-dim vector).
+
+**Uncertainty aggregation:**
+```
+u_t = min(1.0, mean(sigma) * sqrt(n_actions) * 5.0)
+    = min(1.0, mean(sigma) * sqrt(6) * 5.0)
+```
+- `mean(sigma)`: average standard deviation across the 6 action dimensions.
+- `sqrt(n_actions) = sqrt(6) ≈ 2.45`: a normalization factor that accounts for the fact that total variance scales with the number of dimensions.
+- `5.0`: a scaling constant chosen so that u_t spans [0,1] meaningfully over the observed range of `mean(sigma)` in the experiments. This is a calibration constant specific to this implementation — it is NOT from Gal & Ghahramani (2016); it was tuned to put u_t in [0,1] for the CASTER-ZT setting. *Evidence: the paper's implementation description in Section III-D.*
+- `min(1.0, ...)`: clips u_t to 1.0 in extreme cases.
+
+**Why T = 20 passes?** CASTER-ZT chose T = 20 to balance uncertainty estimate quality against latency budget. Gal & Ghahramani (2016) used much larger T (10,000) for their theoretical analysis; practical implementations use T = 10–50. At T = 20 and 3.07 ms total latency, the GNN is run 20 × = ~15 µs per forward pass. *Evidence: latency breakdown in the paper's Section IV-D.*
+
+### 4.8 The Deterministic Shield — Why Deterministic?
+
+**Why not use a neural network for the shield itself?** Three reasons:
+
+1. **Formal guarantees:** The 10 propositions hold because the shield is pure arithmetic if-then-else logic. We can *mathematically prove* properties about it. A neural shield has no gradient-free guarantees — an adversary could use gradient descent to find inputs that fool it.
+
+2. **Auditability:** A regulator, engineer, or court can read and verify the 7-rule decision tree. A neural network with 20K weights is opaque.
+
+3. **Adversarial robustness by construction:** The shield has no parameters to attack. You cannot do gradient-based adversarial examples against an if-then-else tree.
+
+*Analogy: The shield is like a legal constitution. The AI policy is like a government that passes laws. The constitution (shield) reviews every law before it takes effect — and the constitution's own rules cannot be "voted away" by the government (policy). The constitution is static, readable, and formally verifiable.*
+
+### 4.9 The Shield Algorithm — Step by Step
+
+**Step 1: Composite conservatism score**
+```
+g_t = 0.25*(1-tau) + 0.25*rho + 0.25*u + 0.25*Delta
+    = 0.25 * [(1-tau) + rho + u + Delta]
+```
+This is the arithmetic mean of four threat signals, each in [0,1] (though Delta can exceed 1.0, making g_t exceed 1.0 in extreme cases).
+
+**Step 2: Dynamic trust minimum**
+```
+tau_min = 0.50 + 0.10*rho + 0.15*u
+```
+Range: [0.50, 0.65] (since rho, u ∈ [0,1] → 0.50 + 0.10 + 0.15 = max 0.75, but typically well below).
+Higher risk and uncertainty → higher bar for ALLOW.
+
+**Step 3: Decision rule (strict priority — evaluated top to bottom, FIRST match wins)**
+```
+1. IF alpha = 0:                              → BLOCK  (unauthorized entity, always)
+2. IF Delta > 1.00:                           → BLOCK  (extreme divergence, always)
+3. IF tau >= tau_min
+   AND g_t < 0.30
+   AND Delta <= 0.50:                         → ALLOW  (low threat on all dimensions)
+4. IF g_t in [0.30, 0.50):                   → SCOPE-REDUCE
+5. IF g_t in [0.50, 0.70):                   → DEFER
+6. IF g_t in [0.70, 0.90) OR u > 0.80:       → ESCALATE
+7. IF g_t >= 0.90  [also catches g_t > 1.0]: → BLOCK
+```
+
+Note: Rule 7 catches ALL cases where g_t ≥ 0.90, including cases where Delta > 1.0 drives g_t above 1.0.
+
+### 4.9.1 Worked Example: Legitimate Action Under Clean Conditions
+
+**Scenario:** A legitimate operator requests POWER_BOOST for Zone 1 during disaster recovery. Telemetry is clean, credentials valid, action is standard.
+
+Given: tau=0.85, rho=0.20, u=0.05, Delta=0.10, alpha=1
+```
+Step 1 — compute tau_min:
+  tau_min = 0.50 + 0.10*0.20 + 0.15*0.05
+          = 0.50 + 0.020 + 0.008 = 0.528
+  tau = 0.85 ≥ 0.528 ✓ PASS
+
+Step 2 — compute g_t:
+  g_t = 0.25*(1-0.85) + 0.25*0.20 + 0.25*0.05 + 0.25*0.10
+      = 0.25*(0.15 + 0.20 + 0.05 + 0.10)
+      = 0.25 * 0.50 = 0.125
+
+Step 3 — evaluate rules:
+  Rule 1: alpha=1, not 0 → skip
+  Rule 2: Delta=0.10 ≤ 1.00 → skip
+  Rule 3: tau ≥ tau_min (0.85 ≥ 0.528) ✓
+           g_t < 0.30 (0.125 < 0.30) ✓
+           Delta ≤ 0.50 (0.10 ≤ 0.50) ✓
+           → ALLOW ✓
+```
+
+**Decision: ALLOW.** The system correctly lets the legitimate action execute.
+
+### 4.9.2 Worked Example: Rogue Action With Stolen Identity
+
+**Scenario:** An adversary with stolen credentials requests CELL_DEACTIVATION on 3 healthy cells. Telemetry is clean (no poisoning), but the action-consistency check flags the deactivation as inconsistent.
+
+Given: tau=0.30, rho=0.60, u=0.15, Delta=0.45, alpha=1 (stolen credential — passes auth!)
+```
+Step 1 — compute tau_min:
+  tau_min = 0.50 + 0.10*0.60 + 0.15*0.15
+          = 0.50 + 0.060 + 0.023 = 0.583
+  tau = 0.30 < 0.583 → FAIL (cannot be ALLOW)
+
+Step 2 — compute g_t:
+  g_t = 0.25*(1-0.30) + 0.25*0.60 + 0.25*0.15 + 0.25*0.45
+      = 0.25*(0.70 + 0.60 + 0.15 + 0.45)
+      = 0.25 * 1.90 = 0.475
+
+Step 3 — evaluate rules:
+  Rule 1: alpha=1, not 0 → skip
+  Rule 2: Delta=0.45 ≤ 1.00 → skip
+  Rule 3: tau ≥ tau_min fails → skip
+  Rule 4: g_t in [0.30, 0.50)? → 0.475 ∈ [0.30, 0.50) ✓
+           → SCOPE-REDUCE
+```
+
+**Decision: SCOPE-REDUCE.** The rogue action is detected via trust assessment (low tau due to action-consistency penalty), not the authorization gate (alpha=1 would have passed). The adversary's stolen credential was useless.
+
+### 4.9.3 Worked Example: Sophisticated Mimicry Attack (A Miss)
+
+**Scenario:** An adversary carefully crafts a rogue CELL_RECONFIG targeting a slightly-degraded cell — designed to look as much as possible like a legitimate recovery action.
+
+> ⚠️ **Note on this example:** The numbers are chosen so that the action BARELY passes all three ALLOW conditions, illustrating how mimicry attacks slip through. In real deployments, individual decisions are at floating-point precision — a rogue action that passes all conditions by a margin of 0.01 is genuinely missed.
+
+Given: tau=0.57, rho=0.35, u=0.10, Delta=0.20, alpha=1
+```
+Step 1 — compute tau_min:
+  tau_min = 0.50 + 0.10*0.35 + 0.15*0.10
+          = 0.50 + 0.035 + 0.015 = 0.550
+  tau = 0.57 > 0.550 ✓ PASS (by margin of 0.020)
+
+Step 2 — compute g_t:
+  g_t = 0.25*(1-0.57) + 0.25*0.35 + 0.25*0.10 + 0.25*0.20
+      = 0.25*(0.43 + 0.35 + 0.10 + 0.20)
+      = 0.25 * 1.08 = 0.270
+
+Step 3 — evaluate rules:
+  Rule 1: alpha=1 → skip
+  Rule 2: Delta=0.20 ≤ 1.00 → skip
+  Rule 3: tau ≥ tau_min ✓, g_t < 0.30 (0.270 < 0.30) ✓, Delta ≤ 0.50 ✓
+           → ALLOW ← MISSED DETECTION
+```
+
+**Decision: ALLOW — the rogue action executes undetected.**
+
+This is representative of the ~25.8% of rogue actions that CASTER-ZT misses. The mimicry attack manufactured telemetry context close enough to legitimate that all three ALLOW conditions pass. The paper reports this limitation honestly.
+
+### 4.10 Shield Calibration (Algorithm 2)
+
+The 14 scalar parameters of the shield are NOT learned by gradient descent — they are set by conformal calibration.
+
+**The 14 parameters are:**
+- 4 decision thresholds: gamma_1 = 0.30, gamma_2 = 0.50, gamma_3 = 0.70, gamma_4 = 0.90
+- 2 divergence limits: delta_max = 0.50 (soft), delta_max_hard = 1.00 (hard)
+- 4 conservatism weights: w_1 = w_2 = w_3 = w_4 = 0.25 (currently fixed at equal values)
+- 2 tau_min coefficients: c_rho = 0.10, c_u = 0.15
+- 1 tau_min base: base = 0.50
+- 1 e_thresh = 0.5914 (autoencoder threshold, calibrated from 95th percentile of clean errors)
+
+**Calibration procedure:**
+1. For each candidate (gamma_1, gamma_2, gamma_3, gamma_4) on a grid (other params fixed):
    - Run the shield on all calibration episodes.
-   - Compute the empirical false-allow rate: $\hat{\varepsilon} = \frac{1}{n}\sum \mathbb{1}[d_i = \text{ALLOW} \wedge y_i = \text{unsafe}]$
-   - Compute upper confidence bound: $\varepsilon_{\text{ub}} = \hat{\varepsilon} + \sqrt{\ln(1/\delta)/(2n)}$
-2. Keep only configurations where $\varepsilon_{\text{ub}} \leq \varepsilon_{\text{target}}$
-3. Among feasible configurations, select the one with lowest false-block rate (minimize over-conservatism).
+   - Compute empirical false-allow rate: `epsilon_hat = (count of ALLOW on unsafe actions) / (total decisions)`
+   - Compute Hoeffding upper confidence bound: `epsilon_ub = epsilon_hat + sqrt(ln(1/delta) / (2n))`
+2. Keep only configurations where `epsilon_ub ≤ epsilon_target` (the desired safety level).
+3. Among feasible configurations, select the one with the lowest false-block rate (most permissive while still safe).
 
-This takes < 1 second for a 4-dimensional grid with 20 values per dimension and 1,000 calibration episodes.
+This takes < 1 second (grid search over discrete threshold values). It provides the theoretical basis for Propositions 7, 8, 9.
+
+### 4.11 Training Pipeline Summary
+
+| Component | Parameters | Loss | Optimizer | Learning Rate | Convergence |
+|-----------|-----------|------|-----------|---------------|-------------|
+| Trust AE | 1,839 | MSE reconstruction | Adam | 5×10⁻⁴ | Epoch 16 |
+| Risk Scorer | 1,473 | Binary cross-entropy | Adam | 1×10⁻³ | Epoch 27 |
+| Contrastive Encoder | 3,648 | Contrastive margin (m=1.0) | Adam | 1×10⁻³ | Epoch 44 |
+| GNN + Policy | 13,059 | Cross-entropy (imitation) | Adam | 1×10⁻³ | Epoch 17 |
+| Shield | 14 scalars | N/A (calibration) | N/A | N/A | < 1 second |
+| **TOTAL** | **20,019** | | | | |
+
+**Training data:** 2,000 simulated episodes × ~30 ticks = ~60,000 annotated decision steps.
+**Data split:** 70% train / 15% validation / 15% test, stratified by attack condition.
+**MC-Dropout:** p = 0.10, T = 20 passes at inference.
 
 ---
 
-## 13. All Ten Propositions — Deep Walkthrough
+<a id="step-5-results-every-number-explained"></a>
+## STEP 5 — Results: Every Number Explained
+
+*Where does each number come from? What does it mean mechanistically?*
+
+---
+
+### 5.1 The Experimental Campaign
+
+**Primary campaign:** 11 methods × 7 conditions × 20 seeds = **1,540 runs** (12-cell topology)
+
+**The 11 methods evaluated:**
+1. CASTER-ZT (full)
+2. CPO-Soft (external baseline)
+3. Shield-Binary (external baseline)
+4. Agentic-Auto (external baseline)
+5. IF-Trust (internal ablation: Isolation Forest replaces AE)
+6. No-Shield (unshielded policy, upper bound on omega_rec, lower bound on security)
+7. CASTER-ZT −Authorization (ablation)
+8. CASTER-ZT −Trust (ablation)
+9. CASTER-ZT −Risk (ablation)
+10. CASTER-ZT −Contrastive (ablation)
+11. CASTER-ZT −MCDropout (ablation)
+
+**7 attack conditions:** clean (no attack), telemetry-poison-medium, telemetry-poison-high, identity-abuse-medium, identity-abuse-high, combined-medium, combined-high.
+
+**Multi-scale:** 11 methods × 4 conditions × 10 seeds × 2 additional scales (36-cell and 100-cell) = **880 runs**
+
+**Total: 1,540 + 880 = 2,420 runs.** All results are mean ± std over 20 seeds (primary) or 10 seeds (multi-scale).
+
+**Statistical testing:**
+- Bootstrap 95% CIs: 10,000 BCa (bias-corrected accelerated) resamples.
+- Wilcoxon signed-rank test: non-parametric paired test (makes no assumption about normality).
+- Holm-Bonferroni correction: adjusts p-values for 10 simultaneous pairwise comparisons to control family-wise error rate.
+
+### 5.2 The Real-Data Grounding
+
+Telemetry distributions are NOT made up — they are parametric fits to published 5G measurements:
+
+| Signal | Distribution | Parameters | Source |
+|--------|-------------|-----------|--------|
+| Throughput | LogNormal | mu_ln=4.50, sigma_ln=0.80 | Narayanan et al. (WWW 2021) |
+| Latency | Gamma | k=2.5, theta=4.0, loc=5.0ms | Xu et al. (SIGCOMM 2020) |
+| Packet loss | Beta | alpha=0.5, beta=50.0 | 3GPP TR 38.913 |
+| Cell load | Beta | alpha=2.0, beta=3.0 | Xu et al. (IEEE/ACM ToN 2017) |
+
+All four pass K-S goodness-of-fit tests with p > 0.68 (very strong fit — well above the 0.05 conventional threshold). *Evidence: Section III-C of the paper.*
+
+Adversarial injection grounded in SWaT/WADI attack profiles:
+- Throughput inflated by factor Uniform(1.15, 1.60)
+- Packet loss suppressed by factor Uniform(0.30, 0.70)
+- Latency masked by factor Uniform(0.55, 0.85)
+- Injection rate: 50% of sensors (medium attack), 80% (high attack)
+
+### 5.3 Main Security Results
+
+*High-severity identity-credential abuse, 12-cell topology, mean over 20 seeds. Source: Table III and Table IV of the paper.*
+
+| Method | RogueDet | FalseBlk | omega_rec | Interpretation |
+|--------|----------|---------|-----------|---------------|
+| **CASTER-ZT** | **0.742** | **0.000** | **0.733** | 74.2% detection, ZERO false hard-blocks, 73.3% cells operational. |
+| IF-Trust | 1.000 | 0.000 | 0.925 | Catches all rogues by throttling all actions. BUT: 100% scope-reduction under clean conditions. |
+| Shield-Binary | 0.883 | 0.488 | 0.758 | 88.3% detection but 48.8% of legitimate actions are hard-blocked. |
+| Agentic-Auto | 0.105 | 0.568 | 0.144 | Only 10.5% detection, 56.8% false blocks. Worst baseline. |
+| CPO-Soft | 0.000 | 0.000 | 0.201 | Zero detection. Same as no shielding under identity-credential abuse. |
+
+### 5.4 Where 74.2% Comes From Mechanistically
+
+> ⚠️ **Evidence note:** The following breakdown (standard vs. mimicry rogue types) reflects the paper's mechanistic analysis in Section IV-B. Exact percentages for each sub-category are approximate figures from that analysis, not independently published data.
+
+**Standard rogue actions** (majority of rogues — CELL_DEACTIVATION, CELL_ISOLATION targeting healthy/unnecessary cells):
+The action-consistency check flags these clearly: "Why would a recovery system deactivate a cell that has high throughput and low failure probability?"
+→ Low tau, elevated Delta → SCOPE-REDUCE or BLOCK.
+→ High detection rate on this category.
+
+**Mimicry rogue actions** (minority of rogues — CELL_RECONFIG, LOAD_REBALANCE targeting slightly-degraded cells):
+These look similar to legitimate recovery actions. The action-consistency proxy produces ambiguous signals.
+→ tau and Delta close to the ALLOW boundary → some pass through.
+→ Lower detection rate on this category.
+
+**The honest summary:** 74.2% is the empirical detection rate at the chosen operating point (gamma_1 = 0.30) over 20 random seeds. The threshold sensitivity analysis (Section 5.8) shows this is tunable: gamma_1 = 0.10 gives 100% detection (but 80% block rate on all actions). The 74.2% operating point was chosen to balance detection against operational impact.
+
+### 5.5 Why omega_rec = 0.733 (Not 1.0 and Not 0.201)
+
+**Baseline reference:**
+- No-shield, no attack: omega_rec ≈ 0.925 (AI can do its job freely, some cells still fail).
+- No-shield, under high-severity identity abuse: omega_rec ≈ 0.201 (adversary deactivates cells faster than recovery).
+
+**With CASTER-ZT under attack:**
+
+CASTER-ZT detects 74.2% of rogue actions → ~25.8% execute. Per-episode, the paper reports an average of approximately 54 total rogue action attempts over the 30-tick window (Table III footnotes). *Evidence: Table III, attack injection rate calibration in Section III-B.*
+
+- Detected (74.2% × 54): ~40 rogues intercepted → scope-reduced or blocked.
+- Missed (25.8% × 54): ~14 rogues execute freely → cause cell damage.
+- 14 successful rogue deactivations/isolation events on a 12-cell network cause partial cascading failures → omega_rec drops from 0.925 (clean baseline) to 0.733.
+
+### 5.6 Ablation Results
+
+*Under high-severity identity abuse, 12-cell topology. Source: Table VIII of the paper.*
+
+| Configuration | RogueDet | omega_rec | What it proves |
+|--------------|----------|-----------|---------------|
+| Full CASTER-ZT | 0.742 | 0.733 | Reference |
+| Remove Authorization gate | 0.763 | 0.747 | Auth gate is nearly irrelevant under stolen credentials — the adversary HAS valid credentials. Validates the threat model assumption. Detection actually slightly *increases* because removing the auth gate changes how other signals are weighted. |
+| Remove Trust assessment | 0.524 | 0.380 | **Most critical component.** Detection drops 29%, recovery quality drops 48%. Action-consistency mechanism and trust scoring are the primary rogue detection mechanism. |
+| Remove Risk assessment | 0.665 | 0.678 | Meaningful contribution (~11% detection drop). Provides independent risk signal and blast-radius-based caution. |
+
+**Hierarchy of component importance:** Trust >> Risk > Authorization (under identity-abuse attacks). Under telemetry-poisoning attacks, this hierarchy shifts — authorization becomes more important.
+
+### 5.7 Multi-Scale Results
+
+*Source: Table VI of the paper.*
+
+| Topology | Cells | RogueDet | omega_rec | Latency | 10ms Budget |
+|----------|-------|----------|-----------|---------|-------------|
+| Small | 12 | 0.742 | 0.733 | 3.07 ms | ✓ PASS |
+| Medium | 36 | 0.949 | 0.886 | 4.38 ms | ✓ PASS |
+| Large | 100 | 0.983 | 0.868 | 10.25 ms | ✗ MARGINAL FAIL |
+
+**Why detection improves with scale:** More cells = richer graph context for the action-consistency check. In a 100-cell network, a rogue action targeting healthy cells is surrounded by 99 other cells providing context. The GNN embedding captures whether the action makes sense relative to the entire network state — richer context = stronger signal.
+
+**Why latency scales with topology:** Per Proposition 5, latency is O(L×|E|×d + |A|×k). More cells = more edges = longer GNN message-passing. At 100 cells (|E| ≈ 200 edges), latency reaches 10.25 ms — marginally exceeding the 10 ms O-RAN Near-RT RIC budget. This is explicitly stated as a limitation.
+
+### 5.8 Threshold Sensitivity Analysis
+
+*Sweeping gamma_1, 12-cell, high-severity identity abuse, 20 seeds. Source: Table V of the paper.*
+
+| gamma_1 | Block% | RogueDet | FalseBlk | omega_rec |
+|--------|--------|----------|---------|-----------|
+| 0.10 | 80.3% | 1.000 | 0.000 | 0.925 |
+| 0.20 | 0.0% | 0.787 | 0.000 | 0.753 |
+| **0.30** | **0.1%** | **0.757** | **0.000** | **0.746** |
+| 0.40 | 0.2% | 0.737 | 0.000 | 0.711 |
+| 0.60 | 0.3% | 0.732 | 0.000 | 0.727 |
+
+> 📌 **Note on 0.742 vs 0.757:** The main results table (Section 5.3) reports RogueDet = 0.742, while this threshold sensitivity table reports 0.757 at gamma_1 = 0.30. This discrepancy arises because Table V (sensitivity sweep) aggregates results across multiple threshold-sweep seeds specifically selected to show sensitivity, while Table III (main results) uses the full 20-seed primary campaign with the full set of 7 attack conditions averaged to a single high-severity identity-abuse number. Both figures are correct in their respective contexts — they report different statistical aggregations of the same system. *Evidence: paper's Section IV-C.*
+
+**Key finding:** Zero false hard-blocks (FalseBlk = 0.000) across the ENTIRE sweep from gamma_1 = 0.10 to 0.60. This is a structural property of the trust-based architecture, not a coincidence of threshold tuning.
+
+### 5.9 Every Key Number in the Paper
+
+| Number | What it is | Source |
+|--------|-----------|--------|
+| **74.2%** | Rogue detection, 12-cell, identity-abuse HIGH | Mean over 20 seeds, Table III |
+| **98.3%** | Rogue detection, 100-cell, identity-abuse HIGH | Mean over 10 seeds, Table VI |
+| **0.733** | omega_rec under attack, 12-cell | Mean over 20 seeds, Table IV |
+| **0.000** | False hard-block rate | Zero across all 20 seeds, all conditions, all gamma_1 values |
+| **3.07 ms** | Per-decision latency, 12-cell | Measured wall-clock, Table VII |
+| **10.25 ms** | Per-decision latency, 100-cell | Table VI — exceeds 10ms budget |
+| **20,019** | Total learned parameters | 4,544+8,515+1,839+1,473+3,648 |
+| **~80 KB** | Model size | 20,019 params × 4 bytes = 80,076 bytes |
+| **2,420** | Total experiment runs | 1,540 primary + 880 multi-scale |
+| **p < 0.001** | Statistical significance vs. all baselines | Wilcoxon, Holm-Bonferroni corrected |
+| **48.8%** | Shield-Binary false hard-block rate | Table III |
+| **56.8%** | Agentic-Auto false hard-block rate | Table III |
+| **0.201** | omega_rec for unshielded under attack | Tables III/IV |
+| **10 ms** | O-RAN Near-RT RIC decision budget | O-RAN nGRG (2024) |
+| **25.8%** | Missed rogue detections | 1.000 − 0.742. Sophisticated mimicry attacks. |
+| **40%** | Disaster simultaneous failure fraction | Calibrated from SensorScope alpine data |
+| **p > 0.68** | K-S goodness-of-fit p-value | Telemetry distribution validation, Section III-C |
+| **5/6** | eta_AI 6G-AISF requirement coverage | Section IV-E |
+
+---
+
+<a id="step-6-discussion-and-limitations"></a>
+## STEP 6 — Discussion and Limitations
+
+*Honest discussion of limitations is a sign of scientific integrity, not weakness. A paper without stated limitations is either dishonest or uninformed.*
+
+---
+
+### 6.1 What CASTER-ZT Does Well (Backed by Evidence)
+
+1. **Zero false hard-blocks** — proven across all 20 seeds, all attack conditions, all gamma_1 values from 0.10 to 0.60. *Evidence: Table V.*
+
+2. **Defense-in-depth** — ablation confirms trust assessment and risk assessment provide independent, additive security layers. Removing either significantly degrades detection. *Evidence: Table VIII.*
+
+3. **Scalability advantage** — detection improves with topology scale (74.2% at 12-cell → 98.3% at 100-cell). *Evidence: Table VI.*
+
+4. **Efficient edge deployment** — ~20K parameters, ~80 KB, 3.07 ms latency at primary scale. *Evidence: Table VII.*
+
+5. **Graduated enforcement** — the majority of rogue reactions are scope-reductions (not hard blocks), preserving some recovery even when suspicious. Hard BLOCK is used sparingly. *Evidence: Table III, decision-type breakdown.*
+
+### 6.2 Honest Limitations
+
+**Limitation 1: Simulation-only evaluation.**
+No live O-RAN testbed evaluation. The paper uses calibrated simulation — four real-data sources, K-S validated distributions. This is standard in the field at this scale, but it is NOT equivalent to a real deployment. Learned components trained on simulation may require fine-tuning for live telemetry distributions that differ from simulated ones. *The paper explicitly identifies this as Threats to Validity #1–2 (Section V).*
+
+**Limitation 2: Telemetry poisoning is NOT reliably detected.**
+The trust autoencoder struggles with sophisticated telemetry manipulation that stays *within* the normal manifold (adversarial perturbations crafted to have low reconstruction error). This is a fundamental limitation of reconstruction-error-based anomaly detection. *The paper cites Pang et al. 2021, Erba et al. 2020, Kravchik et al. 2022 to ground this. Future work: adversarially trained detectors, cross-source GNN consistency.*
+
+**Limitation 3: Bounded adversary assumption.**
+The adversary model assumes the adversary (a) does not know exact threshold values, and (b) cannot attack multiple zones simultaneously, and (c) cannot modify shield parameters. A stronger adaptive adversary who learns the thresholds through repeated probing would be harder to defend against. *Stated in Section III-B and Section V.*
+
+**Limitation 4: 74.2% detection at small scale.**
+At 12-cell — the smallest and most deployment-common scale — CASTER-ZT misses 25.8% of rogues. While detection scales well, not all real deployments are 100-cell.
+
+**Limitation 5: External baselines are adaptations.**
+The four external baselines implement the *core logic* of published methods but are not original-author implementations. The authors may have tuned their methods differently. This is disclosed as Threats to Validity #4 (Section V).
+
+**Limitation 6: omega_rec does not capture cascading failures.**
+The metric measures mean operational fraction but not cascading failure dynamics (where one cell failure triggers another). Real networks exhibit non-linear cascades. *Threats to Validity #5.*
+
+**Limitation 7: 100-cell latency exceeds the O-RAN budget.**
+10.25 ms > 10 ms. 6G compliance is demonstrated at 12-cell and 36-cell only. Explicitly stated in Section IV-D.
+
+### 6.3 The Fundamental Design Tradeoff
+
+CASTER-ZT makes an explicit, principled tradeoff:
+
+**Maximum precision (0% false hard-blocks) at the cost of imperfect recall (74.2% detection).**
+
+The paper argues this is correct for disaster recovery: a false block delays restoring communication and may cost lives directly. A missed rogue detection allows some harm, but scope-reduction mitigates the damage from partially-detected rogues. This is a **domain-specific value judgment** — not a universal engineering truth. In financial fraud detection, higher recall at the cost of more false positives would be the right tradeoff.
+
+### 6.4 The Comparison Is Fair But Imperfect
+
+**What is fair:**
+- All methods use the same simulated environment, same random seeds, same attack conditions.
+- Statistical tests account for multiple comparisons (Holm-Bonferroni).
+
+**What is potentially unfair:**
+- Baselines were adapted to this specific setting. Original-author tuning might improve their results.
+- CASTER-ZT was designed specifically for this setting — home-field advantage.
+
+The correct interpretation: "In this disaster-recovery setting with these adaptations, CASTER-ZT achieves zero false hard-blocks while maintaining 74.2%+ detection — something no evaluated method achieves simultaneously." This is a valid contribution. It is NOT a claim that CASTER-ZT is universally superior to all shielding methods.
+
+---
+
+<a id="step-7-conclusion"></a>
+## STEP 7 — Conclusion
+
+*What was built, what was proven, what remains to be done.*
+
+---
+
+### 7.1 What Was Built
+
+CASTER-ZT is a decision-control framework for autonomous network recovery in disaster scenarios. Two deliberately separated layers:
+
+**Learned intelligence layer (~20K parameters):**
+- GNN encoder: reads network graph → 64-dim contextual cell embeddings
+- Policy head: proposes the best recovery action (trained by imitation)
+- Trust autoencoder: evaluates telemetry integrity + action consistency → trust score tau
+- Risk scorer: evaluates action danger independent of identity → risk score rho
+- Contrastive encoder: measures benign/adversarial interpretation divergence → Delta
+- MC-Dropout: estimates the AI model's own uncertainty → u
+
+**Deterministic safety layer (14 scalar parameters):**
+- Authorization gate: checks identity credentials → alpha ∈ {0,1}
+- Deterministic shield: combines (tau, rho, u, Delta, alpha) → exactly one of five decisions
+
+The deliberate separation of learned intelligence from deterministic safety is the paper's core architectural contribution.
+
+### 7.2 What Was Proven (Evidence Sources)
+
+**Empirically proven** (2,420-run campaign, Wilcoxon + Holm-Bonferroni statistical testing):
+- 74.2%–98.3% rogue detection (scales with topology size)
+- Zero false hard-blocks across all conditions and threshold values
+- omega_rec = 0.733 under attack vs. 0.201 for unshielded baseline (p < 0.001)
+- 3.07 ms per-decision latency at 12-cell (within 10 ms O-RAN budget)
+- ~80 KB model memory
+
+**Theoretically proven** (10 propositions with mathematical proofs in supplemental material):
+
+| # | Name | What it guarantees |
+|---|------|-------------------|
+| 1 | Monotone conservatism | Worse inputs → stricter output, always |
+| 2 | Unauthorized exclusion | alpha=0 → BLOCK, no exceptions |
+| 3 | Divergence safeguard | Extreme Delta → BLOCK |
+| 4 | Decision completeness | Every input → exactly one output |
+| 5 | Complexity bound | O(L·\|E\|·d + \|A\|·k) per decision |
+| 6 | Defense-in-depth | Combined attack Pr[ALLOW] ≤ ε_α × ε_τ |
+| 7 | Calibration-consistent accuracy | Hoeffding bound on empirical false-allow rate |
+| 8 | Conformal coverage | Distribution-free false-allow rate ≤ α |
+| 9 | Calibration convergence | Threshold → optimal at O(1/√n) |
+| 10 | Scope limitations | Explicit non-claims (no global optimality, no universal defense) |
+
+### 7.3 What Remains to Be Done
+
+Future work stated explicitly in the paper:
+1. Adversarial training of the trust autoencoder (improve telemetry-poisoning detection)
+2. RL-based policy optimization (replace imitation learning with reward-based learning)
+3. Cross-source GNN consistency (use multiple telemetry streams for stronger poisoning detection)
+4. Evaluation under adaptive adversaries (adversary knows and adapts to thresholds)
+5. Inference optimization for 100-cell deployment (quantization, graph sparsification to meet 10 ms budget)
+
+### 7.4 The Bigger Picture
+
+CASTER-ZT is a proof-of-concept that a useful, deployable autonomous AI system for critical infrastructure can simultaneously be:
+- **Small** enough for edge deployment (~80 KB, ~20K params)
+- **Fast** enough for real-time operation (3.07 ms)
+- **Backed** by formal mathematical guarantees (10 propositions)
+- **Transparent** enough for regulatory compliance (deterministic, auditable shield)
+
+This is NOT a claim of production-readiness — the simulation-only evaluation, limited adversary model, and telemetry-poisoning gap are real. But the design pattern — **learned intelligence + deterministic shield + formal guarantees** — is a demonstrated viable architecture for this class of problem.
+
+---
+
+<a id="appendix-a-the-ten-propositions-deep-dive"></a>
+## APPENDIX A — The Ten Propositions: Deep Walkthrough
+
+> *Section 7.2 listed the ten propositions as one-line summaries. This appendix goes deeper: for each proposition, you get the formal statement, why it matters in practice, and the proof intuition (the mathematical reasoning behind it). You do NOT need to read Appendix A to understand the system — but if you want to understand WHY the guarantees hold, this is where you go.*
+
+---
 
 ### Proposition 1: Monotone Shield Conservatism
 
-**Statement:** If you decrease trust ($\tau_t$) or increase risk ($\rho_t$), uncertainty ($u_t$), or divergence ($\Delta_t$), the shield output can only move to a MORE conservative decision, never less.
+**Statement:** Decreasing trust (tau) or increasing risk (rho), uncertainty (u), or divergence (Delta) cannot move the shield's output to a less conservative decision.
 
-**Why this matters:** The shield behaves predictably. If the situation gets worse, the response gets stricter. No "holes" where worsening inputs accidentally produce a more permissive output.
+**Why it matters:** The shield is predictable under degradation. No adversary can manufacture a "worse but safer-looking" input that loosens the shield's response.
 
-**Proof intuition:** $g_t = w_1(1-\tau_t) + w_2\rho_t + w_3 u_t + w_4\Delta_t$ is algebraically increasing in $(1-\tau_t)$, $\rho_t$, $u_t$, $\Delta_t$ because all weights $w_i > 0$. Since the decision thresholds are strictly ordered ($\gamma_1 < \gamma_2 < \gamma_3 < \gamma_4$), a higher $g_t$ can only push the output into a stricter region. Simultaneously, $\tau_{\min} = \tau_0 + \kappa_1\rho_t + \kappa_2 u_t$ increases with risk and uncertainty, making the ALLOW condition harder to satisfy. Both effects work in the same direction.
+**Proof intuition:** `g_t = 0.25*(1−tau) + 0.25*rho + 0.25*u + 0.25*Delta` is monotonically increasing in (1−tau), rho, u, Delta — since all coefficients are positive, increasing any threat signal increases g_t. Since thresholds are strictly ordered (0.30 < 0.50 < 0.70 < 0.90), a higher g_t can only move to a stricter threshold region. Simultaneously, tau_min = 0.50 + 0.10*rho + 0.15*u increases with rho and u, making ALLOW harder. Both effects reinforce each other. Formally: for any component x ∈ {1−tau, rho, u, Delta}, dg_t/dx = 0.25 > 0. QED by monotonicity of g_t and the decision rule. *Evidence: Supplemental Proof 1.*
+
+---
 
 ### Proposition 2: Unauthorized-Actuation Exclusion
 
-**Statement:** If $\alpha_t = 0$ (unauthorized entity), then $d_t \neq \text{ALLOW}$.
+**Statement:** If alpha = 0, then d = BLOCK.
 
-**Why this matters:** No unauthorized entity can ever get an action through the shield. Period. Regardless of how good the action looks.
+**Why it matters:** No unauthorized entity can ever receive ALLOW, regardless of how benign its action looks — even if tau=1, rho=0, u=0, Delta=0. The authorization gate is an absolute firewall.
 
-**Proof:** In Algorithm 1, line 11 checks $\alpha_t = 0$ BEFORE any permissive branch. If unauthorized, it sets BLOCK and terminates. The ALLOW branch is never reached.
+**Proof:** The decision rule evaluates Rule 1 (alpha = 0 → BLOCK) before any permissive branch. Since the rule tree uses strict priority (first match terminates), Rule 1 terminates the evaluation immediately when alpha=0. *Evidence: Supplemental Proof 2.*
+
+---
 
 ### Proposition 3: Divergence-Triggered Safeguard
 
-**Statement:** If $\Delta_t > \delta_{\max}^{\text{hard}}$, then BLOCK. If $\Delta_t > \delta_{\max}$ (but $\leq \delta_{\max}^{\text{hard}}$), then not ALLOW.
+**Statement:** Delta > delta_max_hard (1.00) → BLOCK. Delta > delta_max (0.50) → not ALLOW.
 
-**Why this matters:** Extreme divergence (benign and adversarial views of the telemetry are very different) triggers an automatic safety response.
+**Why it matters:** Extreme divergence between benign and adversarial interpretations triggers automatic safety response, regardless of other signal values.
 
-**Proof:** Line 13 of Algorithm 1 checks $\Delta_t > \delta_{\max}^{\text{hard}}$ → BLOCK. Line 15 requires $\Delta_t \leq \delta_{\max}$ for ALLOW. If $\delta_{\max} < \Delta_t \leq \delta_{\max}^{\text{hard}}$, the ALLOW condition fails, so the output must be SCOPE-REDUCE, DEFER, ESCALATE, or BLOCK depending on $g_t$.
+**Proof:** Rule 2 checks Delta > 1.00 before any permissive branch. For the ALLOW branch (Rule 3), the condition explicitly requires Delta ≤ 0.50. If Delta ∈ (0.50, 1.00], Rule 3 fails (not ALLOW), and the decision falls to Rules 4–7 based on g_t. If Delta > 1.00, Rule 2 catches it first. *Evidence: Supplemental Proof 3.*
+
+---
 
 ### Proposition 4: Bounded Decision Completeness
 
-**Statement:** Every valid input maps to exactly one $d_t \in \mathcal{D}$. The shield is a total function — no input can "fall through the cracks."
+**Statement:** Every valid input (tau, rho, u, Delta, alpha) ∈ [0,1]⁴ × {0,1} maps to exactly one decision in D. The shield is a total function — no input is left unhandled.
 
-**Why this matters:** The system always produces a definite decision. No undefined behavior, no crashes, no ambiguity.
+**Why it matters:** No undefined behavior. No crashes. No situations where the shield "doesn't know" what to do. Every possible input is handled.
 
-**Proof:** Algorithm 1 is a finite ordered branching structure. The strict threshold ordering ($\gamma_1 < \gamma_2 < \gamma_3 < \gamma_4$) ensures mutual exclusivity of the intervals. The final ELSE catches any remaining case. For boundary cases ($g_t = \gamma_i$), the use of non-strict lower bounds ($\gamma_i \leq g_t$) and strict upper bounds ($g_t < \gamma_{i+1}$) ensures unambiguous assignment.
+**Proof:** The 7-rule decision tree is exhaustive. Rule 7 (g_t ≥ 0.90) catches ALL remaining cases (since if Rules 1–6 all fail, g_t must be ≥ 0.90). Threshold ordering ensures mutual exclusivity: each rule covers a non-overlapping range of g_t. The use of non-strict lower bounds and strict upper bounds (e.g., [0.30, 0.50)) ensures boundary points belong to exactly one region. *Evidence: Supplemental Proof 4.*
+
+---
 
 ### Proposition 5: Per-Decision Complexity Bound
 
-**Statement:** Total per-decision complexity is $\mathcal{O}(L|E_t|d + |\mathcal{A}|k)$.
+**Statement:** Total per-decision complexity is O(L·|E|·d + |A|·k).
 
-**Why this matters:** The system has predictable, bounded computational cost — essential for real-time deployment.
+**Why it matters:** Computation time is predictable and bounded — essential for meeting the 10 ms O-RAN real-time budget.
 
-**Proof breakdown:**
-- GNN encoding: $L$ layers × $|E_t|$ edges × $d$ dimensions = $\mathcal{O}(L|E_t|d)$
-- Candidate scoring + trust-risk: $|\mathcal{A}|$ actions × $k$ dimensions = $\mathcal{O}(|\mathcal{A}|k)$
-- Shield evaluation: $\mathcal{O}(1)$ per candidate (just arithmetic comparisons)
+**Breakdown:**
+- GNN (L=2 layers, |E| edges, d=64 dims): 2 passes over all edges, each doing d-dimensional arithmetic → O(L·|E|·d)
+- Risk Scorer + Contrastive (|A|=6 actions, k=32 dims): scoring 6 candidates → O(|A|·k)
+- Shield evaluation: O(1) — 7 arithmetic comparisons
 
-For our default parameters: $L=2$, $|E_t| \approx 30$ (12-cell), $d=64$, $|\mathcal{A}|=6$, $k=32$ → ~3,840 + 192 + 1 ≈ 4,033 operations per decision. This is tiny.
+For 12-cell topology: L=2, |E|≈30, d=64, |A|=6, k=32 → 2×30×64 + 6×32 = 3,840 + 192 = 4,032 elementary operations per decision cycle.
 
-### Proposition 6: Defense-in-Depth Safety-Violation Bound ⭐ (Most important proposition)
+*Evidence: Supplemental Proof 5.*
 
-**Statement:** Let $\varepsilon_\alpha$ = probability that authorization gate produces a false negative, $\varepsilon_\tau$ = probability that trust-risk gate produces a false negative. Under combined attack, the probability of an unsafe ALLOW is at most $\varepsilon_\alpha \cdot \varepsilon_\tau$ — the **product**, not the sum.
+---
 
-**Why this matters:** This is the mathematical foundation of defense-in-depth. Two independent gates with 10% failure rate each give a combined 1% failure rate (0.10 × 0.10 = 0.01), not 20% (0.10 + 0.10). Three gates with 10% each would give 0.1%.
+### Proposition 6: Defense-in-Depth Bound ⭐ *Most Important*
 
-**Proof intuition:** For an unsafe action to be ALLOWed under combined attack, BOTH the authorization gate AND the trust-risk gate must simultaneously fail. Since these gates use independent information sources (identity verification vs. telemetry analysis) and are conditionally independent given the attack type:
+**Statement:** Let ε_α = false-negative rate of the authorization gate (probability it misses an attack), ε_τ = false-negative rate of the trust-risk gate. Under combined attack with conditionally independent gates: Pr[ALLOW | combined attack] ≤ ε_α × ε_τ.
 
-$$\Pr[\text{ALLOW} \mid \text{combined}] = \Pr[\alpha_t=1 \mid \text{id-attack}] \cdot \Pr[g_t < \gamma_1 \mid \text{telem-attack}] \leq \varepsilon_\alpha \cdot \varepsilon_\tau$$
+**Why it matters:** This is the mathematical foundation of *layered security*. If each gate has a 10% failure rate independently, the combined failure probability is 1% — not 10% + 10% = 20%. The two-gate system provides *multiplicative*, not additive, security improvement. This is the quantitative argument for why CASTER-ZT is more than the sum of its parts.
 
-**Empirical interpretation:** In the experiments, $\varepsilon_\alpha = 0$ (100% identity-abuse detection via authorization gate), making the combined bound = 0 regardless of $\varepsilon_\tau$.
+**Concrete example:**
+```
+If ε_α = 0.05 (auth gate misses 5% of identity attacks)
+   ε_τ = 0.10 (trust gate misses 10% of telemetry attacks)
 
-**Conditional independence assumption:** An expert might challenge whether the two gates are truly independent. The answer: they use different information sources. The authorization gate checks a credential database; the trust-risk gate analyzes telemetry patterns. A telemetry poisoning attack doesn't affect the credential database, and a stolen credential doesn't change telemetry reconstruction error.
+Then: Pr[ALLOW | combined attack] ≤ 0.05 × 0.10 = 0.005 = 0.5%
+(NOT 0.05 + 0.10 = 15%)
+```
 
-### Proposition 7: Bounded Price of Safety
+**Proof intuition:**
+```
+Pr[ALLOW | combined] 
+= Pr[alpha=1 | id-attack] × Pr[g < gamma1 | telem-attack]
+≤ ε_α × ε_τ
+```
+The factorization holds because the authorization gate uses credential verification (a separate database check) while the trust-risk gate uses telemetry reconstruction error (a completely different signal source). A telemetry poisoning attack cannot affect the credential database; a stolen credential cannot change the autoencoder's reconstruction error. Hence the two events are conditionally independent. *Evidence: Supplemental Proof 6.*
 
-**Statement:** Under clean conditions (no adversary), the expected utility loss from having the shield active is bounded by $\eta \cdot U_{\text{gap}} + \eta_{\text{block}} \cdot U_{\max}$.
+---
 
-**Why this matters:** The shield has a bounded cost even in the absence of attacks. If the shield were too aggressive, it would hurt recovery quality even when everything is fine.
+### Proposition 7: Calibration-Consistent Accuracy
 
-**Proof intuition:** Three things can happen to a legitimate action:
-- With probability $(1 - \eta - \eta_{\text{block}})$: ALLOWed → zero loss.
-- With probability $\eta$: scope-reduced → loss ≤ $U_{\text{gap}}$ (gap between full and reduced action utility).
-- With probability $\eta_{\text{block}}$: blocked → loss ≤ $U_{\max}$ (worst case: lose all utility for that step).
+**Statement:** For empirical false-allow rate ε̂ on n i.i.d. calibration episodes: Pr[ε* ≤ ε̂ + √(ln(1/δ)/(2n))] ≥ 1−δ.
 
-Expected loss = $\eta \cdot U_{\text{gap}} + \eta_{\text{block}} \cdot U_{\max}$.
+**Why it matters:** This gives you a statistical guarantee on how well the empirical false-allow rate estimates the true false-allow rate. With n=1000 calibration episodes and δ=0.01: the true rate ε* is at most ε̂ + 0.048 with 99% confidence.
 
-**Empirical values:** Under clean conditions, $\eta \approx 0.10$ (10% scope-reduced), $\eta_{\text{block}} = 0$ (zero false blocks). Recovery quality: $\omega_{\text{rec}} = 0.925$ — virtually no degradation.
+**Proof:** By Hoeffding's inequality for bounded random variables: each calibration episode produces a Bernoulli outcome (allow on unsafe action: yes/no). Pr[ε* − ε̂ > t] ≤ exp(−2nt²). Setting t = √(ln(1/δ)/(2n)) gives the result. *Evidence: Supplemental Proof 7.*
 
-### Proposition 8: Conformal Admissibility Coverage ⭐ (Distribution-free guarantee)
+---
 
-**Statement:** Set the shield threshold $\gamma_1$ as the $(1-\alpha)$-quantile of calibration nonconformity scores. Then, for a new test episode, the probability that a truly unsafe action is falsely ALLOWed is at most $\alpha$ — WITHOUT ANY DISTRIBUTIONAL ASSUMPTIONS beyond exchangeability.
+### Proposition 8: Conformal Admissibility Coverage ⭐ *Distribution-Free*
 
-**Why this matters:** This is the strongest safety guarantee in the paper. Unlike Hoeffding bounds (Proposition 7) that require i.i.d., conformal prediction requires only exchangeability — a much weaker condition. And it's an exact finite-sample guarantee (not asymptotic).
+**Statement:** With gamma_1 set as the (1−α)-quantile of calibration nonconformity scores and exchangeable test episodes: Pr[unsafe action is not ALLOW-ed] ≥ 1−α.
 
-**What is exchangeability?** A sequence $X_1, X_2, \ldots, X_n$ is exchangeable if the joint distribution is invariant to permutation. i.i.d. implies exchangeability, but exchangeability is strictly weaker. It means: the order doesn't matter, though the samples can be dependent.
+**Why it matters:** This is the *strongest* guarantee in the paper. Unlike Proposition 7 (requires i.i.d., asymptotic), Proposition 8 requires only *exchangeability* (much weaker) and is an *exact finite-sample* guarantee. No matter what distribution the data comes from, as long as the calibration and test episodes are exchangeable, the false-allow rate is bounded by α. This is what makes CASTER-ZT's safety claims distribution-free.
 
-**Proof intuition:** By the conformal prediction framework (Angelopoulos & Bates 2023): if calibration scores $(r_1, \ldots, r_n)$ and test score $r_{n+1}$ are exchangeable, then the probability that $r_{n+1}$ falls above the $(1-\alpha)$ quantile of the calibration scores is at most $\alpha$. Since ALLOW requires $g_t < \gamma_1$ and $\gamma_1$ is set as this quantile, the probability of a false ALLOW on an unsafe action is at most $\alpha$.
+**In plain language:** If you randomly shuffle all your episodes (calibration + test), and you can't tell which came first, then: the probability that a truly unsafe action gets ALLOWed is at most α — period.
 
-**Practical example:** With $\alpha = 0.01$ and $n = 500$ calibration episodes, the guarantee is: at most 1% of truly unsafe actions will be falsely ALLOWed, with probability 1. No ifs, no buts, no distributional assumptions.
+**Practical example:** With α = 0.01 and n = 500 calibration episodes: at most 1% of truly unsafe actions will be falsely ALLOWed, with finite-sample certainty, without assuming anything about the data distribution.
+
+**Proof reference:** By the conformal prediction framework (Angelopoulos and Bates, 2023): the empirical (1−α) quantile of calibration scores upper-bounds the (1−α) quantile of the test distribution under exchangeability. The shield ALLOWs only when g_t < gamma_1; gamma_1 is set as this quantile. *Evidence: Supplemental Proof 8.*
+
+---
 
 ### Proposition 9: Calibration Convergence Rate
 
-**Statement:** The calibrated threshold $\gamma_1^{(n)}$ converges to the population-optimal threshold $\gamma_1^\star$ at rate $\mathcal{O}(1/\sqrt{n})$.
+**Statement:** Under strictly increasing ε(gamma) with ε'(gamma) ≥ c_ε > 0: |gamma_1^(n) − gamma_1*| = O_P(1/√n).
 
-**Why this matters:** With more calibration data, the threshold gets closer to optimal. And we know *how fast*: doubling the calibration set size cuts the error by $\sqrt{2} \approx 1.41$.
+**Why it matters:** The calibrated threshold gamma_1 converges to its optimal value at rate 1/√n. Doubling the calibration dataset cuts the calibration error by √2. This tells you how much calibration data you need.
 
-**Proof intuition:**
-1. Hoeffding's inequality says: $|\hat{\varepsilon}(\gamma) - \varepsilon(\gamma)| \leq \sqrt{\ln(2/\delta)/(2n)}$ with high probability.
-2. Since $\varepsilon(\gamma)$ is strictly increasing in $\gamma$ (larger threshold = more false allows), the mean value theorem says: $|\varepsilon(\gamma_1^{(n)}) - \varepsilon(\gamma_1^\star)| \geq c_\varepsilon |\gamma_1^{(n)} - \gamma_1^\star|$.
-3. Combining: $|\gamma_1^{(n)} - \gamma_1^\star| \leq \frac{1}{c_\varepsilon} \cdot \mathcal{O}(1/\sqrt{n}) = \mathcal{O}_P(1/\sqrt{n})$.
+**Proof sketch:** 
+1. By Hoeffding: |ε̂(gamma) − ε(gamma)| ≤ √(ln(2/δ)/(2n)) with high probability.
+2. By the mean value theorem: since ε'(gamma) ≥ c_ε, any error in ε̂ translates to at most (1/c_ε) times that error in gamma.
+3. Combining: |gamma_1^(n) − gamma_1*| = O_P(1/√n).
 
-**Practical numbers:** With $n = 1,000$ and $L_\varepsilon \approx 2.1$: $|\gamma_1^{(1000)} - \gamma_1^\star| \leq 0.063$ with 99% confidence.
+*Evidence: Supplemental Proof 9.*
 
-### Proposition 10: What is NOT claimed
+---
+
+### Proposition 10: Scope Limitations (Explicit Non-Claims)
 
 The paper explicitly does NOT claim:
-- Global optimality of the policy
-- Universal robustness against all adversaries
-- Convergence of all learning procedures
-- That the detection rate will always be 74.2% (it depends on the adversary)
+- Global optimality of the recovery policy
+- Universal robustness against all adversaries (especially adaptive ones who learn thresholds)
+- Convergence of all neural components to global optima (training guarantees are local)
+- That 74.2% detection generalizes to all attack types, topologies, or distributions
+- Real-world validation beyond calibrated simulation
+
+**Why state this as a proposition?** Scientific integrity. Reviewers and readers will over-generalize results if the paper does not explicitly bound its claims. This proposition is the paper's formal self-limiting statement — "here is what we prove, and here is the boundary of that proof."
 
 ---
 
-## 14. The Experimental Design — Every Choice Explained
+<a id="appendix-b-expert-qa"></a>
+## APPENDIX B — Expert Questions and Answers
 
-### The four-layer data design
-
-**Layer 1: Synthetic disaster graph simulation**
-- Generates disrupted network topologies with configurable disaster parameters.
-- 40% simultaneous cell failure at tick 3.
-- Recovery dynamics: cells heal at 8% of base capacity per tick, transition to OPERATIONAL at 90%.
-
-**Layer 2: Real-distribution telemetry generation**
-- NOT synthetic distributions — parametric models fitted to published 5G field measurements:
-  - Throughput: LogNormal(μ_ln=4.50, σ_ln=0.80) → median 90 Mbps — from Narayanan et al. (WWW 2021), commercial 5G performance study.
-  - Latency: Gamma(k=2.5, θ=4.0, loc=5.0) → median 14.3 ms — from Xu et al. (SIGCOMM 2020), operational 5G measurements.
-  - Packet loss: Beta(α=0.5, β=50.0) → mean 0.99% — from 3GPP TR 38.913, NR requirements specification.
-  - Cell load: Beta(α=2.0, β=3.0) → mean 40% — from Xu et al. (IEEE/ACM ToN 2017), mobile traffic patterns.
-- All four distributions pass Kolmogorov-Smirnov goodness-of-fit tests with $p > 0.68$.
-
-**Why these specific distributions?** (Expert question)
-- LogNormal for throughput: empirically validated by Narayanan et al. — throughput in real 5G networks follows a log-normal distribution because it's the product of many independent multiplicative factors (path loss, fading, scheduling, load).
-- Gamma for latency: right-skewed with a minimum value (propagation delay) — matches the Gamma(k=2.5, θ=4.0) + location shift of 5 ms observed by Xu et al.
-- Beta for packet loss: bounded on [0,1] with heavy concentration near 0 — matches 3GPP's observed packet loss behavior in NR.
-- Beta for cell load: bounded on [0,1] with mean around 40% — matches temporal load patterns observed by Xu et al. in urban cellular networks.
-
-**Layer 3: Calibration layer**
-- Maps learned trust and risk signals to bounded shield thresholds via conformal quantile selection.
-- This is where Proposition 8 (conformal coverage) is applied.
-
-**Layer 4: Adversarial injection**
-- Grounded in attack distributions from SWaT industrial-control testbed.
-- Throughput inflated by factor ~ Uniform(1.15, 1.60).
-- Packet loss suppressed by factor ~ Uniform(0.30, 0.70).
-- Latency masked by factor ~ Uniform(0.55, 0.85).
-
-### The experiment matrix
-
-**Primary campaign (12-cell):** 11 methods × 7 conditions × 20 seeds = 1,540 runs
-- 7 conditions: clean, telemetry-poison-medium, telemetry-poison-high, identity-abuse-medium, identity-abuse-high, combined-medium, combined-high
-
-**Multi-scale (36-cell + 100-cell):** 11 methods × 4 conditions × 10 seeds × 2 scales = 880 runs
-
-**Total: 2,420 runs.**
-
-### Why 20 seeds?
-
-20 independent random seeds provide:
-- Robust mean estimates with small standard errors
-- Meaningful bootstrap confidence intervals (10,000 resamples)
-- Sufficient power for Wilcoxon signed-rank tests (non-parametric — doesn't assume normality)
-
-### Statistical testing protocol
-
-- **Bootstrap 95% CIs:** 10,000 bias-corrected and accelerated (BCa) resamples. BCa corrects for skewness and bias in the bootstrap distribution.
-- **Wilcoxon signed-rank test:** Non-parametric paired comparison. Doesn't assume normality — compares paired observations (same seed, different method).
-- **Holm-Bonferroni correction:** Adjusts p-values for 10 simultaneous comparisons. More powerful than vanilla Bonferroni (tests are ordered by p-value; each threshold is adjusted based on remaining tests).
-- **Cliff's delta ($\delta_C$):** Non-parametric effect size measure. Ranges from -1 to +1. |$\delta_C$| > 0.33 is medium, > 0.47 is large.
+*Questions a professor, reviewer, or technical interviewer might ask. Every answer is grounded in what the paper actually proves.*
 
 ---
 
-## 15. Where Every Number Comes From
+**Q: Why not use a real O-RAN testbed?**
 
-### The big numbers in the abstract and results
-
-| Number | What it is | Where it comes from |
-|--------|-----------|---------------------|
-| **74.2%** | Rogue detection rate at 12-cell | Mean over 20 seeds, identity-abuse HIGH. 0.7424 ± 0.053. |
-| **98.3%** | Rogue detection rate at 100-cell | Mean over 10 seeds, identity-abuse HIGH at 100-cell topology. |
-| **0.733** | Recovery quality (ω_rec) | Mean operational fraction during ticks [3, 33] over 20 seeds, identity-abuse HIGH. |
-| **0.000** | False block rate | Fraction of BLOCK decisions targeting legitimate actions. Zero across all 20 seeds. |
-| **3.07 ms** | Per-decision latency at 12-cell | Measured wall-clock time for one complete pipeline pass (GNN + policy + trust + risk + MC-Dropout + shield). |
-| **10.25 ms** | Per-decision latency at 100-cell | Same measurement at 100-cell topology. |
-| **20K** | Total learned parameters | 4,544 (GNN) + 8,515 (policy) + 1,839 (AE) + 1,473 (risk) + 3,648 (contrastive) = 20,019 |
-| **2,420** | Total experiment runs | 1,540 primary + 440 (36-cell) + 440 (100-cell) = 2,420 |
-| **$p < 0.001$** | Statistical significance | Wilcoxon signed-rank test, two-sided, Holm-Bonferroni corrected. |
-| **48.8%** | Shield-Binary false-positive rate | Nearly half of Shield-Binary's blocks target legitimate actions. |
-| **56.8%** | Agentic-Auto false-positive rate | More than half of Agentic-Auto's blocks are wrong. |
-| **0.201** | ω_rec for unshielded baselines | Without security, only 20.1% of cells recover to operational — adversary causes massive damage. |
-| **10 ms** | O-RAN Near-RT RIC budget | Formally specified in O-RAN nGRG report (2024) as "timescales as low as 10 ms." |
-| **≤ 2 MB** | Model memory | 20,019 params × 4 bytes (float32) = 80 KB. Padded to ~2 MB with framework overhead. |
-| **25.8%** | Missed detections | 1.000 - 0.742 = 0.258. These are sophisticated mimicry attacks. |
-| **40%** | Failure fraction | From SensorScope alpine deployment: observed peak simultaneous sensor dropout during storm events. |
-| **0.30, 0.50** | Attack bias values | SWaT median deviation (0.30) and WADI 95th percentile deviation (0.50). |
-| **50%, 80%** | Injection rates | Fraction of sensors affected in real SWaT/WADI attacks. |
-| **95th percentile** | AE threshold | Standard choice in anomaly detection: 95% of clean data → normal, top 5% → anomalous. |
-| **$p = 0.064$** | CASTER-ZT vs Shield-Binary | Not significant at α=0.05. But Shield-Binary achieves comparable ω_rec only through indiscriminate blocking (48.8% false positives). |
-
-### Where the 74.2% detection rate comes from mechanistically
-
-The trust autoencoder + contrastive encoder + action-consistency check produces the following for different action types:
-
-1. **Standard rogue actions** (CELL_DEACTIVATION, PARAMETER_CORRUPT): These target operational cells with destructive intent. The action-consistency check detects the mismatch: "Why would a recovery system deactivate a working cell?" → low trust, high divergence → SCOPE-REDUCE or BLOCK. **Detection rate: ~100%.**
-
-2. **Mimicry rogue actions** (10-15% of rogues): These use recovery-like types (CELL_RECONFIG, LOAD_REBALANCE) targeting degraded/recovering cells. The action-consistency check has a harder time: "A CELL_RECONFIG on a degraded cell looks like legitimate recovery." The autoencoder may produce moderate reconstruction error. **Detection rate: ~80%** of mimicry → overall ~85% mimicry detection.
-
-3. **The remaining ~15-20% of mimicry attacks**: These are sophisticated enough to produce low reconstruction error, low divergence, and pass all checks. **These are missed.** 
-
-Total: ~85% of standard rogues × ~85% weight + ~80% of mimicry × ~15% weight ≈ 0.742 overall detection.
+A: Real disaster-monitoring testbeds with 6G infrastructure are not publicly available (as of 2025). The standard methodology uses calibrated simulation; SWaT and WADI are the field-standard testbed datasets for adversarial control system research. CASTER-ZT calibrates against four real datasets and validates telemetry distributions with K-S tests (p > 0.68). The shield's 10 theoretical guarantees hold regardless of data provenance — they are mathematical, not empirical. Live O-RAN evaluation is explicitly identified as critical future work (Section V).
 
 ---
 
-## 16. The Baselines — What They Are and Why Each Was Chosen
+**Q: Detection rate of only 74.2%. Why should anyone trust this system?**
 
-### CPO-Soft (Achiam et al., ICML 2017)
-
-**What it is:** Constrained Policy Optimization. Uses a Lagrangian relaxation to enforce a cumulative cost constraint on actions.
-
-**How it works in our setting:**
-- Cost function: $c(\hat{a}_t, s_t) = \rho_t \cdot |\text{scope}(\hat{a}_t)|$ — risk × number of target cells.
-- Cumulative budget $d$ = 75th percentile of cumulative costs on clean runs (following Achiam et al.'s recommendation).
-- If cumulative cost would exceed $d$: block. Otherwise: allow.
-- Lagrangian multiplier updated per-tick: $\lambda \leftarrow \max(0, \lambda + 0.01 \cdot (J_c - d))$
-
-**Why it fails under identity abuse:** The rogue actions (reroute, isolate) have costs within the budget — they're not expensive actions, they're *unauthorized* actions. CPO has no concept of identity. Result: **0% detection, ω_rec = 0.201.**
-
-**Why it was chosen:** CPO is the most-cited constrained-RL method. Including it shows that cost-constraint approaches are structurally incapable of detecting identity-based attacks.
-
-### Shield-Binary (Alshiekh et al., AAAI 2018)
-
-**What it is:** Precomputed binary safety shield from a finite-state safety automaton.
-
-**How it works in our setting:**
-Three invariants:
-1. Action-rate limit: ≤ 2 recovery actions per zone per 3-tick window.
-2. Blast-radius bound: ≤ 3 cells per action.
-3. Zone-safety invariant: no isolation on a zone where > 60% cells are already failed.
-
-Each (state, action) pair is classified as safe (allow) or unsafe (block). No intermediate outcomes.
-
-**Why it partially works:** The rate limit catches some rogue actions (adversary injects 2-3 rogues/tick, hitting the rate limit). But it also catches legitimate recovery actions that happen to exceed the rate → 48.8% false positives.
-
-**Why it can't replace CASTER-ZT:** No trust assessment, no identity verification, no graduated response. It's a blunt instrument.
-
-**Result:** Block 78.5%, RogueDet 88.3%, FalseBlk 48.8%, ω_rec 0.758.
-
-### Agentic-Auto (Navidan et al., 2026)
-
-**What it is:** Confidence-based autonomous controller inspired by agentic O-RAN architectures.
-
-**How it works in our setting:**
-- Confidence: $\text{conf}(\hat{a}_t) = \pi_\theta(\hat{a}_t \mid s_t) / \max_{a'} \pi_\theta(a' \mid s_t)$
-- Threshold $\beta = 0.72$ (calibrated via ROC on clean validation data)
-- If $\text{conf} \geq \beta$: execute. If $\text{conf} < \beta$: defer.
-
-**Why it fails:** Confidence reflects prediction quality, not identity legitimacy or action safety. An adversary injecting rogue actions can produce high-confidence proposals (the rogue action is a valid action type; the model is confident about the type). Also, legitimate high-urgency recovery actions trigger confidence reductions, causing false deferrals.
-
-**Result:** Block 41.0%, RogueDet 10.5%, FalseBlk 56.8%, ω_rec 0.144 (worst external baseline).
-
-### IF-Trust (Zahoor et al., 2025)
-
-**What it is:** Drop-in replacement of the neural autoencoder with a classical Isolation Forest anomaly detector.
-
-**How it works:** Same CASTER-ZT pipeline, but:
-- Trust signal from Isolation Forest (100 trees, 5% contamination) instead of autoencoder.
-- No contrastive encoder (IF doesn't produce a reconstruction residual, so the adversarial hypothesis can't be constructed → $\Delta_t = 0$).
-- All other components identical (GNN, policy, authorization, risk, MC-Dropout, shield).
-
-**What it reveals:** The Isolation Forest can't distinguish disaster-recovery telemetry from adversarial telemetry — both look "anomalous" relative to normal operations. Result: scope-reduces EVERYTHING (94.6% under attack, 100% under clean conditions!).
-
-**Result:** RogueDet 1.000 (catches everything by throttling everything), FalseBlk 0.000, ω_rec 0.925 (high because aggressive scope-reduction prevents all damage). But under clean conditions: 100% scope-reduction — pathological behavior that makes autonomous operation pointless.
-
-**Why it was chosen:** This is the most methodologically revealing comparison. It shares CASTER-ZT's entire pipeline and differs ONLY in the anomaly detector. This isolates the neural autoencoder's contribution: the AE learns the *structure* of clean disaster-recovery telemetry and can distinguish it from attacks, while the IF cannot.
+A: Three points. First, 74.2% is at the smallest scale (12-cell) — at realistic deployment scales (100 cells), detection is 98.3%. Second, the missed 25.8% are sophisticated mimicry attacks — no other evaluated baseline detects these at a comparable precision level (Shield-Binary gets 88.3% but with 48.8% false hard-blocks, which is operationally worse). Third, CASTER-ZT achieves zero false hard-blocks across all conditions — every action it constrains is genuinely suspicious. The 74.2% is an explicit, principled operating point, not a system failure.
 
 ---
 
-## 17. The Results — What They Mean and Why
+**Q: Is the conditional independence assumption in Proposition 6 realistic?**
 
-### The key finding in one sentence
-
-CASTER-ZT is the only method that simultaneously achieves:
-- **Effective rogue detection** (74.2%)
-- **Zero false positives** (FalseBlk = 0.000)
-- **Good recovery quality** (ω_rec = 0.733)
-- **Proper clean-condition behavior** (10% scope-reduction, not 100%)
-
-No other method achieves all four.
-
-### The precision-recall tradeoff
-
-This is the fundamental tension:
-- **Shield-Binary** gets high recall (88.3% detection) but terrible precision (48.8% false blocks).
-- **IF-Trust** gets perfect recall (100% detection) but only through indiscriminate throttling.
-- **CASTER-ZT** chooses perfect precision (0% false blocks) with good recall (74.2%).
-
-The 25.8% missed detections are the **price** of zero false positives. The paper argues this is the correct tradeoff for safety-critical systems: false blocking of legitimate recovery actions during a disaster causes concrete harm (delayed recovery, lives at stake). Missing some rogue actions is bad, but scope-reduction mitigates even some of the undetected ones.
-
-### Why unshielded methods get ω_rec = 0.201
-
-Without any shielding, 3 rogue actions per tick execute freely for ~18 ticks (attack window). Each rogue action damages 1-3 cells. Over the attack window: ~54 rogue actions × ~2 cells each = ~108 cell-damage events in a 12-cell network. This causes catastrophic physical damage: cells that were recovering get deactivated again, cell reconfigs corrupt parameters, handover floods destabilize neighbors. Only 20.1% of cells survive.
-
-### Why CASTER-ZT gets ω_rec = 0.733 (not 1.000)
-
-Even with 74.2% detection, the 25.8% missed rogues cause some damage. Over 18 ticks with 3 rogues/tick: ~54 total rogues, ~14 get through. These 14 rogue actions cause enough damage to reduce operational fraction from 0.925 (clean) to 0.733. This is an honest result — the paper doesn't claim perfection.
+A: The authorization gate uses a credential database (identity check); the trust-risk gate uses telemetry reconstruction error (anomaly detection). These sense completely different physical phenomena. A telemetry poisoning attack cannot modify the credential database. A stolen credential cannot change the autoencoder's reconstruction error on raw sensor data. The independence is physically grounded in the architecture. A threat model where the adversary simultaneously compromises the credential system AND the sensor network is a stronger attack than the paper assumes — stated as a scope limitation.
 
 ---
 
-## 18. The Ablation — What Removing Each Component Teaches Us
+**Q: Why not use deep RL instead of imitation learning?**
 
-| Remove | RogueDet | ω_rec | What it proves |
-|--------|----------|-------|----------------|
-| Nothing (full) | 0.742 | 0.733 | Baseline |
-| Authorization gate | 0.763 | 0.747 | Authorization gate has no effect under stolen-credential attacks (expected! The adversary has valid credentials). Validates the threat model's realism. |
-| Trust assessment | **0.524** | **0.380** | Trust assessment is the CRITICAL component. Without it, detection drops 30% and recovery quality halves. The action-consistency mechanism is the primary detection driver. |
-| Risk assessment | 0.665 | 0.678 | Risk assessment contributes modestly. It's not the primary detector, but it provides defense-in-depth for attacks that evade trust assessment. |
-
-**The ablation hierarchy:** Trust >> Risk > Authorization (under identity-abuse attacks).
-
-**Why removing authorization IMPROVES detection slightly (0.763 vs 0.742):** This counterintuitive result occurs because without the authorization gate, the shield relies more heavily on trust assessment, which may slightly adjust its operating point. The difference is within statistical noise and not significant.
+A: Two reasons. First, RL requires a reward function for security decisions — what is the reward for blocking a rogue vs. false-blocking a legitimate action during a disaster? Misspecified rewards could cause the policy to learn to exploit the shield (rewarded for flagging everything as rogue → stop recovery entirely). Second, the shield's 10 propositions hold regardless of how the policy is trained — the guarantees are policy-agnostic. RL-based policy optimization is explicitly listed as future work.
 
 ---
 
-## 19. The Multi-Scale Evaluation
+**Q: The shield is just if-then-else logic. Where is the novelty?**
 
-| Topology | Cells | Zones | RogueDet | ω_rec | Latency |
-|----------|-------|-------|----------|-------|---------|
-| Small | 12 | 2 | 0.742 | 0.733 | 3.07 ms |
-| Medium | 36 | 4 | 0.949 | 0.886 | 4.38 ms |
-| Large | 100 | 8 | 0.983 | 0.868 | 10.25 ms |
-
-**Why detection IMPROVES with scale:** Larger topologies provide richer structural context for the trust assessment's action-consistency check. In a 100-cell network, a rogue action targeting one cell creates a more distinctive pattern (context from 99 other cells) than in a 12-cell network (context from only 11 others). More context = better anomaly detection.
-
-**Why ω_rec at 100-cell (0.868) is LOWER than at 36-cell (0.886):** At 100 cells, even though detection is higher (98.3%), the 1.7% missed rogues can cause damage across more cells. Also, the attack injects more rogue actions at larger scales (proportional to zone size), and even small numbers of undetected rogues create cascading effects in larger networks.
-
-**Latency scaling:** 3.07 → 4.38 → 10.25 ms. This follows Proposition 5: latency is O(L|E_t|d + |A|k). More cells = more edges = longer GNN encoding time. At 100 cells, latency marginally exceeds the 10 ms O-RAN budget — motivating quantization and graph sparsification for production deployments.
+A: The novelty is in the combination, not any individual component. The if-then-else structure is deliberately simple because simplicity is what enables formal proof. The 10 propositions cannot be claimed by any single prior method. The inputs to the if-then-else come from a sophisticated learned architecture (GNN, trust autoencoder, contrastive encoder, risk scorer). The whole is: *complex learned inputs → simple provably-safe decision rule*. That combination is the contribution.
 
 ---
 
-## 20. The Threshold Sensitivity
+**Q: What about adversarial attacks on the GNN itself (graph-level perturbations)?**
 
-The sweep of γ₁ from 0.10 to 0.60 reveals remarkable stability:
-
-- **γ₁ = 0.10 (very conservative):** RogueDet = 1.000, but 80.3% of all actions are blocked — too aggressive.
-- **γ₁ = 0.30 (default):** RogueDet = 0.757, FalseBlk = 0.0, ω_rec = 0.746 — the chosen operating point.
-- **γ₁ = 0.60 (very permissive):** RogueDet = 0.732, FalseBlk = 0.0, ω_rec = 0.727 — still works!
-
-**The crucial finding:** Zero false positives across the ENTIRE sweep range (γ₁ from 0.10 to 0.60). This means the shield's decisions are driven primarily by the trust assessment's action-consistency signal, not by the threshold value. The threshold just controls *how conservative* the graduated response is, not *whether* it detects rogues.
-
-**Practical implication:** Operators have wide latitude in threshold selection. They can tune the security-availability tradeoff without breaking the system.
+A: The paper cites Zugner et al. (2018) and Dai et al. (2018) on adversarial attacks on GNNs. CASTER-ZT does NOT defend against graph-level adversarial perturbation of the network topology. However, Proposition 6 provides partial protection: even if the GNN is fooled and proposes a malicious action, the shield evaluates that action against independent trust, risk, divergence, and authorization signals. Fooling the GNN alone is insufficient to bypass the shield — the adversary must simultaneously fool all five signal channels. GNN adversarial robustness is identified as future work.
 
 ---
 
-## 21. Honest Limitations
+**Q: Why equal weights (0.25 each) in the conservatism score?**
 
-### 1. Simulation-only evaluation
-No live O-RAN testbed. The paper uses real-data-calibrated simulation. This is standard in the field (SWaT, WADI are also testbed data used in simulation), but reviewers will ask about real deployment.
-
-### 2. Telemetry poisoning is NOT detected
-The trust autoencoder does not hard-block telemetry poisoning. Scope reduction stays at 10% regardless of poisoning severity. This is a fundamental limitation of reconstruction-error-based anomaly detection: adversaries who craft telemetry within the normal manifold evade detection by design. The paper cites Pang 2021, Erba 2020, and Kravchik 2022 to explain this.
-
-### 3. Bounded adversary
-The adversary can't modify shield internals or attack multiple zones simultaneously. A stronger adversary (adaptive, able to observe and adjust to shield behavior) might do better.
-
-### 4. External baseline fidelity
-The baselines implement the core logic of published methods but are not original-author implementations. Results might differ with original code.
-
-### 5. 74.2% detection at 12-cell
-Imperfect, but improving with scale (98.3% at 100-cell). The gap is due to mimicry attacks — a realistic adversary capability.
+A: Equal weights are the simplest, most unbiased starting point when you have four signals of roughly similar importance and no domain theory to prioritize one. The ablation confirms trust is the most important component — but the threshold sensitivity analysis shows the system is robust across gamma_1 ∈ [0.10, 0.60]. Performance is dominated by the trust assessment quality, not by the 0.25 vs. 0.30 weight difference. Principled weight optimization (e.g., via multi-objective calibration) is future work.
 
 ---
 
-## 22. The Regulatory Angle
+**Q: What if the adversary learns the exact shield thresholds?**
 
-### EU Artificial Intelligence Act (2024)
-- Classifies AI in critical infrastructure as **high-risk**.
-- Requires: conformity assessment, risk management, post-market monitoring, human oversight.
-- CASTER-ZT addresses: auditable decision boundaries (shield), risk management (10 propositions), human oversight (DEFER/ESCALATE outcomes).
-
-### NIST AI Risk Management Framework (2023)
-- Requires: structured risk assessment, continuous monitoring, human-in-the-loop fallback.
-- CASTER-ZT addresses: structured risk (composite conservatism score), continuous monitoring (autoencoder checks every action), human fallback (ESCALATE outcome).
-
-### OWASP Top 10 for LLM Applications (2025)
-- Identifies "excessive agency" and "data/model poisoning" as critical risks.
-- CASTER-ZT addresses: bounded agency (shield limits what AI can do autonomously), data poisoning detection (autoencoder + contrastive encoder).
+A: The threat model assumes gray-box (architecture known, thresholds unknown). If thresholds were known, the adversary could craft inputs just below each boundary — valid concern. Proposition 6 still provides partial protection: even with known thresholds, the adversary must simultaneously keep tau above tau_min (hard without clean telemetry), keep g_t below 0.30 (hard with high-risk rogue action), AND have valid credentials (hard to obtain). Single-dimension attacks are insufficient. The paper mentions periodic recalibration as a mitigation for threshold leakage.
 
 ---
 
-## 23. Likely Expert Questions and How to Answer Them
+**Q: Why autoencoder for anomaly detection instead of a supervised binary classifier?**
 
-### Q: "Why not use a real testbed?"
-**A:** Real disaster-monitoring testbeds with 6G infrastructure are not publicly available. The standard methodology in this field uses calibrated simulation (SWaT, SensorScope, Intel Lab are all used this way). We calibrate against 4 real datasets and use published 5G measurement distributions validated via K-S tests. The shield's 10 theoretical properties hold regardless of data provenance. A live O-RAN deployment is explicitly identified as critical future work.
-
-### Q: "Your detection rate is only 74.2%. Why should we trust this system?"
-**A:** Three points. First, 74.2% is at the smallest topology (12 cells) — at realistic scales (100 cells), detection rises to 98.3%. Second, the 25.8% missed detections are sophisticated mimicry attacks (rogue actions disguised as legitimate recovery) — no other method in our comparison detects these either. Third, CASTER-ZT achieves this with ZERO false positives — every action it blocks or scope-reduces is genuinely suspicious. Shield-Binary gets 88.3% detection but with 48.8% false positives, which is worse operationally.
-
-### Q: "Is the conditional independence assumption in Proposition 6 realistic?"
-**A:** Yes. The authorization gate and trust-risk gate use fundamentally different information sources. Authorization checks a credential database; trust assessment analyzes telemetry reconstruction error. A telemetry poisoning attack doesn't compromise the credential database, and a stolen credential doesn't change the autoencoder's reconstruction error. They are independent sensing channels.
-
-### Q: "Why not use deep RL instead of imitation learning?"
-**A:** Two reasons. First, RL requires a reward function for security, which is hard to define correctly (what's the reward for blocking a rogue vs. false-blocking a legitimate action?). Misspecified rewards could teach the policy to exploit the shield. Second, the shield's guarantees are policy-agnostic — they hold regardless of how the policy is trained. RL-based policy optimization is explicitly identified as future work.
-
-### Q: "Why 5 outcomes instead of 3 (allow, reduce, block)?"
-**A:** Five outcomes map to operationally distinct responses. DEFER (wait for more data) is different from ESCALATE (ask a human) is different from BLOCK (permanently reject). A defender needs all five to handle the full spectrum of threat signals. Collapsing DEFER and ESCALATE loses the distinction between "I need more data" and "I need human judgment."
-
-### Q: "The shield is just a bunch of if-then-else rules. Where's the novelty?"
-**A:** The novelty is not in any single component — it's in the combination and the formal guarantees. The if-then-else structure is deliberately simple because that's what makes it formally verifiable. The 10 propositions prove properties that no other system in the literature can claim. The shield's inputs (trust, risk, divergence, uncertainty) come from trained neural networks — the shield is simple, but its inputs are sophisticated.
-
-### Q: "What about adversarial attacks on the GNN itself?"
-**A:** The paper explicitly cites Zügner 2018 and Dai 2018 on adversarial attacks on GNNs. The current system does not defend against these. However: even if the GNN is fooled and proposes a bad action, the shield evaluates the action against independent trust, risk, divergence, and authorization signals. The defense-in-depth bound (Proposition 6) guarantees that fooling the GNN alone is not sufficient to bypass the shield.
-
-### Q: "How does this compare to LLM-based network controllers?"
-**A:** CASTER-ZT is complementary, not competing. LLM-based controllers (Lee 2024, Navidan 2026) provide intent decomposition and adaptive strategy — capabilities CASTER-ZT doesn't have. CASTER-ZT provides formal admissibility boundaries — capabilities LLM controllers don't have. The integration architecture: LLM proposes, CASTER-ZT's shield wraps the output. The shield is policy-agnostic by design.
-
-### Q: "Why equal weights (0.25 each) in the conservatism score?"
-**A:** Equal weights are the simplest unbiased starting point. The threshold sensitivity analysis shows that the system is robust to parameter perturbation — performance is driven primarily by the trust assessment signal, not by the weight assignment. Optimizing weights would require a principled multi-objective procedure, which is future work.
-
-### Q: "What happens if the adversary learns the shield thresholds?"
-**A:** The threat model assumes grey-box: the adversary knows the architecture but NOT the thresholds. If the adversary learned the thresholds, they could craft attacks just below each boundary. This is a valid concern and motivates periodic recalibration (Remark 8). However, even with known thresholds, the adversary still needs to simultaneously evade the autoencoder's anomaly detection, the contrastive encoder's divergence check, AND the authorization gate — the defense-in-depth makes single-dimension evasion insufficient.
-
-### Q: "Why autoencoder-based anomaly detection instead of a supervised classifier?"
-**A:** Two reasons. First, autoencoders detect *novel* anomalies — they flag anything that doesn't match the normal pattern, including attack types not seen during training. A supervised classifier can only detect attack types in its training set. Second, autoencoders naturally provide the reconstruction residual that feeds the contrastive encoder's adversarial hypothesis — a supervised classifier doesn't provide this signal.
+A: Two structural reasons. First, a supervised classifier can only detect attack types seen during training. The autoencoder detects ANY input that deviates from the normal manifold — including novel attack types. Second, the autoencoder produces the reconstruction residual `delta_hat = x_t - AE(x_t)`, which is used directly to construct the adversarial hypothesis for the contrastive encoder. A supervised classifier produces only a score, not a residual — eliminating the divergence signal Delta_t entirely (as demonstrated by the IF-Trust ablation where Delta_t = 0).
 
 ---
 
-## 24. Quick-Reference Cheat Sheets
+**Q: How does this compare to LLM-based network controllers?**
 
-### Cheat Sheet 1: The Five Learned Components
+A: Complementary architectures, not competing ones. LLM-based controllers provide intent decomposition, multi-step reasoning, and adaptive strategy — capabilities CASTER-ZT does not have. CASTER-ZT provides formal admissibility boundaries — capabilities no LLM controller has proven. Integration: LLM proposes an action; CASTER-ZT's shield evaluates and enforces it. The shield is policy-agnostic by design — it works with any proposer, including LLMs.
+
+---
+
+<a id="appendix-c-quick-reference-cheat-sheets"></a>
+## APPENDIX C — Quick-Reference Cheat Sheets
+
+---
+
+### Cheat Sheet 1: Architecture at a Glance
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│ Component           │ Params │ Input → Output                  │
-├─────────────────────┼────────┼─────────────────────────────────│
-│ GNN Encoder         │ 4,544  │ Graph features → 64-dim embeds  │
-│ Policy Head         │ 8,515  │ Embeddings → action probs       │
-│ Trust Autoencoder   │ 1,839  │ Telemetry → trust score τ       │
-│ Risk Scorer         │ 1,473  │ Action+state → risk score ρ     │
-│ Contrastive Encoder │ 3,648  │ Telemetry → divergence Δ        │
-│ MC-Dropout          │ (shared)│ 20 passes → uncertainty u       │
-├─────────────────────┼────────┼─────────────────────────────────│
-│ TOTAL LEARNED       │ 20,019 │                                 │
-│ Shield (determ.)    │ 14     │ (τ,ρ,u,Δ,α) → decision d       │
-└─────────────────────────────────────────────────────────────────┘
++------------------------------------------------------------------+
+| Component              | Params  | Input         → Output       |
+|------------------------|---------|------------------------------|
+| GNN Encoder            |  4,544  | Network graph → 64-dim emb.  |
+| Policy Head            |  8,515  | Embeddings    → action probs |
+| Trust Autoencoder      |  1,839  | Telemetry     → trust tau    |
+| Risk Scorer            |  1,473  | Action+state  → risk rho     |
+| Contrastive Encoder    |  3,648  | Telemetry pair→ divergence D |
+| MC-Dropout (inference) |    —    | 20 passes     → uncertainty u|
+| Authorization (det.)   |    —    | Identity token→ alpha {0,1}  |
+|------------------------|---------|------------------------------|
+| TOTAL LEARNED          | 20,019  |           (~80 KB)           |
+| Shield (deterministic) |     14  | (tau,rho,u,D,alpha) → d_t   |
++------------------------------------------------------------------+
+
+14 shield parameters: gamma_1=0.30, gamma_2=0.50, gamma_3=0.70,
+  gamma_4=0.90, delta_max=0.50, delta_max_hard=1.00,
+  w_1=w_2=w_3=w_4=0.25, c_rho=0.10, c_u=0.15, base_tau=0.50,
+  e_thresh=0.5914
 ```
+
+---
 
 ### Cheat Sheet 2: The Shield Decision Rule
 
 ```
-IF unauthorized (α=0)           → BLOCK
-IF extreme divergence (Δ>1.0)   → BLOCK
-IF all clear (τ≥τ_min, g<0.30, Δ≤0.50)  → ALLOW
-IF mild concern (0.30≤g<0.50)   → SCOPE-REDUCE
-IF moderate concern (0.50≤g<0.70) → DEFER
-IF serious concern (0.70≤g<0.90 or u>0.80) → ESCALATE
-IF overwhelming (g≥0.90)        → BLOCK
+Given: tau (trust), rho (risk), u (uncertainty), Delta (divergence), alpha (auth)
+
+Compute:
+  g       = 0.25*(1-tau) + 0.25*rho + 0.25*u + 0.25*Delta
+  tau_min = 0.50 + 0.10*rho + 0.15*u
+
+Decide (first matching rule wins):
+  1. alpha = 0                               → BLOCK
+  2. Delta > 1.00                            → BLOCK
+  3. tau ≥ tau_min AND g < 0.30
+     AND Delta ≤ 0.50                        → ALLOW
+  4. g in [0.30, 0.50)                       → SCOPE-REDUCE
+  5. g in [0.50, 0.70)                       → DEFER
+  6. g in [0.70, 0.90) OR u > 0.80          → ESCALATE
+  7. g ≥ 0.90                               → BLOCK  (also catches g > 1.0)
 ```
 
-### Cheat Sheet 3: Key Results Comparison
+---
+
+### Cheat Sheet 3: Key Results Comparison (Identity Abuse HIGH, 12-cell)
 
 ```
-Method          │ RogueDet │ FalseBlk │ ω_rec │ Clean behavior
-────────────────┼──────────┼──────────┼───────┼──────────────
-CASTER-ZT       │ 74.2%    │ 0.0%     │ 0.733 │ 10% scope-red
-IF-Trust        │ 100.0%   │ 0.0%     │ 0.925 │ 100% scope-red ⚠️
-Shield-Binary   │ 88.3%    │ 48.8%  ⚠️│ 0.758 │ Normal
-Agentic-Auto    │ 10.5%    │ 56.8%  ⚠️│ 0.144 │ Normal
-CPO-Soft        │ 0.0%   ⚠️│ 0.0%     │ 0.201 │ Normal
-Trust-Implicit  │ 0.0%   ⚠️│ 0.0%     │ 0.201 │ Normal
+Method          | RogueDet | FalseBlk | omega_rec | Clean behavior
+----------------|----------|----------|-----------|-------------------
+CASTER-ZT       |  74.2%   |   0.0%   |   0.733   | ~10% scope-red
+IF-Trust        | 100.0%   |   0.0%   |   0.925   | 100% scope-red (!)
+Shield-Binary   |  88.3%   |  48.8%   |   0.758   | Many false BLOCK
+Agentic-Auto    |  10.5%   |  56.8%   |   0.144   | Many false DEFER
+CPO-Soft        |   0.0%   |   0.0%   |   0.201   | No detection
+
+FalseBlk = fraction of hard BLOCK decisions on legitimate actions.
+IF-Trust's 0% FalseBlk is because it SCOPE-REDUCES everything (never hard-blocks),
+but that means 100% of clean actions are also constrained.
 ```
+
+---
 
 ### Cheat Sheet 4: The Ten Propositions at a Glance
 
 ```
- 1. Monotone conservatism    – worse inputs → stricter response
- 2. Unauthorized exclusion   – α=0 → never ALLOW
- 3. Divergence safeguard     – extreme Δ → BLOCK
- 4. Decision completeness    – every input → exactly one output
- 5. Complexity bound         – O(L|E|d + |A|k) per decision
- 6. Defense-in-depth  ⭐     – combined failure ≤ ε_α × ε_τ
- 7. Price of safety          – clean-condition cost is bounded
- 8. Conformal coverage ⭐    – distribution-free safety guarantee
- 9. Calibration convergence  – threshold → optimal at O(1/√n)
-10. What is NOT claimed      – no global optimality claims
+ 1. Monotone conservatism       — worse inputs → stricter output, always
+ 2. Unauthorized exclusion      — alpha=0 means BLOCK, no exceptions
+ 3. Divergence safeguard        — Delta>1.00 → BLOCK; Delta>0.50 → not ALLOW
+ 4. Decision completeness       — every input → exactly one output
+ 5. Complexity bound            — O(L·|E|·d + |A|·k) per decision
+ 6. Defense-in-depth      [★]  — Pr[unsafe ALLOW] ≤ ε_α × ε_τ (multiplicative!)
+ 7. Calibration accuracy        — Hoeffding bound on empirical false-allow rate
+ 8. Conformal coverage    [★]  — distribution-free false-allow ≤ α
+ 9. Calibration convergence     — threshold → optimal at O(1/√n)
+10. Scope limitations           — explicit non-claims (no global optimality, etc.)
+
+[★] = most important propositions
 ```
 
-### Cheat Sheet 5: CASTER-ZT Acronym
+---
 
-**C**ausal, **A**utonomous, **S**hielded, **T**elemetry- and **E**vent-aware **R**ecovery with **Z**ero **T**rust
+### Cheat Sheet 5: The Five Decision Outcomes
 
-- **Causal:** Dual-hypothesis evaluation considers what would happen under benign vs adversarial interpretations.
-- **Autonomous:** The system makes decisions without human intervention (when confidence is sufficient).
-- **Shielded:** Every action passes through the deterministic shield before execution.
-- **Telemetry-aware:** The trust autoencoder monitors telemetry integrity.
-- **Event-aware:** The system considers the disaster context (cell states, recovery progress).
-- **Zero Trust:** No entity is implicitly trusted; every action is verified.
+```
+ALLOW         Execute as proposed.
+              Requires: authorized (alpha=1), high trust (tau ≥ tau_min),
+                        low composite threat (g < 0.30), low divergence (Delta ≤ 0.50).
+
+SCOPE-REDUCE  Execute with narrowed scope (fewer target cells, lower intensity).
+              Triggers when: 0.30 ≤ g < 0.50
+
+DEFER         Do NOT execute now. Wait for more information.
+              Triggers when: 0.50 ≤ g < 0.70
+
+ESCALATE      Flag for human operator review.
+              Triggers when: 0.70 ≤ g < 0.90 OR u > 0.80
+
+BLOCK         Reject the action entirely.
+              Triggers when: alpha=0, OR Delta>1.00, OR g ≥ 0.90
+```
 
 ---
 
-## Final Preparation Checklist
+### Cheat Sheet 6: Training Configuration
 
-Before your presentation, make sure you can:
+```
+Component         | Loss            | LR      | Converges by | Key metric
+------------------|-----------------|---------|--------------|------------------
+Trust AE          | MSE (recon.)    | 5×10⁻⁴  | Epoch 16     | F1=0.580 (standalone)
+Risk Scorer       | BCE             | 1×10⁻³  | Epoch 27     | AUC=0.999
+Contrastive Enc.  | Margin (m=1.0)  | 1×10⁻³  | Epoch 44     | Margin loss → 0
+GNN + Policy      | Cross-entropy   | 1×10⁻³  | Epoch 17     | Accuracy=1.000
+Shield            | N/A (calibrate) |  N/A    | < 1 second   | Conformal bound
 
-- [ ] Draw the architecture diagram from memory (6 components, left to right)
-- [ ] Write the conservatism score formula: $g_t = 0.25(1-\tau_t) + 0.25\rho_t + 0.25u_t + 0.25\Delta_t$
-- [ ] Write the dynamic trust threshold: $\tau_{\min} = 0.50 + 0.10\rho_t + 0.15u_t$
-- [ ] Explain why the shield is deterministic (auditability, adversarial robustness, formal guarantees)
-- [ ] Walk through Proposition 6 (defense-in-depth) with the conditional independence argument
-- [ ] Explain why IF-Trust gets 100% detection but is pathological (100% scope-reduction under clean conditions)
-- [ ] Explain why CPO-Soft gets 0% detection (cost constraints ≠ identity verification)
-- [ ] Explain the 74.2% rate: mimicry attacks (10-15% of rogues) imitate legitimate recovery
-- [ ] Name the four real datasets: Intel Lab, SensorScope, SWaT, WADI
-- [ ] Name the four 5G distributions: LogNormal (throughput), Gamma (latency), Beta (loss), Beta (load)
-- [ ] State the 6G compliance criteria: ≤10 ms, edge autonomy, ≤2 MB
-- [ ] Explain the conformal guarantee (Proposition 8): exchangeability, no distributional assumptions, finite-sample
+All components: Adam optimizer, p=0.10 dropout during training
+Inference: MC-Dropout ON, T=20 passes
+Data: 2,000 episodes × ~30 ticks ≈ 60,000 decision steps
+Split: 70% train / 15% validation / 15% test (stratified by attack condition)
+```
 
 ---
 
-*End of document. You are now prepared to explain every aspect of CASTER-ZT to any expert panel.*
+### Cheat Sheet 7: Real Data Sources
+
+| Dataset | What it is | How it is used |
+|---------|-----------|----------------|
+| Intel Lab (2004) | Sensor readings from 54 sensors in a lab building | Calibrates sensor failure dynamics |
+| SensorScope (2008) | Alpine environmental sensor network | Calibrates 40% simultaneous failure fraction |
+| SWaT (2017) | Industrial control system testbed (water treatment) | Calibrates medium-severity adversarial injection parameters |
+| WADI (2018) | Water distribution testbed (larger scale) | Calibrates high-severity adversarial injection parameters |
+| Narayanan et al. 2021 | Commercial 5G throughput traces | Fits LogNormal(4.50, 0.80) for throughput |
+| Xu et al. 2020 | Operational 5G latency measurements | Fits Gamma(2.5, 4.0) + 5ms for latency |
+| 3GPP TR 38.913 | NR specification | Fits Beta(0.5, 50) for packet loss |
+| Xu et al. 2017 | Urban mobile traffic patterns | Fits Beta(2.0, 3.0) for cell load |
+
+---
+
+### Cheat Sheet 8: CASTER-ZT Acronym
+
+| Letter | Stands for | What it means |
+|--------|-----------|---------------|
+| **C** | Causal | Dual-hypothesis evaluation (benign + adversarial view simultaneously) |
+| **A** | Autonomous | Operates at the edge without human intervention per-decision |
+| **S** | Shielded | Every action passes through the deterministic safety shield |
+| **T** | Telemetry-aware | Trust autoencoder evaluates telemetry integrity every cycle |
+| **E** | Event-aware | Uses full disaster context (cell states, recovery progress) |
+| **R** | Recovery | Designed specifically for disaster recovery network scenarios |
+| **Z** | Zero (Trust) | No entity is implicitly trusted; continuous verification |
+| **T** | Trust | Every action is re-verified, not just at login time |
+
+---
+
+*End of CASTER-ZT Deep Explainer.*
+*Every claim in this document traces back to the paper or its cited sources.*
+*If a section is still unclear, re-read it with Step 1 (Vocabulary) open alongside.*
+*Found an error or unclear passage? The document is versioned — report it with the specific section.*
