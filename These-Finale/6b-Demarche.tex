@@ -70,6 +70,33 @@ Dans le contexte de cette thèse~:
     \item \textbf{Rigueur}~: chaque artefact est évalué par des campagnes de simulation exhaustives (21\,000 + 390 + 2\,420 exécutions) avec des protocoles statistiques rigoureux (Section~\ref{sec:demarche-stats}).
 \end{itemize}
 
+\noindent Le Tableau~\ref{tab:dsrm-grid} présente la grille d'évaluation DSRM alignant les six activités du processus avec les indicateurs quantitatifs de chaque article, permettant ainsi de valider la démarche elle-même au-delà de la simple validation des artefacts produits.
+
+\begin{table}[htbp]
+\centering
+\caption{Grille d'évaluation DSRM~: alignement des six activités de Peffers~et~al.\ (2007) avec les indicateurs quantitatifs des trois articles.}
+\label{tab:dsrm-grid}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{2.8cm}p{2.5cm}p{3.8cm}p{3.8cm}p{3.8cm}}
+\toprule
+\textbf{Activité DSRM} & \textbf{Définition} & \textbf{Art.~1 --- GAPF} & \textbf{Art.~2 --- CALASH} & \textbf{Art.~3 --- CASTER-ZT} \\
+\midrule
+\textbf{1. Identification du problème} & Motivation et cadrage & Couverture $< 4/12$ critères par les approches existantes & Absence de métrique LCI dans le routage WSN & Absence de contrôle zéro-confiance pour politiques IA \\
+\addlinespace
+\textbf{2. Objectifs de solution} & Objectifs mesurables & PDR $\geq 98$\,\%, mémoire $< 6$\,KB & LCI $-33$\,\%, durée de vie $+60$\,\% & FPR $= 0$\,\%, $\omega_{\text{rec}} > 0{,}7$ \\
+\addlinespace
+\textbf{3. Conception} & Artefact produit & GCN ($d=16$) + CAS + fusion QMIX/QTRAN & CADR + CARE + SHDR + LSE & GraphSAGE ($d=64$) + évaluateur + bouclier 14~param. \\
+\addlinespace
+\textbf{4. Démonstration} & Mise en œuvre & 7~scénarios (20--100~nœuds), 21\,000~épisodes & 30~graines Monte Carlo, 13~variantes & 2\,420~exécutions, 4~conditions d'attaque, 3~échelles \\
+\addlinespace
+\textbf{5. Évaluation} & Indicateurs quantitatifs & PDR, ECE & LCI, PDR, durée de vie & FPR, $\omega_{\text{rec}}$, ECE, latence \\
+\addlinespace
+\textbf{6. Communication} & Diffusion & Soumis IEEE Trans.\ Green Commun.\ Netw. & Soumis IEEE Trans.\ Green Commun.\ Netw. & En préparation \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
 
 %%
 %%  PROTOCOLE EXPÉRIMENTAL
@@ -180,6 +207,24 @@ Art.~3 (CASTER-ZT) & 2\,420 exécutions & 20 & CPO, Shield, Anomaly Det. & Wilco
 }
 \end{table}
 
+\subsection{Indicateurs de qualité de la démarche méthodologique}\label{sec:demarche-qualite}
+
+Au-delà des tests de signification statistique ($p$-valeurs), trois indicateurs évaluent la \textbf{qualité intrinsèque de la démarche} elle-même~:
+
+\noindent\textbf{(i) Puissance statistique et taille d'effet (Cohen~$d$).}
+La taille d'effet de Cohen~$d$, définie comme~:
+\begin{equation}
+d = \frac{\mu_{\text{proposé}} - \mu_{\text{référence}}}{\sigma_{\text{poolé}}}
+\label{eq:cohen-d}
+\end{equation}
+quantifie la magnitude pratique des améliorations indépendamment de la taille de l'échantillon. Pour l'Article~1, la différence de PDR entre GAPF (98--99\,\%) et QMIX (46--67\,\%) correspond à un $d \gg 1$, classé \emph{très grand effet} selon la convention de Cohen ($d > 0{,}8$). Pour l'Article~2, la réduction du LCI de 33\,\% sur 30~graines Monte Carlo dépasse tout seuil de signifiance pratique. Pour l'Article~3, le maintien de FPR~$= 0$\,\% sur 2\,420~exécutions implique une borne supérieure de l'intervalle de confiance à 95\,\% sur le FPR de $3/2420 \approx 1{,}24 \times 10^{-3}$ (règle des trois pour observations sans événement), confirmant la robustesse de la garantie formelle.
+
+\noindent\textbf{(ii) Reproductibilité inter-laboratoire.}
+La reproductibilité de la démarche au-delà du laboratoire d'origine est assurée par trois mécanismes~: (a)~publication des graines aléatoires (42, 123, 456 pour l'Art.~1~; 30~graines Monte Carlo pour l'Art.~2~; 20~graines pour l'Art.~3) permettant la reproduction exacte des résultats~; (b)~spécification complète des bibliothèques et versions logicielles (PyTorch, PyTorch Geometric, EPyMARL)~; (c)~utilisation exclusive de jeux de données publics (Intel Berkeley Lab, UK Carbon Intensity API, USGS ShakeMap) accessibles sans restriction géographique ni institutionnelle.
+
+\noindent\textbf{(iii) Cohérence interne inter-articles.}
+La transitivité des protocoles de référence communs constitue un \textbf{indice de cohérence interne}~: LEACH est présent dans les Articles~1 et~2, QMIX/QTRAN dans les Articles~1 et~3. Si les performances de ces références restent stables à travers les campagnes de simulation (sous les mêmes paramètres réseau), cela valide la reproductibilité inter-articles de l'environnement de simulation. Cette propriété est vérifiée~: les performances de LEACH (PDR~$\approx$~65--75\,\%, durée de vie~$\approx$~931~tours) et de QMIX (PDR~$\approx$~46--67\,\%) rapportées dans les Articles~1 et~2 sont cohérentes entre elles et avec les valeurs publiées dans les études originales~\cite{heinzelman2000leach, rashid2018qmix}.
+
 
 %%
 %%  STRATÉGIE DE VALIDATION
@@ -187,6 +232,16 @@ Art.~3 (CASTER-ZT) & 2\,420 exécutions & 20 & CPO, Shield, Anomaly Det. & Wilco
 \section{Stratégie de validation et calibration}\label{sec:demarche-validation}
 
 La validation par simulation adopte trois niveaux complémentaires~: (1)~\textbf{vérification} (tests unitaires, reproduction des résultats LEACH~\cite{heinzelman2000leach}, vérification des invariants physiques tels que la conservation de l'énergie)~; (2)~\textbf{validation} (calibration sur données réelles --- Intel Lab~\cite{intel_lab_data}, UK Carbon Intensity API~\cite{uk_carbon_api}, USGS ShakeMap --- et analyse de sensibilité via les études d'ablation des Articles~2 et~3)~; (3)~\textbf{reconnaissance des limites} (canal radio simplifié sans évanouissement, synchronisation TDMA parfaite, catastrophe instantanée isotrope), discutées en détail aux Sections~\ref{sec:disc-limites} et~\ref{sec:concl-limitations}.
+
+\medskip
+\noindent\textbf{Justification du choix simulatoire.}
+Le recours exclusif à la simulation --- plutôt qu'à un déploiement matériel réel --- est justifié par quatre arguments complémentaires. Premièrement, la \textbf{contrôlabilité}~: reproduire en laboratoire un réseau de 100--200~capteurs soumis simultanément à un séisme de magnitude~7,8, à une variation continue de l'intensité carbone et à des attaques adversariales de type compromission de politique n'est pas réalisable. Deuxièmement, la \textbf{comparabilité}~: la simulation permet d'évaluer plus de 20~protocoles de référence dans des conditions strictement identiques (même graine, même énergie initiale, même modèle de canal), éliminant les biais expérimentaux inhérents aux déploiements physiques hétérogènes. Troisièmement, la \textbf{validation indirecte par ancrage empirique}~: bien que numériques, les simulations sont calibrées sur trois sources de données réelles qui constituent autant d'ancrages empiriques~:
+\begin{itemize}
+    \item les \textbf{traces Intel Berkeley Research Lab}~\cite{intel_lab_data} (54~nœuds Mica2, 36~jours) valident les profils réalistes de génération de paquets~;
+    \item les données de la \textbf{UK Carbon Intensity API}~\cite{uk_carbon_api} (résolution 30~min sur plusieurs années) reflètent les variations réelles de l'intensité carbone du réseau électrique~;
+    \item les \textbf{cartes ShakeMap USGS} du séisme Turquie-Syrie (6~février~2023, Mw~7,8) calibrent le paramètre $\sigma_{\text{cat}}$ du modèle de catastrophe gaussien (Éq.~\ref{eq:disaster-model}).
+\end{itemize}
+Quatrièmement, la \textbf{continuité avec l'état de l'art}~: tous les protocoles de référence (LEACH, QMIX, QTRAN, CPO) ont été originellement évalués par simulation dans le même modèle énergétique de premier ordre~\cite{heinzelman2000leach}, ce qui assure la comparabilité directe des résultats et la position de cette thèse dans le courant principal de la communauté WSN.
 
 
 %%
@@ -299,21 +354,62 @@ La formulation du routage comme un problème de Dec-POMDP requiert la définitio
 
 \begin{table}[htbp]
 \centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.5}
 \caption{Espaces d'état, d'action et de récompense pour les trois articles. $n$~: nombre de n\oe{}uds, $|\mathcal{N}(v)|$~: taille du voisinage du n\oe{}ud $v$.}
 \label{tab:spaces}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{llp{6.5cm}p{4.5cm}p{5.5cm}}
+\begin{tabular}{p{1.7cm}p{3.8cm}p{3.8cm}p{3.8cm}}
 \toprule
-\textbf{Article} & \textbf{Agent} & \textbf{Observation $o_i$} & \textbf{Action $a_i$} & \textbf{Récompense $r$} \\
+\textbf{Attribut} & \textbf{Art.~1 --- GAPF} & \textbf{Art.~2 --- CALASH} & \textbf{Art.~3 --- CASTER-ZT} \\
 \midrule
-\multirow{3}{*}{Art.~1 (GAPF)} & N\oe{}ud capteur $i$ & $[RE_i, CE_i, x_i, y_i, N_i]$ $\in \mathbb{R}^{5}$ (énergie résiduelle, énergie consommée, position $x$-$y$, nombre de paquets) & Sélection du prochain saut parmi $\mathcal{N}(v) \cup \{\text{BS}\}$ & $r = \alpha_1 \cdot \text{PDR} + \alpha_2 \cdot (1 - \sigma_E / \bar{E}) + \alpha_3 \cdot \text{alive\_ratio}$ \\
-\addlinespace
-\multirow{3}{*}{Art.~2 (CALASH)} & CH $j$ & $[E_j^{\text{res}}, \text{CI}(t), \text{LCI}_j, Q_j^{\text{carb}}, |\text{cluster}_j|, d_j^{\text{BS}}, \text{RIS}_{j,\text{gain}}]$ $\in \mathbb{R}^{7}$ & Ratio CS $\rho_j \in [0.3, 1.0]$ et sélection de bande (sub-THz / micro-onde) & $r = -\Delta\text{LCI} + \beta_1 \cdot \text{PDR} - \beta_2 \cdot Q_j^{\text{carb}}$ (Lyapunov drift-plus-penalty) \\
-\addlinespace
-\multirow{3}{*}{Art.~3 (CASTER-ZT)} & Cellule réseau $c$ & Graphe local $G_c = (V_c, E_c, X_c)$ avec $X_c \in \mathbb{R}^{|V_c| \times f}$ (caractéristiques de n\oe{}uds) & Décision $\in \{\text{autoriser, réduire, différer, escalader, bloquer}\}$ & $r = \omega_1 \cdot \text{détection} + \omega_2 \cdot (1 - \text{FP}) + \omega_3 \cdot \text{récupération}$ \\
+\textbf{Agent} &
+  N\oe{}ud capteur $i$ &
+  Cluster head $j$ &
+  Cellule réseau $c$ \\
+\midrule
+\textbf{Observation $o_i$} &
+  $RE_i$: énergie résiduelle\newline
+  $CE_i$: énergie consommée\newline
+  $x_i,y_i$: position\newline
+  $N_i$: nb paquets\newline
+  $o_i \in \mathbb{R}^{5}$ &
+  $E_j^{\text{res}}$: énergie résiduelle\newline
+  $\text{CI}(t)$: intensité carbone\newline
+  $\text{LCI}_j$: indice carbone\newline
+  $Q_j^{\text{carb}}$: file carbone\newline
+  $|\text{cluster}_j|$, $d_j^{\text{BS}}$, $\text{RIS}_{j,\text{gain}}$\newline
+  $o_j \in \mathbb{R}^{7}$ &
+  Graphe local\newline
+  $G_c = (V_c, E_c, X_c)$\newline
+  $X_c \in \mathbb{R}^{|V_c| \times f}$\newline
+  (caract. de n\oe{}uds) \\
+\midrule
+\textbf{Action $a_i$} &
+  Prochain saut\newline
+  $\in \mathcal{N}(v) \cup \{\text{BS}\}$ &
+  Ratio CS $\rho_j \in [0.3, 1.0]$\newline
+  + sélection de bande\newline
+  (sub-THz / micro-onde) &
+  $d_t \in \{$autoriser,\newline
+  \hphantom{$d_t \in \{$}réduire,\newline
+  \hphantom{$d_t \in \{$}différer,\newline
+  \hphantom{$d_t \in \{$}escalader,\newline
+  \hphantom{$d_t \in \{$}bloquer$\}$ \\
+\midrule
+\textbf{Récompense $r$} &
+  $r = \alpha_1 \cdot \text{PDR}$\newline
+  $\phantom{r} + \alpha_2 (1 - \sigma_E/\bar{E})$\newline
+  $\phantom{r} + \alpha_3 \cdot \text{alive\_ratio}$ &
+  $r = -\Delta\text{LCI}$\newline
+  $\phantom{r} + \beta_1 \cdot \text{PDR}$\newline
+  $\phantom{r} - \beta_2 \cdot Q_j^{\text{carb}}$\newline
+  (Lyapunov drift+penalty) &
+  $r = \omega_1 \cdot \text{détection}$\newline
+  $\phantom{r} + \omega_2 (1 - \text{FP})$\newline
+  $\phantom{r} + \omega_3 \cdot \text{récup.}$ \\
 \bottomrule
-\end{tabular}%
-}
+\end{tabular}
 \end{table}
 
 \textbf{Observations clés sur les espaces~:}

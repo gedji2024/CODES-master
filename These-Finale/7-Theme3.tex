@@ -189,6 +189,7 @@ $\text{telemetry} \to \underbrace{\text{GNN enc.}}_{\theta} \to \underbrace{\tex
 
 \begin{figure*}[t]
 \centering
+\resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[
     node distance=1.15cm and 0.9cm,
     block/.style={draw, rounded corners=2pt, align=center, minimum height=0.95cm, minimum width=2.45cm, fill=gray!6},
@@ -215,7 +216,8 @@ $\text{telemetry} \to \underbrace{\text{GNN enc.}}_{\theta} \to \underbrace{\tex
 \draw[line] (shield) -- (outcome);
 \draw[line] (shield) -- (exec);
 \draw[line] (outcome.south) |- (exec.east);
-\end{tikzpicture}
+\end{tikzpicture}%
+}%
 \caption{CASTER-ZT architecture.  The policy proposes; the zero-trust shield $\Gamma$ controls execution via trust, risk, divergence, authorization, and uncertainty signals.}
 \label{art3:fig:caster_architecture}
 \end{figure*}

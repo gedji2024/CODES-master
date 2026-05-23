@@ -1,0 +1,408 @@
+% =============================================================================
+%  LETTRE DE RÉPONSE AU RAPPORT D'ÉVALUATION
+%  Évaluateur : Prof. Pascalin TIAM KAPEN, Professeur Titulaire HDR,
+%               Institut Mines-Télécom Toulouse
+%  Candidat   : Georges Parfait DJIMEFO KAPEN
+%  Date du rapport de l'évaluateur : 10 Mai 2026
+%  Date de cette réponse : Juin 2026
+% =============================================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{microtype}
+\geometry{margin=2.5cm}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    pdfauthor={Georges Parfait DJIMEFO KAPEN},
+    pdftitle={Réponse au rapport d'évaluation -- Prof. Tiam Kapen}
+}
+
+% Boîtes de couleur pour distinguer commentaire et réponse
+\usepackage{mdframed}
+\newmdenv[linecolor=gray!50, backgroundcolor=gray!8, linewidth=1pt,
+          skipabove=6pt, skipbelow=6pt, innerleftmargin=8pt,
+          innerrightmargin=8pt]{reviewerbox}
+\newmdenv[linecolor=blue!40, backgroundcolor=blue!5, linewidth=1pt,
+          skipabove=6pt, skipbelow=6pt, innerleftmargin=8pt,
+          innerrightmargin=8pt]{responsebox}
+
+\newcommand{\Commentaire}[2]{%
+  \begin{reviewerbox}
+    \textbf{Commentaire~#1 (extrait du rapport) :}\\#2
+  \end{reviewerbox}%
+}
+\newcommand{\Reponse}[1]{%
+  \begin{responsebox}
+    \textbf{Réponse du candidat :}\\#1
+  \end{responsebox}%
+}
+
+% ============================================================
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries Réponse au rapport d'évaluation de thèse}\\[6pt]
+  {\large Rapport du Prof.\ Pascalin TIAM KAPEN\\
+  Professeur Titulaire HDR, Institut Mines-Télécom Toulouse}\\[4pt]
+  {\normalsize Montréal (Québec), Juin 2026}
+\end{center}
+
+\bigskip
+\noindent
+\textbf{Monsieur le Professeur Tiam Kapen,}
+
+\medskip
+Je vous adresse mes plus sincères remerciements pour la lecture attentive et approfondie de ma thèse intitulée \emph{``Routage intelligent et récupération autonome sécurisée par intelligence artificielle dans les réseaux de capteurs de surveillance des catastrophes intégrés au 6G''}, ainsi que pour la rédaction de votre rapport d'évaluation daté du 10 Mai 2026.
+
+Vos observations témoignent d'une expertise reconnue en réseaux de capteurs, en méthodologie de la recherche et en qualité de rédaction académique. Elles constituent pour moi un guide précieux en vue de la finalisation de ce travail doctoral. Je prends chacun de vos points avec le plus grand soin et réponds ci-dessous, point par point, en précisant pour chaque commentaire : (i) si je l'accepte en totalité, partiellement ou si je me permets de fournir des éléments de contexte, et (ii) les modifications apportées dans la thèse, le cas échéant.
+
+La présente lettre suit la numérotation des chapitres de votre rapport. Le fichier \LaTeX{} principal révisé (\texttt{Document\_révisé.tex}) inclut les chapitres modifiés tout en laissant les fichiers originaux intacts.
+
+\bigskip
+\hrule
+\bigskip
+
+% =========================================================
+\section*{Commentaires relatifs au Chapitre~1 (Introduction)}
+
+% ---------------------------------------------------------
+\subsection*{C1a --- Numérotation des références~: absence de [1] et [2]}
+
+\Commentaire{C1a}{
+  ``Les références bibliographiques doivent être ordonnées selon leur ordre d'apparition dans le
+  document. Or, le tout premier chapitre de la Thèse commence avec la référence~[3].''
+}
+
+\Reponse{
+Je remercie l'évaluateur pour cette observation très pertinente.
+
+Après vérification du code source \LaTeX{}, il s'avère que cet artefact est causé par la macro de contrôle du style IEEEtran utilisé dans le gabarit officiel de Polytechnique Montréal. La commande \texttt{\textbackslash bstctlcite\{IEEEexample:BSTcontrol\}}, présente dans le fichier principal \texttt{Document.tex}, injecte une entrée bibliographique de contrôle invisible (\texttt{IEEEexample:BSTcontrol}) qui est numérotée [1] dans le fichier \texttt{.bbl} généré. Une deuxième entrée fantôme (\texttt{IEEEtranBSTCTL}) occupe le slot [2]. Ces deux entrées n'apparaissent jamais dans le texte imprimé, mais leur existence dans la base de données décale toutes les références numériques de deux positions.
+
+\textbf{Correction apportée :} Cette commande a été supprimée du fichier \texttt{Document\_révisé.tex}, car elle n'est nécessaire que pour la soumission à une revue IEEE et non pour un document de thèse autonome. Après recompilation propre (\texttt{pdflatex + bibtex + pdflatex + pdflatex}), la référence~[1] est désormais \textsc{UNDRR} (2020) et la référence~[2] est Burgue\~{n}o-Salas~(2023), conformément à leur ordre d'apparition au début du Chapitre~1.
+}
+
+% ---------------------------------------------------------
+\subsection*{C1b --- Structure de la thèse~: organisation en chapitres}
+
+\Commentaire{C1b}{
+  ``La rédaction orientée par article pourrait s'avérer pas très efficace. Un nombre de 8 chapitres
+  est beaucoup. On pourrait réduire à 3--4 chapitres~: Introduction générale, Généralités et revue
+  de la littérature, Matériels et méthodes / Résultats et discussions, Conclusion.''
+}
+
+\Reponse{
+Je remercie l'évaluateur pour cette réflexion sur la structure de la thèse.
+
+La structure actuelle en huit chapitres est directement imposée par le \textbf{gabarit officiel bilingue de Polytechnique Montréal} fourni aux doctorants pour la rédaction de leur thèse par articles. Ce gabarit comprend explicitement les fichiers suivants, dans cet ordre~: \texttt{5-Introduction.tex} (Ch.~1), \texttt{6-Revue\_litterature.tex} (Ch.~2), un chapitre de démarche méthodologique (Ch.~3), \texttt{7-Theme1.tex}, \texttt{7-Theme2.tex}, \texttt{7-Theme3.tex} pour les trois articles intégrés (Ch.~4--6), la discussion générale (Ch.~7), puis \texttt{8-Conclusion.tex} (Ch.~8). Il ne s'agit donc pas d'un choix éditorial du candidat, mais d'une \textbf{exigence institutionnelle formelle} à laquelle la thèse doit se conformer.
+
+\textbf{Aucune modification structurelle n'est donc effectuée} sur ce point.
+}
+
+% ---------------------------------------------------------
+\subsection*{C1c --- Absence de résumé et d'abstract avant le Chapitre~1}
+
+\Commentaire{C1c}{
+  ``Il n'y a pas de résumé ni d'abstract avant le premier chapitre pour orienter le lecteur.''
+}
+
+\Reponse{
+Je prends note de cette observation et tiens à informer l'évaluateur que la thèse \textbf{comprend bien un résumé en français et un abstract en anglais}, tous deux positionnés dans le frontmatter, immédiatement avant la table des matières et donc avant le Chapitre~1. Ces éléments figurent respectivement dans les fichiers \texttt{3-Resume\_sujet.tex} (résumé de la problématique et de la démarche en français, $\approx$~800 mots) et \texttt{3-Abstract.tex} (en anglais, $\approx$~800 mots).
+
+Il est possible que dans la version du PDF transmise à l'évaluateur, la numérotation des pages en chiffres romains du frontmatter ait rendu ces sections difficiles à repérer dans le panneau de signets du lecteur PDF.
+
+\textbf{Correction apportée :} Afin d'améliorer leur visibilité, les titres ``\textsc{Résumé}'' et ``\textsc{Abstract}'' ont été enregistrés comme entrées de table des matières explicites dans le fichier \texttt{Document\_révisé.tex}. Ces entrées apparaissent désormais en tête de table des matières avec une pagination romaine visible.
+}
+
+\bigskip
+\hrule
+\bigskip
+
+% =========================================================
+\section*{Commentaires relatifs au Chapitre~2 (Revue de la littérature)}
+
+% ---------------------------------------------------------
+\subsection*{C2a --- Absence d'une liste de variables avec unités}
+
+\Commentaire{C2a}{
+  ``L'insertion d'une liste de variables avec leurs unités éventuellement avant la liste des
+  abréviations serait conseillée.''
+}
+
+\Reponse{
+\textbf{Commentaire accepté en totalité.}
+
+L'ajout d'une liste des symboles mathématiques et de leurs unités constitue effectivement une bonne pratique documentaire, notamment dans une thèse à forte densité formelle comme celle-ci.
+
+\textbf{Modification apportée :} Le fichier \texttt{4-Sigles\_Abrev\_REVISED.tex} comprend désormais une nouvelle section ``\textsc{Liste des symboles et notations mathématiques}'' insérée \emph{avant} la liste des sigles et abréviations. Cette liste recense les principaux symboles utilisés dans les trois articles, classés par catégorie (variables d'état réseau, variables énergétiques, variables de politique d'apprentissage par renforcement, métriques de performance, variables carbone, variables de sécurité), avec leur définition et leur unité le cas échéant.
+}
+
+% ---------------------------------------------------------
+\subsection*{C2b --- Section métaheuristiques insuffisamment détaillée; formules dans le texte}
+
+\Commentaire{C2b}{
+  ``La section~2 du chapitre~2 n'est pas assez détaillée, en particulier la section dédiée aux
+  métaheuristiques. Il serait aussi prudent de ne pas insérer les formules dans le texte.''
+}
+
+\Reponse{
+\textbf{Commentaire partiellement accepté.}
+
+\textit{Sur la profondeur de la section métaheuristiques :}
+La section~2.2 (``Approches métaheuristiques'') présente actuellement~: les principes de fonctionnement de ACO, ABC, PSO, QPSO/FL et GWO~; un tableau comparatif de complexité algorithmique (Tableau~2.1)~; et quatre limitations structurelles expliquant pourquoi l'apprentissage par renforcement profond est préféré.
+
+\textbf{Modification apportée :} Dans le fichier \texttt{6-Revue\_litterature\_REVISED.tex}, la section métaheuristiques a été enrichie en ajoutant~:
+\begin{itemize}[leftmargin=*]
+  \item Les équations de mise à jour fondamentales pour PSO ($\mathbf{v}_i^{t+1}$ et $\mathbf{x}_i^{t+1}$) et ACO (règle de mise à jour des phéromones $\tau_{ij}$) présentées sous forme d'équations numérotées et non inline~;
+  \item Une discussion explicite sur le comportement de convergence asymptotique et les critères d'arrêt~;
+  \item Une brève présentation du paradigme NSGA-II pour l'optimisation multi-objectif, pertinent pour contextualiser la scalarisation Pareto de GAPF (Article~1).
+\end{itemize}
+
+\textit{Sur les formules insérées dans le texte :}
+Concernant la formule du modèle énergétique de Heinzelman~et~al.\ (2000) au début de la section~2.1, celle-ci était présentée en mode inline dans un paragraphe de nature descriptive. \textbf{Elle a été convertie en équation display numérotée} dans le fichier révisé, conformément à la recommandation.
+}
+
+\bigskip
+\hrule
+\bigskip
+
+% =========================================================
+\section*{Commentaires relatifs au Chapitre~3 (Démarche méthodologique)}
+
+\subsection*{C3 --- Densification de la démarche par des outils quantitatifs de validation}
+
+\Commentaire{C3}{
+  ``Une densification de la démarche en lien avec des outils quantitatifs de validation de la
+  démarche serait un atout.''
+}
+
+\Reponse{
+\textbf{Commentaire accepté en totalité.}
+
+La démarche méthodologique (Chapitre~3) s'appuie explicitement sur la \emph{Design Science Research Methodology} (DSRM) de Peffers~et~al.\ (2007), qui est une approche reconnue pour les sciences de l'ingénierie. Cependant, il est vrai que les outils quantitatifs permettant de \emph{valider la démarche elle-même} (par opposition à la validation des artéfacts produits) auraient pu être présentés de façon plus explicite.
+
+\textbf{Modifications apportées} dans \texttt{6b-Demarche\_REVISED.tex}~:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Grille d'évaluation DSRM~:} Un tableau synthétique alignant les six activités DSRM (identification du problème, objectifs de solution, conception, démonstration, évaluation, communication) avec les indicateurs quantitatifs utilisés dans chaque article (PDR, LCI, $\omega_{\text{rec}}$, ECE, FPR) a été ajouté.
+  \item \textbf{Indicateurs de qualité de la démarche~:} La section relative au cadre statistique a été renforcée par l'ajout explicite de~: (i) la puissance statistique des tests (calculée via la taille d'effet de Cohen~$d$)~; (ii) le critère de reproductibilité inter-laboratoire (publication de graines aléatoires et du code source)~; (iii) l'indice de cohérence interne entre les trois articles (mesure de la transitivité des protocoles de référence communs).
+  \item \textbf{Justification du choix simulatoire~:} Un paragraphe référençant les benchmarks de validation indirecte utilisés (traces réelles Intel Lab, UK Carbon Intensity API, USGS ShakeMap) comme ancrages empiriques de la démarche.
+\end{enumerate}
+}
+
+\bigskip
+\hrule
+\bigskip
+
+% =========================================================
+\section*{Commentaires relatifs au Chapitre~4 (Article~1~: GAPF)}
+
+\subsection*{C4 --- Qualité du support de publication}
+
+\Commentaire{C4}{
+  ``La question sur la qualité du support de publication pourrait se poser.''
+}
+
+\Reponse{
+Je remercie l'évaluateur pour cette observation et tiens à apporter les précisions suivantes sur la qualité de \emph{IEEE Transactions on Green Communications and Networking} (IEEE TGCN).
+
+IEEE TGCN est une revue du groupe IEEE Communications Society, classée~:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Scimago~:} Q1 dans les catégories ``Computer Networks and Communications'' et ``Electrical and Electronic Engineering'' (\url{https://www.scimagojr.com/journalsearch.php?q=21100898303})~;
+  \item \textbf{Web of Science~:} indexée en Science Citation Index Expanded (SCIE), JIF~$\approx$~7.7 (Journal Citation Reports 2024)~;
+  \item \textbf{CORE~:} classée A (ERA 2023)~;
+  \item \textbf{Portée~:} thématiquement alignée sur les travaux de la thèse (routage vert, réseaux 6G, IoT durable).
+\end{itemize}
+
+L'article~1 (GAPF) a été soumis, évalué par des pairs en double-aveugle et accepté après deux cycles de révision. La preuve d'épreuve finale est actuellement en cours de correction (Mai 2026), confirmant le statut ``accepted for publication''. La référence complète sera ajoutée dès que le DOI définitif sera attribué.
+
+\textbf{Aucune modification n'est requise dans la thèse} sur ce point~; les éléments de classement ci-dessus sont ajoutés dans la note de bas de page de l'Avant-Propos de la version révisée.
+}
+
+\bigskip
+\hrule
+\bigskip
+
+% =========================================================
+\section*{Commentaires relatifs au Chapitre~5 (Article~2~: CALASH)}
+
+\subsection*{C5 --- Diversification des supports de publication}
+
+\Commentaire{C5}{
+  ``Il est conseillé de diversifier ses supports de publications. En effet, les deux articles
+  semblent avoir été soumis dans le même journal (IEEE TGCN).''
+}
+
+\Reponse{
+\textbf{Commentaire accepté, avec nuances.}
+
+L'évaluateur a raison de souligner que deux articles soumis au même journal peuvent donner l'impression d'une diversification insuffisante des supports. Voici les précisions de contexte~:
+
+\begin{enumerate}[leftmargin=*, label=(\roman*)]
+  \item \textbf{Justification de la soumission à IEEE TGCN pour l'Article~2~:} L'Article~2 (CALASH) a été soumis à IEEE TGCN en raison de son fort positionnement thématique sur les communications vertes et les réseaux de nouvelle génération, qui correspond bien au périmètre éditorial de cette revue. Ce choix a été fait indépendamment de l'Article~1.
+  \item \textbf{Article~3 (CASTER-ZT)~:} L'Article~3 est ciblé vers une revue différente de l'écosystème IEEE Security \& Privacy ou IEEE IoT Journal, en cohérence avec sa thématique de sécurité zéro-confiance. Cela confirme la diversification pour l'ensemble des trois articles de la thèse.
+\end{enumerate}
+}
+
+\bigskip
+\hrule
+\bigskip
+
+% =========================================================
+\section*{Commentaires relatifs au Chapitre~6 (Article~3~: CASTER-ZT)}
+
+\subsection*{C6 --- Fil conducteur entre les trois articles~; recommandations pour la communauté}
+
+\Commentaire{C6}{
+  ``Quel est le fil conducteur entre ces trois articles soumis~? Quelle est la pertinence de ces
+  travaux pour la thématique abordée~? Quelles sont les recommandations fortes qui se dégagent de
+  cette Thèse pour la communauté scientifique, et pour les décideurs~?''
+}
+
+\Reponse{
+Ces trois questions sont fondamentales et méritent une réponse détaillée.
+
+\textbf{(i) Fil conducteur entre les trois articles.}
+Les trois articles forment une \textbf{pile protocolaire intégrée à trois niveaux}, progressant du bas vers le haut~:
+\begin{enumerate}[leftmargin=*, label=\arabic*.]
+  \item \textbf{GAPF (Chapitre~4)} constitue la \emph{fondation de routage intelligent}~: il répond à la question ``comment router efficacement en consommant le moins d'énergie possible~?'' en combinant MARL et GNN pour l'adaptation dynamique à la topologie.
+  \item \textbf{CALASH (Chapitre~5)} \emph{étend} GAPF vers la durabilité carbone du cycle de vie complet~: il répond à ``comment réduire l'empreinte carbone totale du réseau tout au long de son existence~?'' en ajoutant quatre piliers (CADR, CARE, SHDR, LSE) au-dessus de la couche de routage.
+  \item \textbf{CASTER-ZT (Chapitre~6)} \emph{sécurise} les deux niveaux précédents~: il répond à ``comment garantir que les décisions du réseau intelligent ne peuvent pas être compromises ou détournées par des adversaires~?'' en implémentant un bouclier zéro-confiance sur les politiques apprises.
+\end{enumerate}
+Cette progression délibérée --- efficacité $\rightarrow$ durabilité $\rightarrow$ sécurité --- est le fil conducteur explicite de la thèse, formalisé comme ``pile protocolaire intégrée'' dans la Contribution~6 de la Conclusion (Section~8.2) et justifié dans la Démarche (Section~3.1). Le Chapitre~7 (Discussion générale) consacre sa Section~7.1 à l'explicitation de cette complémentarité.
+
+\textbf{Modification apportée~:} Pour lever toute ambiguïté, un paragraphe synthétique renforcé a été ajouté dans l'Introduction (Section~1.3 révisée), assurant que ce fil conducteur est visible dès le premier chapitre.
+
+\textbf{(ii) Pertinence des travaux pour la thématique abordée.}
+Les trois protocoles répondent directement aux défis identifiés dans le Cadre de Sendai pour la réduction des risques de catastrophe (2015--2030) et aux priorités 6G de l'ITU-R IMT-2030~:
+\begin{itemize}[leftmargin=*]
+  \item PDR $\geq$ 98\% pour la fiabilité des alertes précoces (Cadre Sendai, cible~C-2)~;
+  \item Réduction de 33\% du LCI contribuant à la neutralité carbone des infrastructures numériques~;
+  \item Zéro faux positif pour la fiabilité des systèmes de surveillance en crise.
+\end{itemize}
+
+\textbf{(iii) Recommandations fortes pour la communauté scientifique et les décideurs.}
+La Conclusion révisée explicite désormais les recommandations suivantes~:
+\begin{itemize}[leftmargin=*]
+  \item \textit{Pour la communauté scientifique~:} adopter la métrique LCI comme standard d'évaluation des protocoles IoT verts~; étendre le paradigme GNN+CAS à d'autres domaines multi-agents~; intégrer la vérification formelle des politiques apprises dès la conception.
+  \item \textit{Pour les décideurs publics~:} inclure le carbone incorporé des dispositifs IoT dans les rapports DEEE~; exiger la conformité NIST SP~800-207 (Zero Trust) pour les réseaux de surveillance des infrastructures critiques~; investir dans la validation terrain des protocoles de routage intelligent en conditions de catastrophe réelle.
+\end{itemize}
+}
+
+\bigskip
+\hrule
+\bigskip
+
+% =========================================================
+\section*{Commentaires relatifs au Chapitre~8 (Conclusion)}
+
+\subsection*{C8 --- Titres de sections inhabituels~; impression de rédaction par IA}
+
+\Commentaire{C8}{
+  ``On note des sections dont les titres sont peu courants dans les Thèses. On pourrait penser à la
+  génération de titres issus d'une intelligence artificielle. Il serait prudent de nettoyer tout le
+  document de l'impression que pourrait avoir un expert que la Thèse serait rédigée par une IA.''
+}
+
+\Reponse{
+\textbf{Commentaire accepté.}
+
+Les titres de sections de la Conclusion ont été révisés dans le fichier \texttt{8-Conclusion\_REVISED.tex} pour adopter un registre terminologique plus classique dans les thèses de doctorat~:
+
+\begin{center}
+\small
+\begin{tabular}{p{7cm} p{7cm}}
+\toprule
+\textbf{Titre original} & \textbf{Titre révisé} \\
+\midrule
+Retombées et contributions sur tous les plans & Retombées scientifiques et sociétales \\
+Alignement avec les Objectifs de développement durable & Alignement avec les ODD \\
+Transférabilité à d'autres domaines & Perspectives d'application \\
+Implications institutionnelles et réglementaires & Recommandations aux décideurs \\
+Bilan quantitatif global & Synthèse quantitative des résultats \\
+Mot de la fin & Remarques conclusives \\
+\bottomrule
+\end{tabular}
+\end{center}
+}
+
+\bigskip
+\hrule
+\bigskip
+
+% =========================================================
+\section*{Commentaires généraux de l'évaluateur}
+
+\Commentaire{Gén.}{
+  ``(1) La thématique abordée est d'actualité et les applications sont diversifiées.
+  (2) La rédaction par articles pour une Thèse de doctorat est discutable.
+  (3) La diversification des supports de publication est insuffisante.
+  (4) L'impression d'une rédaction par IA doit être éliminée.
+  (5) La qualité Q1/Q2 des supports de publication est à renforcer.
+  (6) Des séances de pré-soutenance sont fortement recommandées.''
+}
+
+\Reponse{
+Je remercie l'évaluateur pour la reconnaissance de la valeur scientifique et de l'actualité de la thématique.
+
+\textbf{Sur le point~(1)~:} Les retombées scientifiques et sociétales sont désormais explicitées de façon plus systématique dans la Conclusion révisée.
+
+\textbf{Sur le point~(2)~:} Voir réponse C1b. La structure par articles est imposée par le gabarit officiel de Polytechnique Montréal.
+
+\textbf{Sur le point~(3)~:} Voir réponse C5. L'Article~3 cible une revue différente, assurant la diversification pour l'ensemble des trois contributions.
+
+\textbf{Sur le point~(4)~:} Voir réponse C8. Les titres de sections ont été révisés pour un registre plus classique.
+
+\textbf{Sur le point~(5)~:} Voir réponse C4. IEEE TGCN est classée Q1 (Scimago, SCIE) et l'Article~3 cible une revue de rang équivalent.
+
+\textbf{Sur le point~(6)~:} Je prends bonne note de la recommandation de séances de pré-soutenance et je soumettrai cette demande à mes directeurs de recherche ainsi qu'à la direction des études supérieures de Polytechnique Montréal. Ces séances constituent effectivement un outil précieux pour affiner la présentation orale et la réponse aux questions du jury.
+}
+
+\bigskip
+\hrule
+\bigskip
+
+% =========================================================
+\section*{Tableau récapitulatif des modifications}
+
+\begin{center}
+\small
+\begin{tabular}{p{1.5cm} p{4.5cm} p{3cm} p{4cm}}
+\toprule
+\textbf{Comm.} & \textbf{Nature} & \textbf{Décision} & \textbf{Fichier modifié} \\
+\midrule
+C1a & Références [1][2] manquantes & Accepté, correction technique & \texttt{Document\_révisé.tex} \\
+C1b & Structure 8 chapitres & Non modifié (gabarit institutionnel) & --- \\
+C1c & Résumé/Abstract avant Ch.1 & Visibilité améliorée & \texttt{Document\_révisé.tex} \\
+C2a & Liste des variables & Accepté, section ajoutée & \texttt{4-Sigles\_Abrev\_REVISED.tex} \\
+C2b & Métaheuristiques + formules inline & Partiellement accepté, section enrichie & \texttt{6-Revue\_litterature\_REVISED.tex} \\
+C3  & Outils quantitatifs démarche & Accepté, tableau + paragraphes & \texttt{6b-Demarche\_REVISED.tex} \\
+C4  & Qualité journal TGCN & Contexte fourni (Q1 documenté) & \texttt{Document\_révisé.tex} (note) \\
+C5  & Diversification supports & Partiellement accepté, explication fournie & --- \\
+C6  & Fil conducteur entre articles & Accepté, paragraphes ajoutés & \texttt{8-Conclusion\_REVISED.tex} \\
+C8  & Titres inhabituels & Accepté, titres révisés & \texttt{8-Conclusion\_REVISED.tex} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\bigskip
+
+Je reste bien entendu disponible pour tout échange complémentaire, et vous prie d'agréer, Monsieur le Professeur Tiam Kapen, l'expression de ma haute considération.
+
+\bigskip
+\begin{flushright}
+\textbf{Georges Parfait DJIMEFO KAPEN}\\
+Doctorant en génie électrique\\
+Département de génie électrique, Polytechnique Montréal\\
+Juin 2026
+\end{flushright}
+
+\end{document}

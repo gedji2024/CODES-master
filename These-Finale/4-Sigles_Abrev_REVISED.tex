@@ -1,0 +1,317 @@
+% Liste des sigles et abbréviations / List of symbols and acronyms
+% FICHIER RÉVISÉ — Juin 2026 — Réponse C2a au rapport Tiam Kapen
+% Ajout : Liste des symboles et notations mathématiques (avant les sigles)
+
+\ifthenelse{\equal{\Langue}{english}}{
+	\newcommand\abbrevname{LIST OF SYMBOLS AND ACRONYMS}
+	\newcommand\nomname{LIST OF MATHEMATICAL SYMBOLS AND NOTATIONS}
+}{
+	\newcommand\abbrevname{LISTE DES SIGLES ET ABRÉVIATIONS}
+	\newcommand\nomname{LISTE DES SYMBOLES ET NOTATIONS MATHÉMATIQUES}
+}
+
+%% ---------------------------------------------------------------
+%%  LISTE DES SYMBOLES ET NOTATIONS MATHÉMATIQUES
+%% ---------------------------------------------------------------
+\chapter*{\nomname}
+\addcontentsline{toc}{compteur}{\nomname}
+\pagestyle{pagenumber}
+
+\noindent
+Les symboles ci-dessous sont regroupés par thème et listés par ordre d'apparition au sein de chaque groupe. L'unité est précisée entre crochets lorsqu'elle est applicable ; ``sans dim.'' indique une grandeur adimensionnelle.
+
+\bigskip
+
+\paragraph{Variables d'état du réseau}
+\begin{longtable}{lp{3in}l}
+$\mathcal{G}(t)=(\mathcal{V},\mathcal{E}(t))$ & Graphe du réseau WSN à l'instant $t$ & --- \\
+$\mathcal{V}$ & Ensemble des nœuds capteurs & --- \\
+$N$ & Nombre total de nœuds & [nœuds] \\
+$\mathcal{E}(t)$ & Ensemble des liens actifs à l'instant $t$ & --- \\
+$d_{ij}$ & Distance entre nœuds $i$ et $j$ & [m] \\
+$d_0$ & Distance seuil de transition propagation & [m] \\
+$e_i(t)$ & Énergie résiduelle du nœud $i$ à l'instant $t$ & [J] \\
+$E_0$ & Énergie initiale de chaque nœud & [J] \\
+$\mathcal{N}(i)$ & Ensemble des voisins à 1 saut du nœud $i$ & --- \\
+\end{longtable}
+
+\paragraph{Modèle énergétique (Heinzelman~\emph{et al.})}
+\begin{longtable}{lp{3in}l}
+$E_{\text{elec}}$ & Énergie dissipée par bit d'émission/réception & [J/bit] \\
+$\varepsilon_{\text{fs}}$ & Coefficient d'amplification espace libre & [J/bit/m\textsuperscript{2}] \\
+$\varepsilon_{\text{mp}}$ & Coefficient d'amplification multi-chemins & [J/bit/m\textsuperscript{4}] \\
+$\ell$ & Taille du paquet transmis & [bits] \\
+$\alpha$ & Exposant de perte de chemin (2 ou 4) & [sans dim.] \\
+$E_{\text{Tx}}(\ell, d)$ & Énergie de transmission de $\ell$ bits sur distance $d$ & [J] \\
+$E_{\text{Rx}}(\ell)$ & Énergie de réception de $\ell$ bits & [J] \\
+\end{longtable}
+
+\paragraph{Variables de l'apprentissage par renforcement multi-agents (MARL)}
+\begin{longtable}{lp{3in}l}
+$s_i^t$ & État local de l'agent $i$ à l'instant $t$ & --- \\
+$o_i^t$ & Observation partielle de l'agent $i$ & --- \\
+$a_i^t$ & Action de l'agent $i$ à l'instant $t$ & --- \\
+$r_i^t$ & Récompense individuelle de l'agent $i$ & [sans dim.] \\
+$\gamma$ & Facteur d'actualisation des récompenses futures & [sans dim.] \\
+$\pi_\theta$ & Politique paramétrée par $\theta$ & --- \\
+$Q^\pi(s,a)$ & Fonction valeur action-état sous la politique $\pi$ & [sans dim.] \\
+$Q_{\text{tot}}$ & Valeur globale mélangée (QMIX/QTRAN) & [sans dim.] \\
+$\mathbf{h}_i^{(k)}$ & Représentation GNN du nœud $i$ à la couche $k$ & --- \\
+$\mathbf{z}_G$ & Représentation de niveau graphe (pooling) & --- \\
+$w_j$ & Poids contextuel de la politique $j$ (CAS) & [sans dim.] \\
+$|\Theta|$ & Nombre de paramètres entraînables & [paramètres] \\
+$\boldsymbol{\alpha}$ & Vecteur de poids d'attention appris (GAPF outer loop) & [sans dim.] \\
+$\phi$ & Paramètres du réseau d'attention (Evolution Strategies) & --- \\
+$J(\phi)$ & Méta-objectif outer loop ES (efficacité + équilibre) & [sans dim.] \\
+$\sigma_{\text{ES}}$ & Bruit de perturbation Evolution Strategies ($= 0.01$) & [sans dim.] \\
+$\eta_{\text{ES}}$ & Taux d'apprentissage Evolution Strategies ($= 0.01$) & [sans dim.] \\
+\end{longtable}
+
+\paragraph{Métriques de performance réseau}
+\begin{longtable}{lp{3in}l}
+PDR & Taux de livraison de paquets (\emph{Packet Delivery Ratio}) & [\%] \\
+$T_{\text{vie}}$ & Durée de vie du réseau (dernier nœud vivant) & [rounds] \\
+$T_{1/2}$ & Demi-vie du réseau (50\% des nœuds vivants) & [rounds] \\
+$\bar{e}(t)$ & Énergie résiduelle moyenne du réseau à $t$ & [J] \\
+$\Delta_e$ & Variance d'équilibre énergétique entre nœuds & [J\textsuperscript{2}] \\
+\end{longtable}
+
+\paragraph{Variables carbone (CALASH)}
+\begin{longtable}{lp{3in}l}
+LCI & Intensité carbone du cycle de vie (\emph{Lifecycle Carbon Intensity}) & [gCO\textsubscript{2}eq/paquet] \\
+$C_{\text{emb}}$ & Carbone incorporé (fabrication + installation) & [gCO\textsubscript{2}eq] \\
+$C_{\text{op}}(t)$ & Carbone opérationnel cumulé jusqu'à $t$ & [gCO\textsubscript{2}eq] \\
+$C_{\text{eol}}$ & Carbone de fin de vie (traitement DEEE) & [gCO\textsubscript{2}eq] \\
+CI$(t)$ & Intensité carbone du réseau électrique à $t$ & [gCO\textsubscript{2}eq/kWh] \\
+$\rho_{\text{CS}}(t)$ & Ratio de compression sensing adaptatif & [sans dim.] \\
+$\rho_{\min}$ & Compression maximale (fraction minimale transmise, $= 0.3$) & [sans dim.] \\
+$\rho_{\max}$ & Compression minimale (fraction maximale transmise, $= 0.8$) & [sans dim.] \\
+$r_{\text{recycle}}$ & Taux de recyclage des nœuds morts ($= 0.3$) & [sans dim.] \\
+$Z(t)$ & File virtuelle de Lyapunov (pression carbone) & [gCO\textsubscript{2}eq] \\
+$\bar{c}$ & Budget carbone moyen admissible par ronde & [gCO\textsubscript{2}eq/ronde] \\
+$V$ & Paramètre de compromis Lyapunov (livraison vs.~carbone) & [sans dim.] \\
+$B$ & Constante de borne Lyapunov ($\frac{1}{2}\max_t\{(C_{\text{tot}}(t)-\bar{c})^2\}$) & [gCO\textsubscript{2}eq\textsuperscript{2}] \\
+$\bar{D}$ & Taux de livraison moyen atteint par CALASH & [paquets/ronde] \\
+$\bar{D}^*$ & Taux de livraison optimal de toute politique statique & [paquets/ronde] \\
+$\ell_j$ & Facteur de pénalité carbone incorporé du nœud $j$ & [sans dim.] \\
+$w_{\text{eol}}$ & Poids de la pénalité fin de vie dans la décision de routage & [sans dim.] \\
+CDL & Borne de Pareto carbone-livraison-durée de vie & --- \\
+\end{longtable}
+
+\paragraph{Variables de détection comprimée / TinyML (CALASH)}
+\begin{longtable}{lp{3in}l}
+$n$ & Dimension originale du signal capteur & [sans dim.] \\
+$m$ & Dimension compressée ($m = \rho_{\text{CS}} \cdot n$) & [sans dim.] \\
+$s$ & Niveau de sparsité du signal dans le domaine DCT & [sans dim.] \\
+$F$ & Fidélité de reconstruction ($F = 1 - \text{NMSE}$) & [sans dim.] \\
+$\delta$ & Seuil de distorsion NMSE acceptable & [sans dim.] \\
+\end{longtable}
+
+\paragraph{Variables de sécurité (CASTER-ZT)}
+\begin{longtable}{lp{3in}l}
+$\mathcal{T}$ & Ensemble des types de menaces modélisées & --- \\
+$p(y \mid o)$ & Distribution de confiance avec MC-Dropout & [sans dim.] \\
+ECE & Erreur de calibration attendue (\emph{Expected Calibration Error}) & [sans dim.] \\
+$\omega_{\text{rec}}$ & Score de récupération normalisé & [sans dim.] \\
+FPR & Taux de faux positifs (\emph{False Positive Rate}) & [\%] \\
+$\mathcal{D}$ & Bouclier déterministe à 5 niveaux gradués & --- \\
+$\tau_k$ & Seuil du niveau $k$ du bouclier & [sans dim.] \\
+RogueDet & Taux de détection d'agents rogues (nœuds compromis) & [\%] \\
+$\eta_{\text{AI}}$ & Indice d'autonomie IA (étages neuronaux / total) & [sans dim.] \\
+\end{longtable}
+
+\bigskip
+
+%% ---------------------------------------------------------------
+%%  LISTE DES SIGLES ET ABRÉVIATIONS
+%% ---------------------------------------------------------------
+\chapter*{\abbrevname}
+\addcontentsline{toc}{compteur}{\abbrevname}
+\pagestyle{pagenumber}
+%
+\begin{acronym}
+  \acro{ABC}{Artificial Bee Colony}
+  \acro{ACV}{Analyse du Cycle de Vie (Life Cycle Assessment)}
+  \acro{ACO}{Ant Colony Optimization}
+  \acro{AI}{Artificial Intelligence}
+  \acro{AODV}{Ad hoc On-Demand Distance Vector}
+  \acro{BS}{Base Station}
+  \acro{CADR}{Carbon-Aware Data Reduction}
+  \acro{CALASH}{Carbon-Aware Lifecycle-Autonomous Self-Healing}
+  \acro{CARE}{Carbon-Aware Routing Engine}
+  \acro{CAS}{Contextual Algorithm Selection}
+  \acro{CASTER-ZT}{Carbon-Aware Self-healing Topology Engine for Resilient routing --- Zero-Trust}
+  \acro{CDL}{Carbon-Delivery-Lifecycle}
+  \acro{CH}{Cluster Head}
+  \acro{CI}{Carbon Intensity}
+  \acro{CMDP}{Constrained Markov Decision Process}
+  \acro{COMA}{Counterfactual Multi-Agent (policy gradient)}
+  \acro{CPO}{Constrained Policy Optimization}
+  \acro{CS}{Compressive Sensing}
+  \acro{CTDE}{Centralized Training with Decentralized Execution}
+  \acro{Dec-POMDP}{Decentralized Partially Observable Markov Decision Process}
+  \acro{DMSN}{Disaster-Monitoring Sensing Network}
+  \acro{DQN}{Deep Q-Network}
+  \acro{DRL}{Deep Reinforcement Learning}
+  \acro{DSR}{Design Science Research}
+  \acro{DSRM}{Design Science Research Methodology}
+  \acro{ECE}{Expected Calibration Error}
+  \acro{EE-LEACH}{Energy-Efficient LEACH}
+  \acro{EERP}{Energy-Efficient Routing Protocol}
+  \acro{ES}{Evolution Strategies}
+  \acro{FL}{Federated Learning}
+  \acro{FMEA}{Failure Mode and Effect Analysis}
+  \acro{FPR}{False Positive Rate}
+  \acro{GAPF}{Graph-Attentive Policy Fusion}
+  \acro{GAT}{Graph Attention Network}
+  \acro{GCN}{Graph Convolutional Network}
+  \acro{GIN}{Graph Isomorphism Network}
+  \acro{GNN}{Graph Neural Network}
+  \acro{GraphSAGE}{Graph SAmple and aggreGatE}
+  \acro{GRU}{Gated Recurrent Unit}
+  \acro{HEED}{Hybrid Energy-Efficient Distributed (clustering)}
+  \acro{IGM}{Individual-Global-Max (property)}
+  \acro{IoT}{Internet of Things}
+  \acro{IPCC}{Intergovernmental Panel on Climate Change}
+  \acro{ISAC}{Integrated Sensing and Communication}
+  \acro{ISO}{International Organization for Standardization}
+  \acro{LCA}{Life Cycle Assessment}
+  \acro{LCI}{Lifecycle Carbon Intensity}
+  \acro{LEACH}{Low-Energy Adaptive Clustering Hierarchy}
+  \acro{LEO}{Low Earth Orbit}
+  \acro{LSE}{Lifecycle Sustainability Engine}
+  \acro{LSTM}{Long Short-Term Memory}
+  \acro{LTL}{Linear Temporal Logic}
+  \acro{MADRL}{Multi-Agent Deep Reinforcement Learning}
+  \acro{MAPE-K}{Monitor, Analyze, Plan, Execute --- Knowledge}
+  \acro{MAPPO}{Multi-Agent Proximal Policy Optimization}
+  \acro{MARL}{Multi-Agent Reinforcement Learning}
+  \acro{MC}{Monte Carlo}
+  \acro{MCU}{Microcontroller Unit}
+  \acro{MDP}{Markov Decision Process}
+  \acro{MLP}{Multi-Layer Perceptron}
+  \acro{MPNN}{Message Passing Neural Network}
+  \acro{NAS}{Neural Architecture Search}
+  \acro{NIST}{National Institute of Standards and Technology}
+  \acro{NSGA-II}{Non-dominated Sorting Genetic Algorithm II}
+  \acro{NTN}{Non-Terrestrial Network}
+  \acro{OFDM}{Orthogonal Frequency-Division Multiplexing}
+  \acro{O-RAN}{Open Radio Access Network}
+  \acro{PBFT}{Practical Byzantine Fault Tolerance}
+  \acro{PDR}{Packet Delivery Ratio}
+  \acro{PEGASIS}{Power-Efficient Gathering in Sensor Information Systems}
+  \acro{POMDP}{Partially Observable Markov Decision Process}
+  \acro{PPDR}{Public Protection and Disaster Relief}
+  \acro{PSO}{Particle Swarm Optimization}
+  \acro{QMIX}{Q-value Mixing Network}
+  \acro{QTRAN}{Q-value Transformation Network}
+  \acro{RIC}{RAN Intelligent Controller}
+  \acro{RIS}{Reconfigurable Intelligent Surface}
+  \acro{RL}{Reinforcement Learning}
+  \acro{RNN}{Recurrent Neural Network}
+  \acro{SHDR}{Self-Healing Disaster Recovery}
+  \acro{SMT}{Satisfiability Modulo Theories}
+  \acro{TDMA}{Time Division Multiple Access}
+  \acro{TFLM}{TensorFlow Lite Micro}
+  \acro{THz}{Terahertz}
+  \acro{TIC}{Technologies de l'Information et de la Communication}
+  \acro{UAV}{Unmanned Aerial Vehicle}
+  \acro{UNDRR}{United Nations Office for Disaster Risk Reduction}
+  \acro{VDN}{Value Decomposition Network}
+  \acro{WL}{Weisfeiler-Leman (graph isomorphism test)}
+  \acro{WSN}{Wireless Sensor Network}
+\end{acronym}
+%
+\begin{longtable}{lp{5in}}
+ABC        & Artificial Bee Colony\\
+ACV        & Analyse du Cycle de Vie (Life Cycle Assessment)\\
+ACO        & Ant Colony Optimization\\
+AI         & Artificial Intelligence\\
+AODV       & Ad hoc On-Demand Distance Vector\\
+BS         & Base Station\\
+CADR       & Carbon-Aware Data Reduction\\
+CALASH     & Carbon-Aware Lifecycle-Autonomous Self-Healing\\
+CARE       & Carbon-Aware Routing Engine\\
+CAS        & Contextual Algorithm Selection\\
+CASTER-ZT  & Carbon-Aware Self-healing Topology Engine for Resilient routing --- Zero-Trust\\
+CDL        & Carbon-Delivery-Lifecycle\\
+CH         & Cluster Head\\
+CI         & Carbon Intensity\\
+CMDP       & Constrained Markov Decision Process\\
+COMA       & Counterfactual Multi-Agent (policy gradient)\\
+CPO        & Constrained Policy Optimization\\
+CS         & Compressive Sensing\\
+CTDE       & Centralized Training with Decentralized Execution\\
+Dec-POMDP  & Decentralized Partially Observable Markov Decision Process\\
+DMSN       & Disaster-Monitoring Sensing Network\\
+DQN        & Deep Q-Network\\
+DRL        & Deep Reinforcement Learning\\
+DSR        & Design Science Research\\
+DSRM       & Design Science Research Methodology\\
+ECE        & Expected Calibration Error\\
+EE-LEACH   & Energy-Efficient LEACH\\
+EERP       & Energy-Efficient Routing Protocol\\
+ES         & Evolution Strategies\\
+FL         & Federated Learning\\
+FMEA       & Failure Mode and Effect Analysis\\
+FPR        & False Positive Rate\\
+GAPF       & Graph-Attentive Policy Fusion\\
+GAT        & Graph Attention Network\\
+GCN        & Graph Convolutional Network\\
+GIN        & Graph Isomorphism Network\\
+GNN        & Graph Neural Network\\
+GraphSAGE  & Graph SAmple and aggreGatE\\
+GRU        & Gated Recurrent Unit\\
+HEED       & Hybrid Energy-Efficient Distributed (clustering)\\
+IGM        & Individual-Global-Max (property)\\
+IoT        & Internet of Things\\
+IPCC       & Intergovernmental Panel on Climate Change\\
+ISAC       & Integrated Sensing and Communication\\
+ISO        & International Organization for Standardization\\
+LCA        & Life Cycle Assessment\\
+LCI        & Lifecycle Carbon Intensity\\
+LEACH      & Low-Energy Adaptive Clustering Hierarchy\\
+LEO        & Low Earth Orbit\\
+LSE        & Lifecycle Sustainability Engine\\
+LSTM       & Long Short-Term Memory\\
+LTL        & Linear Temporal Logic\\
+MADRL      & Multi-Agent Deep Reinforcement Learning\\
+MAPE-K     & Monitor, Analyze, Plan, Execute --- Knowledge\\
+MAPPO      & Multi-Agent Proximal Policy Optimization\\
+MARL       & Multi-Agent Reinforcement Learning\\
+MC         & Monte Carlo\\
+MCU        & Microcontroller Unit\\
+MDP        & Markov Decision Process\\
+MLP        & Multi-Layer Perceptron\\
+MPNN       & Message Passing Neural Network\\
+NAS        & Neural Architecture Search\\
+NIST       & National Institute of Standards and Technology\\
+NSGA-II    & Non-dominated Sorting Genetic Algorithm II\\
+NTN        & Non-Terrestrial Network\\
+OFDM       & Orthogonal Frequency-Division Multiplexing\\
+O-RAN      & Open Radio Access Network\\
+PBFT       & Practical Byzantine Fault Tolerance\\
+PDR        & Packet Delivery Ratio\\
+PEGASIS    & Power-Efficient Gathering in Sensor Information Systems\\
+POMDP      & Partially Observable Markov Decision Process\\
+PPDR       & Public Protection and Disaster Relief\\
+PSO        & Particle Swarm Optimization\\
+QMIX       & Q-value Mixing Network\\
+QTRAN      & Q-value Transformation Network\\
+RIC        & RAN Intelligent Controller\\
+RIS        & Reconfigurable Intelligent Surface\\
+RL         & Reinforcement Learning\\
+RNN        & Recurrent Neural Network\\
+SHDR       & Self-Healing Disaster Recovery\\
+SMT        & Satisfiability Modulo Theories\\
+TDMA       & Time Division Multiple Access\\
+TFLM       & TensorFlow Lite Micro\\
+THz        & Terahertz\\
+TIC        & Technologies de l'Information et de la Communication\\
+UAV        & Unmanned Aerial Vehicle\\
+UNDRR      & United Nations Office for Disaster Risk Reduction\\
+VDN        & Value Decomposition Network\\
+WL         & Weisfeiler-Leman (graph isomorphism test)\\
+WSN        & Wireless Sensor Network\\
+\end{longtable}
+
