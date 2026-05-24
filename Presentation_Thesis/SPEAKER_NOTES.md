@@ -1,417 +1,423 @@
-# PhD Defense — Speaker Notes
-**Georges Parfait Djimefo Kapen — Polytechnique Montréal — July 2026**
-**Total time: 30 minutes | ~25 slides | ~1 min/slide average**
+# Soutenance de thèse — Notes de présentation
+**Georges Parfait Djimefo Kapen — Polytechnique Montréal — Juillet 2026**
+**Durée totale : 30 minutes | ~25 diapositives | ~1 min/diapo en moyenne**
 
 ---
 
-## PACING GUIDE
+## GUIDE DE RYTHME
 
-| Section | Slides | Time |
-|---------|--------|------|
-| Title + Outline | 2 | 1 min |
-| Context & Motivation | 2 | 3 min |
-| Problem & Objectives | 2 | 3 min |
-| Methodology | 2 | 2 min |
+| Section | Diapositives | Durée |
+|---------|--------------|-------|
+| Titre + Plan | 2 | 1 min |
+| Contexte et motivation | 2 | 3 min |
+| Problème et objectifs | 2 | 3 min |
+| Méthodologie | 2 | 2 min |
 | Article 1 — GAPF | 3 | 5 min |
 | Article 2 — CALASH | 3 | 5 min |
 | Article 3 — CASTER-ZT | 2 | 4 min |
-| Discussion & Summary | 3 | 4 min |
-| Contributions & Impact | 2 | 2 min |
-| Limitations & Future work | 2 | 1 min |
+| Discussion et synthèse | 3 | 4 min |
+| Contributions et impact | 2 | 2 min |
+| Limites et perspectives | 2 | 1 min |
 | Conclusion | 1 | 1 min |
-| Thank you | — | 30 s |
+| Remerciements | — | 30 sec |
 
 ---
 
-## SLIDE 1 — Title
+## DIAPO 1 — Titre
 
-> *Stand in silence for 3 seconds. Make eye contact with the jury before speaking.*
+> *Restez immobile trois secondes. Regardez le jury avant de parler. Puis, pendant l'intro, tournez-vous aussi vers la salle — famille, amis, invités. C'est leur moment aussi.*
 
-"Good morning. My name is Georges Parfait Djimefo Kapen. Today I am defending my PhD thesis entitled: *AI-Driven Intelligent Routing and Secure Autonomous Recovery in 6G-Integrated Disaster-Monitoring Sensor Networks.*
+« Bonjour à toutes et à tous. Je m'appelle Georges Parfait Djimefo Kapen. Je soutiens aujourd'hui ma thèse de doctorat intitulée : *Routage intelligent piloté par l'IA et récupération autonome sécurisée dans les réseaux de capteurs sans fil intégrés à la 6G pour la surveillance de catastrophes.*
 
-This work was conducted under the supervision of Professor Ranwa Al Mallah and co-supervisor Professor Samuel Pierre, in the LARIM laboratory at Polytechnique Montréal.
+Ce travail a été réalisé sous la direction du Professeur Ranwa Al Mallah et du co-directeur Professeur Samuel Pierre, au laboratoire LARIM de Polytechnique Montréal.
 
-In the next 30 minutes, I will show you why sensor networks that monitor natural disasters need to be more efficient, greener, and safer — and how I built a complete solution to achieve exactly that."
-
----
-
-## SLIDE 2 — Outline
-
-> *Brief. Just orient the audience.*
-
-"Here is the roadmap for today. I will start with the context — why this research matters. Then I will walk you through three articles, each solving one major challenge. I will close with a discussion of results, limitations, and what comes next."
+Au cours des 30 prochaines minutes, je vais vous expliquer pourquoi les réseaux de capteurs qui surveillent les catastrophes naturelles doivent être plus efficaces, plus écologiques et plus sûrs — et comment j'ai construit une solution complète pour y parvenir. »
 
 ---
 
-## SLIDE 3 — Context: Natural Disasters and Monitoring
+## DIAPO 2 — Plan
 
-> *This slide speaks to everyone — technical or not. Take your time.*
+> *Rapide. Il s'agit simplement d'orienter l'auditoire.*
 
-"Let's start with a number that should concern all of us. Between 2000 and 2019, there were over 7,000 major natural disasters worldwide — earthquakes, floods, hurricanes. That's 4.2 billion people affected, 1.2 million deaths, and nearly 3 trillion dollars in economic losses.
-
-In 2023 alone: 398 disasters, 95,000 deaths. And climate change is making it worse — scientists project 30% more frequent extreme weather events in the coming decades.
-
-The Sendai Framework, adopted by 187 countries in 2015, sets a clear goal: strengthen early warning systems so that people can evacuate before disaster strikes.
-
-The question is: *how do you monitor a disaster zone in real time?* The answer is: with wireless sensor networks — small, cheap, autonomous devices scattered across an area that continuously send data. That is what this thesis is about."
+« Voici le plan de ma présentation. Je commencerai par le contexte — pourquoi cette recherche est importante. Je vous présenterai ensuite trois articles, chacun résolvant un défi majeur. Je terminerai par une discussion des résultats, des limites et des perspectives. »
 
 ---
 
-## SLIDE 4 — WSNs: Potential and Constraints
+## DIAPO 3 — Contexte : catastrophes naturelles et surveillance
 
-> *Brief contrast. Set up the engineering tension.*
+> *Cette diapositive parle à tout le monde, technique ou non. Prenez le temps.*
 
-"Sensor networks are powerful — they can cover large areas autonomously, they're cheap, and they work even after a disaster hits. But they have severe constraints.
+« Commençons par un chiffre qui devrait nous préoccuper tous. Entre 2000 et 2019, on a recensé plus de 7 000 grandes catastrophes naturelles dans le monde — séismes, inondations, ouragans. Cela représente 4,2 milliards de personnes touchées, 1,2 million de morts et près de 3 000 milliards de dollars de pertes économiques.
 
-Think of a sensor as a small coin-battery-powered device: about half a joule of energy total. They can't be recharged. They have very limited memory. And they're physically exposed to the very disaster they're monitoring.
+En 2023 seulement : 398 catastrophes, 95 000 décès. Et le changement climatique aggrave la situation — les scientifiques prévoient une augmentation de 30 % de la fréquence des événements météorologiques extrêmes dans les prochaines décennies.
 
-On top of that, we are now entering the era of 6G — the next generation of mobile communications, with terahertz frequencies, intelligent reflective surfaces, and ultra-low latency. This opens new possibilities for sensor networks — but also new complexities to manage.
+Le Cadre de Sendai, adopté par 187 pays en 2015, fixe un objectif clair : renforcer les systèmes d'alerte précoce pour que les populations puissent évacuer avant que la catastrophe ne frappe.
 
-So we have a challenging environment. Let me now tell you what exactly needs to be solved."
-
----
-
-## SLIDE 5 — Three Fundamental Challenges
-
-> *Three problems, three articles. Announce the structure clearly.*
-
-"This thesis identifies three fundamental challenges that no existing approach has solved simultaneously.
-
-**Challenge 1 — Energy.** Routing — deciding how each sensor forwards its data — is the number one factor in how long a sensor network lives. Existing AI-based methods require tens of thousands of parameters per sensor agent. They are simply too heavy for embedded devices, and none of them intelligently combines multiple strategies based on the network topology.
-
-**Challenge 2 — Carbon.** Most people think about energy consumption. But actually, the biggest carbon footprint of a sensor comes from *manufacturing it* — not running it. The embedded carbon from production is a million times larger than what the sensor consumes per packet. No existing routing protocol accounts for this full lifecycle carbon. None.
-
-**Challenge 3 — Security.** When you put AI in the control loop, you create a new attack surface. A sensor can be compromised. The AI policy can be manipulated. Existing defenses are binary — they either allow or block. But in a disaster zone, blocking everything is not an option. You need nuance.
-
-These three challenges — efficiency, sustainability, security — are what this thesis solves."
+La question est donc : *comment surveiller une zone sinistrée en temps réel ?* La réponse : grâce aux réseaux de capteurs sans fil — de petits appareils autonomes et peu coûteux, disséminés sur une zone, qui transmettent en continu des données. C'est précisément l'objet de cette thèse. »
 
 ---
 
-## SLIDE 6 — Research Questions and Objectives
+## DIAPO 4 — Les réseaux de capteurs : potentiel et contraintes
 
-> *Read the main question clearly and slowly. It is the anchor of the thesis.*
+> *Court. Poser la tension d'ingénierie.*
 
-"The main research question that guides this thesis is:
+« Les réseaux de capteurs sont puissants : ils peuvent couvrir de grandes zones de manière autonome, ils sont peu coûteux, et ils fonctionnent même après une catastrophe. Mais ils ont des contraintes sévères.
 
-*'How do you design a complete intelligent routing protocol stack — energy-efficient, carbon-sustainable, and secure — for AI-native sensor networks integrated with 6G?'*
+Imaginez un capteur comme un appareil alimenté par une petite pile de montre : environ 0,5 joule d'énergie au total. Pas de recharge possible. Mémoire très limitée. Et il est physiquement exposé à la catastrophe même qu'il surveille.
 
-I translated this into three specific questions and three specific objectives — one per article. I will not read all of them now, but I want you to notice that each objective has a measurable target: packet delivery ratio above 98%, carbon reduction of 33%, zero false positives in security, all within the 10 millisecond real-time budget of the 6G standard."
+Par ailleurs, nous entrons maintenant dans l'ère de la 6G — la prochaine génération de communications mobiles, avec des fréquences térahertz, des surfaces réfléchissantes intelligentes et une latence ultra-faible. Cela ouvre de nouvelles possibilités pour les réseaux de capteurs, mais aussi de nouvelles complexités à gérer.
 
----
-
-## SLIDE 7 — Methodological Approach
-
-> *Keep it brief — the jury already knows DSR.*
-
-"Methodologically, this work follows the Design Science Research framework — a rigorous approach for research that produces concrete artifacts, in this case three software frameworks.
-
-The three articles follow a deliberate progression: GAPF is the foundation — it solves efficiency. CALASH extends the work to sustainability. CASTER-ZT adds the protection layer. But notice the feedback arrow — the security layer also protects the gains achieved by the two earlier layers. This is not three independent papers. This is one integrated stack."
+Nous avons donc un environnement exigeant. Voyons maintenant ce qu'il faut précisément résoudre. »
 
 ---
 
-## SLIDE 8 — Common Experimental Protocol
+## DIAPO 5 — Trois défis fondamentaux
 
-> *Establish credibility fast.*
+> *Trois problèmes, trois articles. Annoncer la structure clairement.*
 
-"All three articles share a common evaluation philosophy: simulations anchored in real-world data. We used real sensor traces from the Intel Berkeley Lab, real carbon intensity data from the UK grid API, and real seismic models calibrated on the 2023 Turkey-Syria earthquake — magnitude 7.8.
+« Cette thèse identifie trois défis fondamentaux qu'aucune approche existante n'a résolus simultanément.
 
-In total, across the three articles, we ran more than 23,800 simulations. All results report 95% confidence intervals. This is not a small study."
+**Défi 1 — L'énergie.** Le routage — la manière dont chaque capteur transmet ses données — est le premier facteur déterminant la durée de vie d'un réseau de capteurs. Les méthodes existantes basées sur l'IA nécessitent des dizaines de milliers de paramètres par agent. Elles sont tout simplement trop lourdes pour des appareils embarqués, et aucune ne combine intelligemment plusieurs stratégies selon la topologie du réseau.
 
----
+**Défi 2 — Le carbone.** La plupart des gens pensent à la consommation énergétique. Mais en réalité, le plus grand impact carbone d'un capteur provient de sa *fabrication* — le silicium, la batterie, le boîtier — et non de son fonctionnement. Le carbone incorporé lors de la production est un million de fois supérieur à celui consommé par paquet transmis. Aucun protocole de routage existant ne tient compte de ce cycle de vie complet.
 
-## SLIDE 9 — GAPF: Architecture
+**Défi 3 — La sécurité.** Lorsque l'on intègre l'IA dans la boucle de contrôle, on crée une nouvelle surface d'attaque. Un nœud capteur peut être compromis. La politique de l'IA peut être manipulée. Les défenses existantes sont binaires : autoriser ou bloquer. Mais dans une zone sinistrée, tout bloquer paralyse le réseau. Il faut de la nuance.
 
-> *First article. Spend time on the diagram — it's the core idea.*
-
-"Let me introduce the first article: GAPF — Graph-Attentive Policy Fusion.
-
-The core idea is simple but powerful. Instead of training one large neural network to control routing — which would be too heavy for sensors — I took two existing AI agents that were already trained, QMIX and QTRAN, froze their weights, and built a lightweight meta-controller on top.
-
-This meta-controller — shown here — does two things. The GCN, or Graph Convolutional Network, reads the topology of the sensor network and produces a compact summary of the current state. Then the CAS — the Contextual Algorithm Selector — uses that summary to decide *which expert to trust* in the current moment.
-
-Think of it like a coach who watches two specialists. One specialist is great at coordinating closely-packed teams. The other is better at handling more spread-out formations. The coach watches the field and decides who to listen to. That is GAPF.
-
-The whole meta-controller has only 1,473 trainable parameters. For comparison, a single traditional MARL agent has 39,000 parameters. We are 26 times lighter."
+Ces trois défis — efficacité, durabilité, sécurité — sont ce que cette thèse résout. »
 
 ---
 
-## SLIDE 10 — GAPF: Why Fusion Works
+## DIAPO 6 — Questions et objectifs de recherche
 
-> *This is the scientific justification — keep it accessible.*
+> *Lire la question principale lentement et clairement. C'est l'ancre de la thèse.*
 
-"Why does fusion work? Because QMIX and QTRAN are complementary. QMIX is very good at tight coordination — it guarantees that improving one agent always improves the team. QTRAN handles more complex, non-monotonic interactions. They make different mistakes in different situations. By combining them contextually, we get the best of both.
+« La question de recherche principale qui guide cette thèse est la suivante :
 
-We also introduced a novel component: the monotonic attention network, which scalarizes the multi-objective reward — energy, delivery rate, latency — in a way that is mathematically guaranteed never to rank a worse solution higher than a better one. This is a formal property called Pareto monotonicity, which existing methods do not guarantee."
+*"Comment concevoir une pile de protocoles de routage intelligents — efficace en énergie, durable en carbone, et sécurisée — pour des réseaux de capteurs natifs IA intégrés à la 6G ?"*
 
----
-
-## SLIDE 11 — GAPF: Key Results
-
-> *Numbers — state them clearly and with confidence.*
-
-"The results speak for themselves. Compared to the best existing method, QMIX:
-
-- Packet delivery rate went from 46–67% up to **98% and above** — an improvement of 43 to 111%.
-- Energy consumption dropped to **less than half** — 2 to 3.5 times lower.
-- The model fits in **5.8 kilobytes** — directly deployable on a 10-dollar ARM microcontroller, no compression needed.
-- Training memory dropped from up to 14 gigabytes to under 1 gigabyte.
-
-This was validated on 21,000 simulation episodes across 7 different network scenarios ranging from 20 to 100 sensors."
+J'ai traduit cette question en trois questions spécifiques et trois objectifs précis — un par article. Je ne les lirai pas tous maintenant, mais je veux que vous remarquiez que chaque objectif dispose d'une cible mesurable : taux de livraison de paquets supérieur à 98 %, réduction carbone de 33 %, zéro faux positif en sécurité, le tout dans le budget de latence de 10 millisecondes imposé par la norme 6G. »
 
 ---
 
-## SLIDE 12 — CALASH: Architecture
+## DIAPO 7 — Approche méthodologique
 
-> *Second article. Explain the lifecycle insight clearly — it's counterintuitive.*
+> *Adressez-vous à toute la salle, pas seulement au jury. La famille ne connaît pas la DSR.*
 
-"The second article is CALASH — Carbon-Aware Lifecycle Autonomous Self-Healing.
+« Sur le plan méthodologique, cette thèse suit une approche appelée Recherche en Science du Design. Concrètement, cela signifie que l'objectif n'est pas seulement de comprendre un phénomène, mais de *construire quelque chose* — et de prouver que ça fonctionne. Comme un architecte qui ne se contente pas d'étudier les bâtiments, mais qui en conçoit un, le construit, et mesure s'il tient debout. Ici, j'ai construit trois outils logiciels, et je les ai testés rigoureusement.
 
-Before I explain the architecture, let me share the key insight that motivated it. When you think about the carbon footprint of a sensor, you probably think about the electricity it uses. But the manufacturing of the sensor — the silicon, the battery, the casing — costs one million times more carbon per packet than the electricity consumed during operation. The only way to amortize that embedded carbon is to maximize the number of *useful packets* the sensor delivers over its lifetime.
-
-This is the fundamental principle: the greener routing strategy is the one that keeps the network alive longer and delivers more data efficiently.
-
-CALASH implements this through four pillars, each handling one part of the lifecycle:
-
-- **CADR** adapts how much data is compressed based on how dirty the electrical grid is right now.
-- **CARE** makes routing decisions using a hybrid Lyapunov optimization with a virtual carbon queue — a mathematical mechanism that enforces a long-term carbon budget.
-- **SHDR** is the self-healing component — it monitors the network, detects dead nodes after a disaster, and automatically rebuilds the topology.
-- **LSE** tracks the full lifecycle carbon using a metric we call LCI — Lifecycle Carbon Intensity — expressed in grams of CO2 per useful packet delivered, compliant with the ISO 14040 standard.
-
-All of this runs over a 6G dual-band physical layer — using both sub-terahertz for high throughput and traditional sub-6 GHz for coverage, with intelligent reflecting surfaces."
+Ces trois outils suivent une progression délibérée : le premier résout l'efficacité énergétique, le deuxième étend le travail à l'impact carbone, le troisième ajoute la sécurité. Et — c'est important — ils se protègent mutuellement. Ce n'est pas trois projets séparés mis bout à bout. C'est une seule pile intégrée. »
 
 ---
 
-## SLIDE 13 — CALASH: Four Pillars
+## DIAPO 8 — Protocole expérimental commun
 
-> *Optional deeper dive — can skim if short on time.*
+> *Établir la crédibilité rapidement.*
 
-"To summarize the four pillars briefly: CADR is the data reduction layer — compress more when the grid is dirty, less when it's clean. CARE is the routing brain — it uses Lyapunov mathematics to prove that it simultaneously converges toward maximum delivery AND stays within a carbon budget. SHDR is the resilience layer — MAPE-K autonomic loop that rebuilds the network after damage. And LSE is the accounting layer — it tracks the full environmental cost of every decision."
+« Les trois articles partagent une philosophie d'évaluation commune : des simulations ancrées dans des données réelles. Nous avons utilisé de vraies traces de capteurs du laboratoire Intel Berkeley, de vraies données d'intensité carbone de l'API du réseau électrique britannique, et de vrais modèles sismiques calibrés sur le séisme Turquie-Syrie 2023 — magnitude 7,8.
 
----
-
-## SLIDE 14 — CALASH: Key Results
-
-> *Again, numbers with confidence.*
-
-"CALASH results, compared to LEACH — the standard baseline:
-
-- Network lifetime: from 931 rounds to **1,486 rounds** — **60% longer**.
-- Packet delivery ratio: **82.9%** — high even in harsh disaster conditions.
-- Carbon footprint per packet: from 13.42 down to **8.99 grams of CO2 equivalent** — a **33% reduction**.
-
-This was validated on 390 runs with 30 independent Monte Carlo seeds, using real carbon intensity data from four different national grids — France, Germany, Poland, Norway — showing the gains are robust regardless of the energy mix."
+Au total, sur les trois articles, nous avons effectué plus de 23 800 simulations. Tous les résultats reportent des intervalles de confiance à 95 %. Ce n'est pas une étude à petite échelle. »
 
 ---
 
-## SLIDE 15 — CASTER-ZT: Architecture
+## DIAPO 9 — GAPF : Architecture
 
-> *Third article. Lead with the threat, then the solution.*
+> *Premier article. Prendre le temps sur le schéma — c'est l'idée centrale.*
 
-"The third article is CASTER-ZT — and it addresses a problem that is rarely discussed in sensor network research: what happens when the AI itself is compromised?
+« Permettez-moi de vous présenter le premier article : GAPF — Graph-Attentive Policy Fusion, ou Fusion de Politiques par Attention sur Graphe.
 
-When you put AI in the control loop of a disaster-monitoring network, you are trusting that AI to make the right routing decisions. But what if a sensor node has been hacked and is broadcasting false information? What if the AI policy — trained to recover from failures — has been manipulated to route packets into the void?
+L'idée centrale est simple mais puissante. Au lieu d'entraîner un grand réseau de neurones pour contrôler le routage — ce qui serait trop lourd pour les capteurs —, j'ai pris deux agents IA déjà entraînés, QMIX et QTRAN, bloqué leurs poids, et construit un méta-contrôleur léger par-dessus.
 
-Existing solutions are binary: allow or block. But in a critical mission, blocking every suspicious decision shuts down the network. You need graduated responses.
+Ce méta-contrôleur fait deux choses. Le GCN, ou Réseau de Convolution sur Graphe, lit la topologie du réseau de capteurs et produit un résumé compact de l'état courant. Ensuite, le CAS — le Sélecteur Contextuel d'Algorithme — utilise ce résumé pour décider quel expert écouter dans la situation présente.
 
-CASTER-ZT introduces a zero-trust decision shield — inspired by the NIST SP 800-207 standard. Every decision proposed by the AI goes through a verification pipeline. The GraphSAGE encoder reads the network topology. The policy head proposes an action. Then four evaluators assess: Is the source trustworthy? Is this action risky? Does it diverge from normal behavior? Is the actor even authorized to act?
+Imaginez un entraîneur qui observe deux spécialistes. L'un est excellent pour coordonner des équipes très regroupées. L'autre est meilleur pour des formations plus dispersées. L'entraîneur regarde le terrain et décide qui écouter. C'est GAPF.
 
-The zero-trust shield then issues one of five graduated decisions — shown at the bottom: Allow, Scope-reduce, Defer, Escalate, or Block.
-
-Crucially, the shield itself is **deterministic** — 14 scalar parameters, no learning. It cannot be fooled by adversarial examples because it does not rely on neural network outputs to make its final decision."
+L'ensemble du méta-contrôleur n'a que 1 473 paramètres entraînables. À titre de comparaison, un seul agent MARL traditionnel en compte 39 000. Nous sommes 26 fois plus légers. »
 
 ---
 
-## SLIDE 16 — CASTER-ZT: Results
+## DIAPO 10 — GAPF : Pourquoi la fusion fonctionne
 
-> *Zero false positives is the headline — emphasize it.*
+> *Commencez par l'analogie. Ne dites le nom technique qu'après.*
 
-"CASTER-ZT results:
+« Pourquoi la fusion fonctionne-t-elle ? Parce que les deux algorithmes que j'ai combinés sont bons dans des situations différentes — et mauvais dans des situations différentes. QMIX excelle quand les capteurs sont proches et doivent se coordonner serré. QTRAN est meilleur quand les interactions sont plus complexes. En laissant un méta-contrôleur choisir lequel écouter selon la situation, on ne garde que le meilleur de chacun.
 
-- Rogue policy detection: **74 to 98%** depending on attack type.
-- False positives: **zero percent** — the shield never incorrectly blocks a legitimate action. Never. This is formally guaranteed, not just empirically observed.
-- Recovery score: 0.733 — 3.7 to 5.2 times better than existing methods.
-- Decision latency: **3.07 milliseconds** — well within the 10ms real-time budget mandated by the O-RAN standard for 6G control loops.
+Pensez à deux médecins spécialistes : l'un est cardiologue, l'autre pneumologue. Un généraliste intelligent ne choisit pas l'un pour toujours — il écoute le cardiologue quand il s'agit du cœur, et le pneumologue quand il s'agit des poumons. C'est exactement ce que fait GAPF.
 
-This was validated on 2,420 simulation runs, tested against four attack scenarios including coordinated rogue policies and out-of-distribution hallucinations."
+Nous avons aussi résolu un problème classique de décision multi-critères : comment comparer énergie, fiabilité et rapidité sur une seule échelle ? Nous avons introduit un mécanisme mathématique qui garantit formellement que si une solution est meilleure sur tous les critères à la fois, elle sera toujours classée au-dessus. Cette garantie n'existe dans aucune méthode existante. »
 
 ---
 
-## SLIDE 17 — Protocol Stack Synergies
+## DIAPO 11 — GAPF : Résultats clés
 
-> *This is the thesis's key insight beyond the three individual contributions.*
+> *Les chiffres — les énoncer clairement et avec assurance.*
 
-"Now let me take a step back and explain why these three frameworks form a *stack* rather than three separate papers.
+« Les résultats parlent d'eux-mêmes. Par rapport à la meilleure méthode existante, QMIX :
 
-The synergies are real and directional:
+- Le taux de livraison de paquets est passé de 46 à 67 % jusqu'à 98 % et plus — une amélioration de 43 à 111 %.
+- La consommation énergétique a chuté à moins de la moitié — 2 à 3,5 fois plus faible.
+- Le modèle tient dans 5,8 kilo-octets — déployable directement sur un microcontrôleur ARM à 10 dollars, sans compression.
+- La mémoire d'entraînement est passée de 14 gigaoctets à moins d'un gigaoctet.
 
-- GAPF delivers data efficiently — which directly reduces operational carbon. More efficient routing means less energy per packet, which means lower CO2.
-- CALASH reduces data volume through compression — which reduces the number of transmissions — which reduces the attack surface that CASTER-ZT needs to monitor.
-- CASTER-ZT protects the entire stack — if it didn't exist, a single compromised node could invalidate all the efficiency and sustainability gains of GAPF and CALASH.
-
-The whole stack costs approximately 27,000 trainable parameters — comparable to a single traditional MARL agent. We achieve efficiency, sustainability, AND security at the cost of a single baseline algorithm."
-
----
-
-## SLIDE 18 — Overall Quantitative Summary
-
-> *The jury will look at this table carefully. Walk through it row by row.*
-
-"Let me give you the complete quantitative picture. This table summarizes all gains across the three articles compared to the best existing baselines:
-
-- Packet delivery: from 46–67% up to 98%. Improvement of 43 to 111%.
-- Energy: 2 to 3.5 times lower per packet.
-- Parameters: 26 times fewer — 1,473 versus 39,000.
-- Network lifetime: 60% longer.
-- Carbon footprint: 33% lower.
-- Security: 74 to 98% detection with zero false positives — the previous best had 48.8% false positives.
-- Decision latency: 3.3 times faster than the O-RAN budget.
-- Coverage of the 12 gap criteria identified in the literature review: 12 out of 12.
-
-No existing approach covers more than 1 of those 12 criteria. We cover all 12."
+Ceci a été validé sur 21 000 épisodes de simulation couvrant 7 scénarios réseau différents, de 20 à 100 capteurs. »
 
 ---
 
-## SLIDE 19 — TinyML Deployability
+## DIAPO 12 — CALASH : Architecture
 
-> *This slide shows practical impact — make it tangible.*
+> *Deuxième article. Expliquer l'intuition sur le cycle de vie — c'est contre-intuitif.*
 
-"One of the most important practical results of this thesis is deployability. The complete protocol stack — all three frameworks combined — requires 27,000 parameters and fits in 103 kilobytes. That's less than a small image file.
+« Le deuxième article est CALASH — Carbon-Aware Lifecycle Autonomous Self-Healing, soit Récupération Autonome Consciente du Carbone sur Cycle de Vie.
 
-For context: MCUNet, the current state of the art for deploying deep learning on microcontrollers, deploys about 1 million parameters. Our stack is **38 times lighter**.
+Avant d'expliquer l'architecture, permettez-moi de partager l'intuition centrale qui le motive. Quand vous pensez à l'empreinte carbone d'un capteur, vous pensez probablement à l'électricité qu'il consomme. Mais la fabrication du capteur — le silicium, la batterie, le boîtier — coûte un million de fois plus de carbone par paquet que l'électricité consommée pendant le fonctionnement. La seule façon d'amortir ce carbone incorporé est de maximiser le nombre de paquets utiles livrés par le capteur au cours de sa vie.
 
-This means the complete AI system can run on microcontrollers that cost a few dollars. This is crucial — 95% of disaster deaths occur in developing countries. A solution that requires expensive hardware helps no one. A solution deployable on a $5 chip can save lives."
+C'est le principe fondamental : la stratégie de routage la plus écologique est celle qui fait vivre le réseau plus longtemps et livre plus de données efficacement.
 
----
+CALASH met en oeuvre cela à travers quatre piliers, chacun gérant une partie du cycle de vie :
 
-## SLIDE 20 — Six Original Scientific Contributions
+- Le premier pilier, CADR, adapte la compression des données selon la propreté du réseau électrique à l'instant T. Quand l'électricité vient principalement du charbon, on compresse davantage pour transmettre moins. Quand elle vient du solaire ou de l'hydraulique, on envoie plus de données.
+- Le deuxième pilier, CARE, prend les décisions de routage avec un mécanisme mathématique — inspiré des travaux du mathématicien Lyapunov sur la stabilité des systèmes — qui garantit qu'on maximise les livraisons de données TOUT EN respectant un budget carbone à long terme. Imaginez un comptable qui gère un budget mensuel : il peut dépenser plus un jour, mais il sait qu'il devra compenser les jours suivants. C'est exactement ce que fait ce mécanisme, appliqué au carbone.
+- Le troisième pilier, SHDR, est le composant d'auto-réparation : après une catastrophe, des capteurs meurent. Ce pilier surveille en permanence l'état du réseau et reconstruit automatiquement les chemins de communication — comme un GPS qui recalcule l'itinéraire quand une route est coupée.
+- Le quatrième pilier, LSE, est la couche de comptabilité carbone : il calcule, pour chaque paquet livré, le coût carbone total depuis la fabrication du capteur jusqu'à sa fin de vie, selon la norme internationale ISO 14040.
 
-> *Read each contribution with one sentence of context.*
-
-"Let me now enumerate the six original contributions of this thesis:
-
-**C1** — The first framework that uses a graph neural network to fuse multiple MARL policies for routing in sensor networks. The GNN+CAS paradigm is transferable to any multi-agent system.
-
-**C2** — The first monotonic attention network for multi-objective reward scalarization in routing. Pareto monotonicity is formally guaranteed — a property absent from all existing scalarization methods.
-
-**C3** — The first Lifecycle Carbon Intensity metric for sensor networks, compliant with ISO 14040. This metric can be adopted as a standard benchmark for any IoT protocol evaluation.
-
-**C4** — The first four-pillar routing protocol with mathematical Lyapunov guarantees on both delivery rate and carbon budget simultaneously.
-
-**C5** — The first zero-trust decision control framework for AI-native networks, with five graduated decisions, ten formal propositions, and a deterministic explainable shield.
-
-**C6** — A demonstration that energy efficiency, carbon sustainability, and security are not trade-offs. They reinforce each other. This is a systemic result."
+Tout cela fonctionne au-dessus d'une couche physique 6G double bande — utilisant à la fois le sub-térahertz pour le haut débit et le sub-6 GHz classique pour la couverture, avec des surfaces réfléchissantes intelligentes. »
 
 ---
 
-## SLIDE 21 — Impact and SDG Alignment
+## DIAPO 13 — CALASH : Les quatre piliers
 
-> *Brief — connect to real-world stakeholders.*
+> *Cette diapo est un résumé visuel. Parlez lentement, montrez chaque pilier du doigt.*
 
-"These contributions have concrete implications across three stakeholder groups.
+« Pour résumer les quatre piliers en une phrase chacun : CADR compresse les données quand l'électricité est sale. CARE route les paquets en respectant un budget carbone avec garantie mathématique. SHDR répare automatiquement le réseau après une catastrophe. Et LSE mesure le coût carbone total, de la fabrication à la mise au rebut.
 
-For **industry**: the 5.8 KB GAPF model eliminates the need for costly edge gateways. The 60% lifetime improvement reduces maintenance costs. The LCI metric provides a standardized tool for sustainability reporting under CSRD regulations. The auditable shield simplifies IEC 62443 certification.
-
-For **governments**: the LCI offers a standardized IoT indicator that regulators can mandate. GAPF and CALASH contribute directly to two Sendai Framework indicators — C-2 and C-6 — which measure early warning coverage. All algorithms are open-access, no vendor dependency.
-
-For **society** and the United Nations SDGs: we contribute to SDG 9 (resilient infrastructure), SDG 11 (reduce disaster deaths), SDG 12 (sustainable production), SDG 13 (climate action), and SDG 16 (transparent institutions)."
+Ce qui est remarquable, c'est que ces quatre piliers fonctionnent ensemble en temps réel, sur un microcontrôleur qui coûte quelques euros. »
 
 ---
 
-## SLIDE 22 — Acknowledged Limitations
+## DIAPO 14 — CALASH : Résultats clés
 
-> *Be direct and confident. Knowing your limits shows scientific maturity.*
+> *À nouveau, les chiffres avec assurance.*
 
-"I want to be transparent about the limitations of this work.
+« Résultats de CALASH, comparés à LEACH — la référence standard :
 
-Methodologically: all results are simulation-based. We used real-world data for calibration, but we have not yet validated on physical hardware. The disaster model uses a Gaussian spatial distribution — adequate for earthquakes, but not for slow-moving floods or wildfires. The 6G physical layer uses analytical models, not full 3D ray tracing.
+- Durée de vie du réseau : de 931 à 1 486 rounds — 60 % plus long.
+- Taux de livraison de paquets : 82,9 % — élevé même dans des conditions de catastrophe difficiles.
+- Empreinte carbone par paquet : de 13,42 à 8,99 grammes de CO2 équivalent — une réduction de 33 %.
 
-Technically: the three frameworks have not been integrated and tested as a unified system. Their performance beyond 200 nodes is not characterized. The security model assumes static adversaries — adaptive attackers who learn to evade the shield are not covered. And we have not conducted user studies with emergency responders.
-
-These are honest limitations. They define exactly what the next phase of this research must address."
-
----
-
-## SLIDE 23 — Future Research Directions
-
-> *Forward-looking and energetic. This is the opening, not the closing.*
-
-"The roadmap ahead is clear.
-
-In the **short term** — one to two years — the priority is integration: combining the three layers into one system and testing on real hardware like the Zolertia RE-Mote or NVIDIA Jetson. We also need more realistic disaster models.
-
-In the **medium term** — two to four years — federated learning allows training without centralizing sensitive data. Digital twins provide a continuous simulation environment for policy updates before deployment. Formal verification using theorem provers like Coq would allow certification of the shield for safety-critical systems.
-
-In the **long term** — four-plus years — we are looking at non-terrestrial networks: LEO satellites, high-altitude platforms, drones as mobile base stations after a disaster. We are also looking at standardization — submitting the LCI metric and the zero-trust framework to ISO, ETSI, and 3GPP.
-
-And beyond disaster monitoring — the same principles apply to precision agriculture, smart cities, connected healthcare, and drone swarms."
+Ceci a été validé sur 390 simulations avec 30 graines Monte Carlo indépendantes, en utilisant des données réelles d'intensité carbone de quatre réseaux électriques nationaux — France, Allemagne, Pologne, Norvège — montrant que les gains sont robustes quel que soit le mix énergétique. »
 
 ---
 
-## SLIDE 24 — Conclusion
+## DIAPO 15 — CASTER-ZT : Architecture
 
-> *This is the moment. Calm, clear, confident.*
+> *Troisième article. Commencer par la menace, puis la solution.*
 
-"To conclude.
+« Le troisième article est CASTER-ZT — et il aborde un problème rarement discuté dans la recherche sur les réseaux de capteurs : que se passe-t-il quand l'IA elle-même est compromise ?
 
-This thesis proposed a complete protocol stack for intelligent routing in 6G-integrated disaster-monitoring sensor networks, built around three complementary frameworks.
+Lorsque vous intégrez l'IA dans la boucle de contrôle d'un réseau de surveillance de catastrophes, vous faites confiance à cette IA pour prendre les bonnes décisions de routage. Mais que se passe-t-il si un noeud a été piraté et diffuse de fausses informations ? Si la politique de l'IA — entraînée à récupérer après des pannes — a été manipulée pour envoyer les paquets dans le vide ?
 
-GAPF solves the energy problem: 1,473 parameters, packet delivery above 98%, energy consumption cut by 2 to 3.5 times.
+Les solutions existantes sont binaires : autoriser ou bloquer. Mais dans une mission critique, bloquer toute décision suspecte paralyse le réseau. Il faut des réponses graduées.
 
-CALASH solves the carbon problem: four pillars, Lyapunov guarantees, 33% carbon reduction, 60% longer network lifetime.
+CASTER-ZT introduit un bouclier de décision à confiance zéro — un concept de cybersécurité qui signifie : *ne faire confiance à personne par défaut, vérifier systématiquement tout le monde*. C'est le même principe que les aéroports : même si vous avez votre carte d'embarquement, vous passez quand même le contrôle de sécurité.
 
-CASTER-ZT solves the security problem: five graduated decisions, zero false positives, 10 formal propositions, 3.07 milliseconds per decision.
+Concrètement : chaque décision proposée par l'IA passe par un pipeline de vérification en quatre questions. La source est-elle fiable ? L'action est-elle anormalement risquée ? Le comportement dévie-t-il de la normale ? L'agent est-il autorisé à prendre ce type de décision ?
 
-The central message of this thesis is this: AI, designed with *parsimony*, *environmental awareness*, and *systematic verification*, is a reliable tool for critical environments.
+Selon les réponses, le bouclier prend l'une des cinq décisions visibles en bas de la diapositive — Autoriser, Réduire la portée, Différer, Escalader, ou Bloquer. Ce n'est pas binaire. C'est gradué, comme un agent de sécurité qui peut soit laisser passer, soit demander une fouille, soit appeler son supérieur, soit bloquer.
 
-We don't need bigger models. We need *smarter* ones."
-
----
-
-## SLIDE 25 — Thank You / Questions
-
-> *Stop. Take a breath. Smile. Let the silence do the work.*
-
-"Thank you for your attention.
-
-I am ready for your questions."
+Fait crucial : le bouclier lui-même ne fait pas d'apprentissage automatique — il ne peut donc pas être trompé par des données fabriquées pour le manipuler. Il applique des règles logiques déterministes. C'est ce qui le rend certifiable pour des systèmes critiques. »
 
 ---
 
-## BACKUP SLIDES — Quick Reference
+## DIAPO 16 — CASTER-ZT : Résultats
 
-### Backup 1 — Convergence and Theoretical Guarantees
-- **GAPF**: QMIX converges within monotonic functions (IGM constraint). QTRAN covers a larger space via affine factorization. CAS acts as a variance reducer (analogous to Wolpert's stacking).
-- **CALASH**: Lyapunov drift-plus-penalty. Converges to within O(1/V) of the optimum. V=100 gives -33% LCI with acceptable latency. CDL bound proves *simultaneous* convergence on both PDR and carbon budget.
-- **CASTER-ZT**: 10 propositions proved by logical construction. Monotone conservatism, unauthorized-actuation exclusion, conformal calibration coverage, bounded security price.
+> *Zéro faux positif est le titre — l'insister.*
 
-### Backup 2 — Gap Analysis (12 criteria)
-No existing approach covered more than 1 of 12 identified criteria. Our stack covers all 12. Criteria include: energy-efficient routing, topology awareness, MARL fusion, Pareto scalarization, lifecycle carbon metric, carbon-aware compression, carbon budget guarantees, self-healing, 6G PHY, rogue detection, graduated decisions, formal security proofs.
+« Résultats de CASTER-ZT :
 
-### Backup 3 — Dec-POMDP Complexity
-Optimal Dec-POMDP is NEXP-complete. CTDE (QMIX, QTRAN) is a structured approximation that reduces joint action space from |A|^n to Σ|A_i|. GAPF adds a meta-level of expert selection. The 98% PDR result is not a proof of global optimality — it is a high-quality approximation validated empirically over 21,000 episodes.
+- Détection de politique malveillante : 74 à 98 % selon le type d'attaque.
+- Faux positifs : zéro pour cent — le bouclier ne bloque jamais incorrectement une action légitime. Jamais. C'est une garantie formelle, pas simplement un résultat empirique.
+- Score de récupération : 0,733 — 3,7 à 5,2 fois supérieur aux méthodes existantes.
+- Latence de décision : 3,07 millisecondes — largement dans le budget temps de 10 ms imposé par la norme O-RAN pour les boucles de contrôle 6G.
 
----
-
-## FREQUENTLY EXPECTED JURY QUESTIONS
-
-**Q: Why not train a single end-to-end policy instead of fusing QMIX and QTRAN?**
-> "Training a single monolithic policy requires the training infrastructure to scale with n agents — 39K parameters each. GAPF exploits the complementarity of two already-proven specialists and adds only 1,473 parameters on top. The portfolio paradigm is well-established in combinatorial optimization. The 26× parameter reduction and the formal Pareto monotonicity guarantee are arguments for this approach over a monolithic one."
-
-**Q: The simulation uses a Gaussian disaster model — how realistic is that?**
-> "The Gaussian model captures the spatial decay of impact from a seismic epicenter. It was calibrated on real ShakeMap data from the Turkey-Syria 2023 earthquake. For slow-moving disasters like floods or wildfires, a different model would be needed — that is explicitly acknowledged as a limitation and motivates the extended disaster model work planned for year 1 of the future research agenda."
-
-**Q: How do you justify the 6G assumption for sensor networks?**
-> "The 6G integration is through the O-RAN architecture — the sensors do not run 6G themselves. The cluster heads communicate with the base station via a 6G dual-band link. This is realistic given the 2030 deployment horizon for 6G, which aligns with when disaster-monitoring systems built today would be in operation."
-
-**Q: CASTER-ZT says zero false positives — is that a guarantee or an empirical result?**
-> "Both. The zero false positive rate is a formal consequence of the shield's correctness property (Proposition 1): the shield only blocks when the composite conservatism score exceeds a calibrated threshold. A legitimate action by definition has low risk and high trust — it will never cross that threshold. The 0% is then confirmed empirically across 2,420 runs."
-
-**Q: How does the LCI metric compare with existing environmental metrics in IoT?**
-> "Existing metrics measure energy per packet (Joules/packet) or operational lifetime. They ignore embodied carbon — the carbon emitted during manufacturing. The LCI metric we define integrates manufacturing, operational, and end-of-life carbon into a single value in gCO2eq per useful packet, following ISO 14040. It is the first metric of this kind for WSN routing protocols. Its adoption as a standard benchmark is a key recommendation to the research community."
-
-**Q: Why was there no hardware deployment?**
-> "Hardware deployment is the next step — it is the first item in the short-term research agenda. The decision to complete simulation evaluation first was deliberate: we needed to validate the algorithms across a large parameter space (21,000 episodes, 7 scenarios) that would be infeasible on physical hardware. The feasibility analysis (Annex E) shows theoretical compatibility with Cortex-M4 at under 1ms inference latency — making the hardware step a validation, not an exploration."
+Cela a été validé sur 2 420 simulations, testées contre quatre scénarios d'attaque incluant des politiques malveillantes coordonnées et des hallucinations hors distribution. »
 
 ---
 
-*Good luck. You've done the work. Trust it.*
+## DIAPO 17 — Synergies de la pile de protocoles
+
+> *C'est l'apport clé de la thèse au-delà des trois contributions individuelles.*
+
+« Permettez-moi maintenant de prendre du recul pour expliquer pourquoi ces trois frameworks forment une pile plutôt que trois articles séparés.
+
+Les synergies sont réelles et directionnelles :
+
+- GAPF livre les données efficacement — ce qui réduit directement le carbone opérationnel. Un routage plus efficace signifie moins d'énergie par paquet, donc moins de CO2.
+- CALASH réduit le volume de données par compression — ce qui réduit le nombre de transmissions — ce qui réduit la surface d'attaque que CASTER-ZT doit surveiller.
+- CASTER-ZT protège l'ensemble de la pile — sans lui, un seul noeud compromis pourrait invalider tous les gains d'efficacité et de durabilité de GAPF et CALASH.
+
+La pile complète coûte environ 27 000 paramètres entraînables — comparable à un seul agent MARL traditionnel. Nous atteignons efficacité, durabilité ET sécurité pour le coût d'un seul algorithme de référence. »
+
+---
+
+## DIAPO 18 — Synthèse quantitative globale
+
+> *Le jury regardera ce tableau attentivement. Parcourez-le ligne par ligne.*
+
+« Laissez-moi vous donner le tableau complet. Ce tableau résume tous les gains sur les trois articles par rapport aux meilleures références existantes :
+
+- Livraison de paquets : de 46 à 67 % jusqu'à 98 %. Amélioration de 43 à 111 %.
+- Énergie : 2 à 3,5 fois moins par paquet.
+- Paramètres : 26 fois moins — 1 473 contre 39 000.
+- Durée de vie du réseau : 60 % plus longue.
+- Empreinte carbone : 33 % réduite.
+- Sécurité : 74 à 98 % de détection avec zéro faux positif — la meilleure méthode précédente avait 48,8 % de faux positifs.
+- Latence de décision : 3,3 fois plus rapide que le budget O-RAN.
+- Couverture des 12 critères de lacune identifiés dans la revue de littérature : 12 sur 12.
+
+Aucune approche existante ne couvre plus d'un de ces 12 critères. Nous couvrons les 12. »
+
+---
+
+## DIAPO 19 — Déployabilité TinyML
+
+> *Cette diapositive parle à tout le monde. Regardez la salle entière.*
+
+« L'un des résultats pratiques les plus importants de cette thèse est la taille du système. La pile complète — les trois frameworks combinés — tient dans 103 kilo-octets. Pour vous donner une idée : c'est moins qu'un emoji animé sur WhatsApp.
+
+Cela signifie que l'intelligence artificielle complète — celle qui gère l'énergie, le carbone, ET la sécurité — peut tourner sur une puce qui coûte 5 dollars et se tient dans votre ongle. Pas besoin d'un serveur. Pas besoin d'une connexion cloud permanente.
+
+Pourquoi est-ce si important ? Parce que 95 % des décès causés par les catastrophes naturelles surviennent dans des pays à revenus faibles ou moyens. Si notre système avait besoin de matériel à 500 dollars par capteur, il ne serait jamais déployé là où il est le plus nécessaire. En tenant dans 5 dollars de silicium, il peut aller partout. »
+
+---
+
+## DIAPO 20 — Six contributions scientifiques originales
+
+> *Lire chaque contribution avec une phrase de contexte.*
+
+« Cette thèse compte six contributions originales reconnues par la communauté scientifique. Permettez-moi de les présenter en langage clair.
+
+Premièrement : j'ai créé la première méthode qui combine intelligemment plusieurs algorithmes d'IA pour le routage de capteurs, en choisissant le meilleur selon le contexte. Cela n'existait pas.
+
+Deuxièmement : j'ai introduit un mécanisme mathématique qui garantit que quand on compare plusieurs critères à la fois — énergie, fiabilité, rapidité — le classement final est toujours cohérent et ne peut pas favoriser une solution inférieure. Une garantie formelle qui manquait dans tous les travaux précédents.
+
+Troisièmement : j'ai créé la première métrique qui mesure l'empreinte carbone complète d'un réseau de capteurs — de la fabrication à la mise au rebut — en grammes de CO₂ par paquet livré. Un outil de mesure standardisé qui n'existait nulle part.
+
+Quatrièmement : j'ai construit le premier protocole de routage qui tient simultanément deux promesses mathématiquement prouvées : livrer un maximum de données ET rester dans un budget carbone.
+
+Cinquièmement : j'ai conçu le premier bouclier de sécurité pour réseaux IA qui répond de façon graduée — cinq niveaux de décision — avec des garanties formelles écrites noir sur blanc sous forme de propositions mathématiques.
+
+Sixièmement, et peut-être le plus important : j'ai démontré que l'efficacité, la durabilité et la sécurité ne sont pas trois objectifs contradictoires. Ils se renforcent. C'est un résultat de fond qui change la façon dont on doit concevoir ces systèmes. »
+
+---
+
+## DIAPO 21 — Impact et alignement avec les ODD
+
+> *Court — connecter aux parties prenantes réelles.*
+
+« Ces contributions ont des implications concrètes pour trois groupes de parties prenantes.
+
+Pour l'industrie : le modèle GAPF de 5,8 ko élimine le besoin de passerelles périphériques coûteuses. L'amélioration de 60 % de la durée de vie réduit les coûts de maintenance. La métrique LCI fournit un outil standardisé pour les rapports de durabilité dans le cadre de la réglementation CSRD. Le bouclier auditable simplifie la certification IEC 62443.
+
+Pour les gouvernements : la LCI offre un indicateur IoT standardisé que les régulateurs peuvent imposer. GAPF et CALASH contribuent directement à deux indicateurs du Cadre de Sendai — C-2 et C-6 — qui mesurent la couverture des systèmes d'alerte précoce. Tous les algorithmes sont en accès libre, sans dépendance à un fournisseur.
+
+Pour la société et les Objectifs de Développement Durable des Nations Unies : nous contribuons à l'ODD 9 (infrastructures résilientes), l'ODD 11 (réduire les décès dus aux catastrophes), l'ODD 12 (production durable), l'ODD 13 (action climatique), et l'ODD 16 (institutions transparentes). »
+
+---
+
+## DIAPO 22 — Limites reconnues
+
+> *Soyez direct et confiant. Connaître ses limites démontre la maturité scientifique.*
+
+« Je souhaite être transparent sur les limites de ce travail.
+
+Sur le plan méthodologique : tous les résultats sont basés sur des simulations. Nous avons utilisé des données réelles pour la calibration, mais nous n'avons pas encore validé sur du matériel physique. Le modèle de catastrophe utilise une distribution spatiale gaussienne — adéquate pour les séismes, mais pas pour les inondations à évolution lente ou les feux de forêt. La couche physique 6G utilise des modèles analytiques, pas de tracé de rayons 3D complet.
+
+Sur le plan technique : les trois frameworks n'ont pas été intégrés et testés en tant que système unifié. Leurs performances au-delà de 200 noeuds ne sont pas caractérisées. Le modèle de sécurité suppose des adversaires statiques — des attaquants adaptatifs qui apprennent à contourner le bouclier ne sont pas couverts. Et nous n'avons pas conduit d'études utilisateurs avec des intervenants d'urgence.
+
+Ce sont des limites honnêtes. Elles définissent précisément ce que la prochaine phase de cette recherche doit aborder. »
+
+---
+
+## DIAPO 23 — Perspectives de recherche
+
+> *Tournée vers l'avenir et énergique. C'est une ouverture, pas une clôture.*
+
+« La feuille de route à venir est claire.
+
+À court terme — un à deux ans — la priorité est l'intégration : combiner les trois couches en un seul système et tester sur du vrai matériel comme le Zolertia RE-Mote ou le NVIDIA Jetson. Nous avons aussi besoin de modèles de catastrophe plus réalistes.
+
+À moyen terme — deux à quatre ans — l'apprentissage fédéré permet l'entraînement sans centraliser les données sensibles. Les jumeaux numériques fournissent un environnement de simulation continu pour les mises à jour de politiques avant déploiement. La vérification formelle par des prouveurs de théorèmes comme Coq permettrait la certification du bouclier pour des systèmes critiques pour la sécurité.
+
+À long terme — plus de quatre ans — nous regardons les réseaux non-terrestres : satellites LEO, plateformes haute altitude, drones comme stations de base mobiles après une catastrophe. Nous regardons aussi la standardisation — soumettre la métrique LCI et le framework à confiance zéro à l'ISO, l'ETSI et le 3GPP.
+
+Et au-delà de la surveillance des catastrophes — les mêmes principes s'appliquent à l'agriculture de précision, aux villes intelligentes, à la santé connectée et aux essaims de drones. »
+
+---
+
+## DIAPO 24 — Conclusion
+
+> *C'est le moment. Calme, clair, confiant.*
+
+« Pour conclure.
+
+Cette thèse a proposé une pile de protocoles complète pour le routage intelligent dans des réseaux de capteurs intégrés à la 6G pour la surveillance de catastrophes, construite autour de trois frameworks complémentaires.
+
+GAPF résout le problème énergétique : 1 473 paramètres, taux de livraison supérieur à 98 %, consommation énergétique réduite de 2 à 3,5 fois.
+
+CALASH résout le problème du carbone : quatre piliers, garanties de Lyapunov, réduction carbone de 33 %, durée de vie du réseau 60 % plus longue.
+
+CASTER-ZT résout le problème de sécurité : cinq décisions graduées, zéro faux positif, 10 propositions formelles, 3,07 millisecondes par décision.
+
+Le message central de cette thèse est le suivant : l'IA, conçue avec parcimonie, conscience environnementale, et vérification systématique, est un outil fiable pour les environnements critiques.
+
+Nous n'avons pas besoin de modèles plus grands. Nous avons besoin de modèles plus intelligents. »
+
+---
+
+## DIAPO 25 — Merci / Questions
+
+> *Arrêtez-vous. Respirez. Souriez. Laissez le silence faire son effet.*
+
+« Je vous remercie de votre attention.
+
+Je suis maintenant disponible pour répondre à vos questions. »
+
+---
+
+## DIAPOSITIVES DE SECOURS — Aide-mémoire rapide
+
+### Secours 1 — Garanties de convergence et fondements théoriques
+- **GAPF** : QMIX converge dans les fonctions monotones (contrainte IGM). QTRAN couvre un espace plus large via la factorisation affine. Le CAS agit comme un réducteur de variance (analogue au stacking de Wolpert).
+- **CALASH** : Dérive de Lyapunov plus pénalité. Converge à O(1/V) de l'optimum. V=100 donne -33 % de LCI avec une latence acceptable. La borne CDL prouve la convergence simultanée sur le taux de livraison et le budget carbone.
+- **CASTER-ZT** : 10 propositions prouvées par construction logique. Conservatisme monotone, exclusion d'actuation non autorisée, couverture de calibration conforme, prix de sécurité borné.
+
+### Secours 2 — Analyse des lacunes (12 critères)
+Aucune approche existante ne couvrait plus d'1 critère sur 12 identifiés. Notre pile couvre les 12. Les critères comprennent : routage écoénergétique, conscience de la topologie, fusion MARL, scalarisation de Pareto, métrique carbone du cycle de vie, compression consciente du carbone, garanties de budget carbone, auto-réparation, PHY 6G, détection de politique malveillante, décisions graduées, preuves formelles de sécurité.
+
+### Secours 3 — Complexité Dec-POMDP
+Le Dec-POMDP optimal est NEXP-complet. Le CTDE (QMIX, QTRAN) est une approximation structurée qui réduit l'espace d'actions jointes de |A|^n à somme de |A_i|. GAPF ajoute un niveau méta de sélection d'experts. Le résultat de 98 % de taux de livraison n'est pas une preuve d'optimalité globale — c'est une approximation de haute qualité validée empiriquement sur 21 000 épisodes.
+
+---
+
+## QUESTIONS FRÉQUEMMENT ATTENDUES DU JURY
+
+**Q : Pourquoi ne pas entraîner une seule politique de bout en bout plutôt que de fusionner QMIX et QTRAN ?**
+> « Entraîner une politique monolithique unique nécessite que l'infrastructure d'entraînement s'adapte à n agents — 39 000 paramètres chacun. GAPF exploite la complémentarité de deux spécialistes déjà éprouvés et n'ajoute que 1 473 paramètres par-dessus. Le paradigme de portefeuille est bien établi en optimisation combinatoire. La réduction des paramètres par 26 et la garantie formelle de monotonicité de Pareto sont des arguments en faveur de cette approche par rapport à une approche monolithique. »
+
+**Q : La simulation utilise un modèle gaussien de catastrophe — est-ce réaliste ?**
+> « Le modèle gaussien capture la décroissance spatiale de l'impact à partir d'un épicentre sismique. Il a été calibré sur les données réelles de ShakeMap du séisme Turquie-Syrie 2023. Pour les catastrophes à évolution lente comme les inondations ou les feux de forêt, un modèle différent serait nécessaire — c'est explicitement reconnu comme une limite et motive le travail sur des modèles de catastrophe étendus prévu en année 1 de l'agenda de recherche future. »
+
+**Q : Comment justifiez-vous l'hypothèse 6G pour les réseaux de capteurs ?**
+> « L'intégration 6G se fait via l'architecture O-RAN — les capteurs eux-mêmes ne fonctionnent pas en 6G. Les têtes de cluster communiquent avec la station de base via un lien double bande 6G. C'est réaliste étant donné l'horizon de déploiement 6G en 2030, qui correspond au moment où les systèmes de surveillance de catastrophes construits aujourd'hui seront en opération. »
+
+**Q : CASTER-ZT annonce zéro faux positif — est-ce une garantie ou un résultat empirique ?**
+> « Les deux. Le taux de zéro faux positif est une conséquence formelle de la propriété de correction du bouclier (Proposition 1) : le bouclier ne bloque que lorsque le score composite de conservatisme dépasse un seuil calibré. Une action légitime, par définition, a un risque faible et une confiance élevée — elle ne franchira jamais ce seuil. Le 0 % est ensuite confirmé empiriquement sur 2 420 simulations. »
+
+**Q : Comment la métrique LCI se compare-t-elle aux métriques environnementales existantes dans l'IoT ?**
+> « Les métriques existantes mesurent l'énergie par paquet (Joules/paquet) ou la durée de vie opérationnelle. Elles ignorent le carbone incorporé — le carbone émis lors de la fabrication. La métrique LCI que nous définissons intègre le carbone de fabrication, opérationnel et de fin de vie en une seule valeur en gCO2eq par paquet utile, selon la norme ISO 14040. C'est la première métrique de ce type pour les protocoles de routage dans les réseaux de capteurs. Son adoption comme référence standard est une recommandation clé à la communauté de recherche. »
+
+**Q : Pourquoi n'y a-t-il pas eu de déploiement sur matériel réel ?**
+> « Le déploiement sur matériel est l'étape suivante — c'est le premier point de l'agenda de recherche à court terme. La décision de compléter d'abord l'évaluation par simulation était délibérée : nous devions valider les algorithmes sur un grand espace de paramètres (21 000 épisodes, 7 scénarios) qui serait infaisable sur du matériel physique. L'analyse de faisabilité (Annexe E) montre la compatibilité théorique avec le Cortex-M4 pour une latence d'inférence inférieure à 1 ms — faisant de l'étape matérielle une validation, non une exploration. »
+
+---
+
+*Bonne chance. Vous avez fait le travail. Faites-lui confiance.*
