@@ -27,6 +27,42 @@ Malgré ces avancées technologiques majeures, trois défis fondamentaux demeure
 
 
 %%
+%%  DÉFINITIONS DES CONCEPTS CLÉS
+%%
+\section{Définitions des concepts clés}\label{sec:intro-definitions}
+
+Cette section définit les termes fondamentaux utilisés tout au long de la thèse, afin d'en faciliter la lecture par des lecteurs de disciplines variées.
+
+\subsection*{Réseau de capteurs sans fil (WSN)}
+
+Un \textbf{réseau de capteurs sans fil} (\emph{Wireless Sensor Network}, WSN) est un ensemble de petits dispositifs électroniques autonomes --- appelés \emph{nœuds capteurs} --- capables de mesurer des grandeurs physiques (température, humidité, vibrations, niveau d'eau), de traiter localement ces mesures et de les transmettre sans fil, en coopération, vers une station de base (\emph{Base Station}, BS) connectée à l'infrastructure d'information. Chaque nœud est alimenté par une batterie non rechargeable, dispose d'une capacité de calcul limitée (microcontrôleur ARM Cortex-M0/M4, 16--256~KB de RAM) et d'une radio basse consommation. L'enjeu central de la conception d'un WSN est de maximiser la \emph{durée de vie du réseau} --- définie comme le temps écoulé jusqu'à la mort du premier nœud ou jusqu'à la perte de connectivité globale --- en minimisant la consommation énergétique de chaque décision de communication.
+
+\subsection*{Routage multi-sauts}
+
+Le \textbf{routage} désigne le processus par lequel les données captées par un nœud sont acheminées, de relais en relais, jusqu'à la station de base. Dans un WSN, la transmission directe vers la BS est trop coûteuse en énergie lorsque la distance est grande (l'énergie croît avec le carré ou la puissance quatre de la distance). Le \emph{routage multi-sauts} consiste donc à faire transiter les données par des nœuds intermédiaires, appelés \emph{chefs de grappe} (\emph{cluster heads}), qui agrègent et retransmettent les données des nœuds voisins. Le choix des relais --- qui routera quoi, vers qui, quand --- constitue le problème d'optimisation central de cette thèse.
+
+\subsection*{Apprentissage par renforcement multi-agent (MARL)}
+
+L'\textbf{apprentissage par renforcement} (\emph{Reinforcement Learning}, RL) est une branche de l'intelligence artificielle dans laquelle un agent apprend à prendre des décisions en interagissant avec son environnement~: il choisit des actions, observe les conséquences (\emph{récompenses} positives ou négatives) et ajuste progressivement sa stratégie pour maximiser la somme cumulative de récompenses futures. L'\textbf{apprentissage par renforcement multi-agent} (\emph{Multi-Agent RL}, MARL) étend ce paradigme à un système de plusieurs agents qui partagent un environnement commun et dont les décisions sont interdépendantes. Dans cette thèse, chaque nœud capteur est modélisé comme un agent MARL coopératif~: les agents apprennent ensemble une stratégie de routage qui maximise la livraison de données tout en minimisant la consommation d'énergie collective.
+
+\subsection*{Réseau de neurones de graphes (GNN)}
+
+Un \textbf{réseau de neurones de graphes} (\emph{Graph Neural Network}, GNN) est un type de réseau de neurones conçu pour traiter des données structurées sous forme de graphe --- c'est-à-dire des ensembles de nœuds reliés par des arêtes. Dans un WSN, la topologie du réseau (quels capteurs sont voisins de quels autres, quelles liaisons sont actives) est naturellement représentable comme un graphe. Un GNN lit cette topologie et produit, pour chaque nœud, une représentation vectorielle compacte qui résume à la fois ses propriétés locales (énergie résiduelle, position) et son contexte global (centralité, rôle dans le réseau). Cette représentation enrichie guide ensuite les décisions de routage de manière topologiquement informée.
+
+\subsection*{Analyse du cycle de vie (ACV) et intensité carbone}
+
+L'\textbf{analyse du cycle de vie} (\emph{Life Cycle Assessment}, LCA/ACV), formalisée par la norme ISO~14040, est une méthode d'évaluation environnementale qui comptabilise les impacts d'un produit ou d'un système \emph{de sa fabrication à sa mise au rebut}~: extraction des matières premières, fabrication des composants, utilisation opérationnelle, et fin de vie (recyclage ou décharge). Dans le contexte des WSN, l'ACV révèle que le \emph{carbone incorporé} lors de la fabrication d'un nœud capteur \hl{($\sim$10~000~gCO$_2$eq}~\cite{pirson2021embodied}\hl{)} domine de plusieurs ordres de grandeur le carbone émis lors de son fonctionnement \hl{($\sim$0,01~gCO$_2$eq sur toute sa durée de vie, pour un budget de 0{,}5~J conforme à}~\cite{heinzelman2000leach}\hl{)}. L'\textbf{intensité carbone du cycle de vie} (LCI, \emph{Lifecycle Carbon Intensity}), métrique originale introduite dans cette thèse, exprime l'empreinte carbone totale en \emph{grammes de CO$_2$ équivalent par paquet utile livré}, fournissant un indicateur unique qui tient compte à la fois de l'efficacité de livraison et du coût environnemental complet.
+
+\subsection*{Confiance zéro (\emph{Zero-trust})}
+
+Le paradigme \textbf{zéro-confiance} (\emph{zero-trust security}), formalisé par le cadre NIST SP~800-207, est un modèle de sécurité informatique fondé sur le principe~: \emph{ne jamais faire confiance, toujours vérifier}. Contrairement aux architectures de sécurité périmétrique classiques qui font confiance aux entités à l'intérieur d'un réseau, le modèle zéro-confiance exige que chaque demande d'accès ou chaque action --- quelle qu'en soit la source --- soit authentifiée, autorisée et vérifiée en continu. Appliqué aux réseaux de capteurs pilotés par IA, ce paradigme signifie que chaque décision émise par un agent d'apprentissage par renforcement est interceptée et vérifiée avant exécution, même si l'agent est considéré comme \og{}de confiance\fg{} a priori.
+
+\subsection*{Sixième génération de réseaux mobiles (6G) et O-RAN}
+
+La \textbf{6G} désigne la prochaine génération de réseaux de communications mobiles, dont le déploiement commercial est attendu autour de 2030. Elle se distingue de la 5G par l'utilisation de fréquences sub-térahertz (100~GHz -- 1~THz) offrant des débits multi-gigabits/s, l'intégration de \emph{surfaces intelligentes reconfigurables} (RIS, \emph{Reconfigurable Intelligent Surfaces}) qui contrôlent passivement la propagation du signal, et la \emph{détection--communication intégrée} (ISAC). L'\textbf{O-RAN} (\emph{Open Radio Access Network}) est une architecture ouverte et standardisée pour les réseaux d'accès radio qui permet l'exécution d'applications intelligentes (\emph{xApps}) sur des contrôleurs logiciels avec des budgets de latence définis~: 10~ms pour le contrôleur quasi-temps-réel (\emph{near-RT RIC}). Dans cette thèse, la pile GAPF--CALASH--CASTER-ZT est conçue pour s'intégrer dans cette architecture O-RAN, en respectant le budget de latence de 10~ms.
+
+
+%%
 %%  JUSTIFICATION ECONOMIQUE ET SOCIETALE
 %%
 \section{Justification économique, sociétale et réglementaire}\label{sec:intro-justification}
@@ -46,7 +82,7 @@ Le routage constitue le principal facteur déterminant la durée de vie d'un WSN
 Plus récemment, l'apprentissage par renforcement multi-agent (MARL) --- notamment QMIX \cite{rashid2018qmix} et QTRAN \cite{son2019qtran} dans le paradigme d'entraînement centralisé et d'exécution décentralisée (CTDE) --- a démontré des résultats prometteurs en modélisant chaque n\oe{}ud comme un agent coopératif. Toutefois, trois lacunes critiques persistent~:
 
 \begin{enumerate}
-    \item \textbf{Explosion mémoire}~: chaque agent MARL basé sur un réseau récurrent (GRU/LSTM) requiert $\sim$39\,000 paramètres, engendrant une consommation mémoire de 3.2 à 13.8\,GB à l'entraînement --- incompatible avec les contraintes des microcontrôleurs de classe capteur (ARM Cortex-M0/M4, $\sim$16--256\,KB de RAM).
+    \item \textbf{Explosion mémoire}~: chaque agent MARL basé sur un réseau récurrent (GRU/LSTM) \hl{requiert $\sim$39\,000 paramètres, engendrant une consommation mémoire de 3.2 à 13.8\,GB à l'entraînement}~\cite{rashid2018qmix,son2019qtran}\hl{ ---} incompatible avec les contraintes des microcontrôleurs de classe capteur (ARM Cortex-M0/M4, $\sim$16--256\,KB de RAM).
     \item \textbf{Ignorance de la topologie}~: QMIX et QTRAN traitent les agents de manière homogène sans exploiter la structure spatiale du réseau (adjacence, centralité, goulots d'étranglement), alors que cette information topologique est cruciale pour un routage efficace dans des réseaux où les catastrophes modifient dynamiquement la connectivité.
     \item \textbf{Absence de fusion de politiques}~: QMIX et QTRAN présentent des forces complémentaires --- QMIX excelle dans les tâches nécessitant une coordination étroite (garantie de monotonie $\partial Q_\text{tot}/\partial Q_i \geq 0$), tandis que QTRAN gère mieux les interactions non monotones via des transformations affines --- mais aucun cadre ne propose de fusionner dynamiquement ces expertises en fonction du contexte topologique.
 \end{enumerate}
@@ -63,7 +99,7 @@ Cette observation a des implications profondes pour la conception de protocoles 
 \begin{itemize}
     \item \textbf{Paradoxe du routage écoénergétique}~: réduire la consommation d'énergie opérationnelle d'un capteur de 50\% ne réduit son empreinte carbone totale que de $\sim$0.005\,gCO$_2$eq --- un gain négligeable face aux 10\,000\,gCO$_2$eq incorporés. Le véritable levier pour réduire l'empreinte carbone par paquet est de \emph{maximiser le nombre de paquets utiles livrés avant la mort du réseau} pour amortir le carbone incorporé sur davantage de paquets.
     \item \textbf{Impact des catastrophes}~: la destruction prématurée de n\oe{}uds par une catastrophe gaspille intégralement le carbone incorporé de chaque dispositif défaillant, rendant la résilience aux catastrophes indissociable de la durabilité carbone.
-    \item \textbf{Intensité carbone variable}~: l'intensité carbone du réseau électrique varie considérablement (de $\sim$50 à $\sim$500\,gCO$_2$/kWh selon le mix énergétique, l'heure et la saison), offrant une opportunité de modulation temporelle de la consommation.
+    \item \textbf{Intensité carbone variable}~: \hl{l'intensité carbone du réseau électrique varie considérablement (de $\sim$50 à $\sim$500\,gCO$_2$/kWh selon le mix énergétique, l'heure et la saison)}~\cite{ember2024,uk_carbon_api}\hl{,} offrant une opportunité de modulation temporelle de la consommation.
 \end{itemize}
 
 Malgré ces constats, aucun protocole de routage existant ne prend en compte cette empreinte carbone \emph{du cycle de vie} complet --- incorporant le carbone de fabrication, d'opération et de fin de vie --- dans ses décisions de routage. De plus, aucun travail ne module dynamiquement le ratio de réduction de données (par détection comprimée) en fonction de l'intensité carbone du réseau électrique en temps réel.
@@ -90,7 +126,9 @@ Il n'existe dans la littérature aucun cadre de contrôle de décision conforme 
 Face aux trois défis identifiés, cette thèse s'articule autour d'une question de recherche principale et de trois questions spécifiques~:
 
 \medskip
-\noindent\textbf{Question principale~:} \emph{Comment concevoir une pile complète de protocoles de routage intelligent --- écoénergétique, durable en carbone et sécurisée --- pour les réseaux de capteurs de surveillance des catastrophes natifs en intelligence artificielle et intégrés aux technologies 6G~?}
+\begin{quote}
+\hl{\textbf{Question principale~:} \textbf{\emph{Comment concevoir une pile complète de protocoles de routage intelligent --- écoénergétique, durable en carbone et sécurisée --- pour les réseaux de capteurs de surveillance des catastrophes natifs en intelligence artificielle et intégrés aux technologies 6G~?}}}
+\end{quote}
 
 \medskip
 Cette question se décline en trois questions spécifiques, chacune traitée par un article de recherche~:
@@ -146,8 +184,27 @@ Cet objectif général se décline en trois objectifs spécifiques, chacun trait
 
 
 %%
+%%  PORTEE ET DELIMITATION  [NOUVEAU — ajouté en réponse au commentaire C6 du Dr Samuel Pierre]
+%%
+\section{Portée et délimitation de la thèse}\label{sec:Portee}
+
+\hl{Cette thèse se concentre sur la conception, l'implémentation et l'évaluation de protocoles de routage intelligent pour les} \textbf{\hl{réseaux de capteurs sans fil (WSN) déployés dans des scénarios de surveillance des catastrophes}}\hl{, intégrés aux technologies de sixième génération (6G). La portée de la thèse est délimitée selon quatre axes~:}
+
+\begin{enumerate}
+    \item \textbf{Domaine applicatif~:} \hl{Les contributions sont conçues et évaluées dans le contexte des WSN de surveillance des catastrophes (feux de forêt, inondations, séismes), caractérisés par des contraintes énergétiques sévères, des topologies dynamiques et des exigences de fiabilité élevées. Les scénarios industriels généraux (IoT industriel, domotique) sont hors périmètre, bien que les techniques développées puissent s'y appliquer.}
+
+    \item \textbf{Échelle et environnement~:} \hl{Les protocoles sont évalués sur des réseaux de 20 à 200 nœuds capteurs statiques ou quasi-statiques. La mobilité continue des nœuds (ex.~: drones, robots) n'est pas prise en charge dans les modèles proposés --- cette limitation est explicitée dans chaque article et dans la discussion générale (Chapitre~}\ref{sec:Discussion}\hl{).}
+
+    \item \textbf{Couche d'abstraction~:} \hl{Les contributions opèrent principalement sur les couches réseau et transport (routage multi-sauts, gestion du trafic, sécurité des politiques). La couche physique 6G (sub-THz, RIS, ISAC) est intégrée comme substrat dans l'Article~2 (CALASH) et l'Article~3 (CASTER-ZT), sans en redéfinir les spécifications radio.}
+
+    \item \textbf{Environnement de validation~:} \hl{Les trois articles reposent sur des environnements de simulation conformes à la littérature (protocoles de référence IEEE, jeux de données réels tels que Intel Lab Data~}\cite{intel_lab_data_2004}\hl{ et SensorScope~}\cite{sensorscope2008}\hl{). Les expérimentations sur banc d'essai matériel réel sont identifiées comme une direction de recherche future (Chapitre~}\ref{sec:Conclusion}\hl{).}
+\end{enumerate}
+
+\noindent \hl{En résumé, cette thèse contribue à la conception d'une pile protocolaire complète --- écoénergétique (GAPF), durable en carbone (CALASH) et sécurisée (CASTER-ZT) --- pour les WSN de surveillance des catastrophes natifs en IA, dans les limites des hypothèses de simulation et d'échelle énoncées ci-dessus. Une discussion approfondie des limites et directions futures est présentée à la Section~}\ref{sec:disc-limites}\hl{.}
+
+%%
 %%  PLAN DE LA THESE
 %%
 \section{Plan de la thèse}\label{sec:Plan}
 
-Cette thèse par articles est organisée en huit chapitres. Le Chapitre~\ref{sec:RevLitt} présente la revue de littérature couvrant le routage WSN, le MARL et les GNN, la durabilité carbone, la sécurité des systèmes autonomes et les technologies 6G, puis identifie trois lacunes majeures. Le Chapitre~\ref{sec:Demarche} explicite la démarche méthodologique, le cadre expérimental commun et les liens entre les trois articles. Les Chapitres~\ref{sec:Theme1}, \ref{sec:Theme2} et~\ref{sec:Theme3} présentent respectivement les articles GAPF (fusion légère de politiques MARL via GNN), CALASH (routage conscient du carbone du cycle de vie avec auto-guérison 6G) et CASTER-ZT (contrôle de décision zéro-confiance gradué). Le Chapitre~\ref{sec:Discussion} effectue une analyse transversale des résultats et discute les implications combinées. Enfin, le Chapitre~\ref{sec:Conclusion} synthétise les contributions, reconnaît les limitations et identifie les directions futures.
+Cette thèse par articles est organisée en huit chapitres. \hl{Les limites transversales de la recherche sont consolidées à la Section~}\ref{sec:disc-limites}\hl{.} Le Chapitre~\ref{sec:RevLitt} présente la revue de littérature couvrant le routage WSN, le MARL et les GNN, la durabilité carbone, la sécurité des systèmes autonomes et les technologies 6G, puis identifie trois lacunes majeures. Le Chapitre~\ref{sec:Demarche} explicite la démarche méthodologique, le cadre expérimental commun et les liens entre les trois articles. Les Chapitres~\ref{sec:Theme1}, \ref{sec:Theme2} et~\ref{sec:Theme3} présentent respectivement les articles GAPF (fusion légère de politiques MARL via GNN), CALASH (routage conscient du carbone du cycle de vie avec auto-guérison 6G) et CASTER-ZT (contrôle de décision zéro-confiance gradué). Le Chapitre~\ref{sec:Discussion} effectue une analyse transversale des résultats et discute les implications combinées. Enfin, le Chapitre~\ref{sec:Conclusion} synthétise les contributions, reconnaît les limitations et identifie les directions futures.

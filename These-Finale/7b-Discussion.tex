@@ -35,6 +35,128 @@ L'ensemble des résultats confirme qu'une pile protocolaire complète --- écoé
 
 
 %%
+%%  ALIGNEMENT AVEC LES OBJECTIFS
+%%
+\section{Alignement avec les objectifs de recherche}\label{sec:disc-alignement}
+
+Cette section établit explicitement la correspondance entre les résultats obtenus dans les trois articles et les objectifs de recherche formulés à la Section~\ref{sec:Objectifs}. L'objectif est de démontrer que chaque contribution discutée dans ce chapitre s'inscrit dans une logique de réponse directe et mesurable aux engagements pris en introduction, et non comme une juxtaposition d'avancées indépendantes.
+
+\subsection{Traçabilité vers l'objectif général (OG)}
+
+L'objectif général de cette thèse est de \emph{concevoir, implémenter et évaluer une pile complète de protocoles de routage intelligent --- écoénergétique, durable en carbone et sécurisée --- pour les réseaux de capteurs de surveillance des catastrophes intégrés aux technologies 6G}. Cet objectif impose trois exigences simultanées~: la complétude (trois dimensions couvertes), l'intégrabilité (les couches doivent coexister sur une même plateforme), et l'évaluabilité (des métriques quantitatives doivent valider chaque dimension).
+
+La pile GAPF--CALASH--CASTER-ZT répond à ces trois exigences. La \textbf{complétude} est attestée par la couverture des douze critères du Tableau~\ref{tab:positionnement}, impossible pour toute approche isolée de l'état de l'art. L'\textbf{intégrabilité} est démontrée par le Tableau~\ref{tab:tinyml-deploy}~: la pile entière tient dans $\sim$27\,K paramètres et 103\,KB de mémoire, déployable sur un Cortex-M7. L'\textbf{évaluabilité} est établie par les métriques quantifiées~: PDR $\geq$ 98\% (GAPF), $-33\%$ LCI (CALASH), 0\% faux positifs et $\omega_{\text{rec}} = 0.733$ (CASTER-ZT). L'OG est donc pleinement atteint.
+
+\subsection{Traçabilité vers OS1 --- Fusion légère de politiques MARL (GAPF)}
+
+OS1 décompose l'objectif GAPF en quatre sous-objectifs opérationnels. Le Tableau~\ref{tab:tracabilite-os1} résume le degré d'atteinte de chacun.
+
+\begin{table}[htbp]
+\centering
+\caption{Traçabilité des résultats GAPF vers les sous-objectifs OS1.}
+\label{tab:tracabilite-os1}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{7cm}p{6cm}c}
+\toprule
+\textbf{Sous-objectif OS1} & \textbf{Résultat obtenu} & \textbf{Atteint~?} \\
+\midrule
+GCN à 2 couches, plongement $d=16$ & Architecture GCN 2L confirmée, $d=16$ & \checkmark \\
+CAS avec $<$ 2\,000 paramètres entraînables & 1\,473 paramètres totaux ($26\times$ moins que QMIX/QTRAN) & \checkmark \\
+Réseau d'attention monotone Q$\cdot$K pour scalarisation multi-objectifs & Implémenté~; garantit que toute amélioration Pareto-dominante produit un signal scalaire supérieur & \checkmark \\
+PDR $\geq$ 98\%, énergie 2--3.5$\times$ inférieure, mémoire $<$ 1\,024\,MB & PDR 98--99\%, énergie $2\times$--$3.5\times$ réduite, mémoire 951\,MB ($13\times$ inférieure à QMIX) & \checkmark \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Au-delà des chiffres, GAPF démontre que le paradigme de \emph{portfolio d'experts légers} constitue une alternative viable à l'escalade paramétrique dominante dans la littérature MARL. Ce constat positionne OS1 non seulement comme un objectif atteint, mais comme un résultat qui élargit le cadre conceptuel du domaine (voir Section~\ref{sec:disc-transversale}).
+
+\subsection{Traçabilité vers OS2 --- Routage conscient du carbone avec auto-guérison (CALASH)}
+
+OS2 impose cinq engagements, dont la définition d'une métrique formelle (LCI), la preuve de garanties théoriques (borne CDL via Lyapunov), l'intégration 6G, et une réduction mesurable de $\geq$ 30\% du LCI.
+
+\begin{table}[htbp]
+\centering
+\caption{Traçabilité des résultats CALASH vers les sous-objectifs OS2.}
+\label{tab:tracabilite-os2}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{7cm}p{6cm}c}
+\toprule
+\textbf{Sous-objectif OS2} & \textbf{Résultat obtenu} & \textbf{Atteint~?} \\
+\midrule
+Définir et formaliser la métrique LCI conforme à ISO~14040 & Métrique LCI = $C_{\text{incorporé}} + \sum C_{\text{op}}(t)$ divisée par paquets utiles livrés~; conforme ISO~14040 & \checkmark \\
+Concevoir quatre piliers intégrés (CADR, CARE, SHDR, LSE) & Quatre piliers implémentés et évalués individuellement et conjointement & \checkmark \\
+Prouver des garanties de budget carbone via l'optimisation de Lyapunov (borne CDL) & Borne CDL prouvée mathématiquement~; convergence $O(1/V)$ de Lyapunov avec $V=100$ & \checkmark \\
+Intégrer les technologies 6G (sub-THz, RIS, ISAC) dans la couche physique & Modèle sub-THz et RIS intégrés dans le simulateur~; ISAC utilisé pour la détection de topologie & \checkmark \\
+Démontrer $\geq$ 30\% d'amélioration du LCI & $-33\%$ LCI observé (seuil $\geq$ 30\% dépassé) & \checkmark \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Un résultat non anticipé d'OS2 est la révélation que le carbone incorporé domine d'environ six ordres de grandeur le carbone opérationnel --- un écart qui remet en question les priorités de la communauté des réseaux verts et dépasse les engagements initiaux d'OS2 (voir Section~\ref{sec:disc-transversale}).
+
+\subsection{Traçabilité vers OS3 --- Contrôle de décision zéro-confiance (CASTER-ZT)}
+
+OS3 impose des garanties formelles (dix propositions), un taux de faux positifs nul, une détection $\geq$ 70\%, et le respect du budget de latence de 10\,ms du near-RT RIC O-RAN.
+
+\begin{table}[htbp]
+\centering
+\caption{Traçabilité des résultats CASTER-ZT vers les sous-objectifs OS3.}
+\label{tab:tracabilite-os3}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{7cm}p{6cm}c}
+\toprule
+\textbf{Sous-objectif OS3} & \textbf{Résultat obtenu} & \textbf{Atteint~?} \\
+\midrule
+Encodeur GraphSAGE + évaluateur neuronal double-hypothèse + MC-Dropout & Architecture implémentée~; $T=20$ passes MC-Dropout, $p_\text{drop}=0.1$ & \checkmark \\
+Bouclier déterministe à 5 niveaux de décision avec 14 paramètres scalaires & Bouclier implémenté~; les 14 seuils sont non apprenables et vérifiables formellement & \checkmark \\
+Dix propositions formelles (conservatisme monotone, exclusion d'actuation non autorisée, etc.) & Dix propositions prouvées dans l'article~3 & \checkmark \\
+Détection $\geq$ 70\% avec 0\% de faux positifs dans le budget de 10\,ms O-RAN & 74.2--98.3\% de détection, 0\% faux positifs confirmés sur 2\,420 exécutions, 3.07\,ms/décision & \checkmark \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+La séparation architecture\-le entre composants apprenables (GraphSAGE) et déterministe (bouclier) est la clé qui permet de satisfaire simultanément la flexibilité (apprentissage continu) et la garantie formelle (vérification statique). Ce principe architectural --- non anticipé comme tel dans la formulation initiale d'OS3 --- constitue une contribution conceptuelle exportable à tout système autonome critique (voir Section~\ref{sec:disc-transversale}).
+
+\subsection{Tableau de traçabilité global}
+
+Le Tableau~\ref{tab:tracabilite-globale} synthétise la couverture des sections du Chapitre~\ref{sec:Discussion} par rapport aux objectifs de recherche. Chaque section du chapitre adresse au minimum un objectif spécifique, et plusieurs sections contribuent simultanément à l'objectif général.
+
+\begin{table}[htbp]
+\centering
+\caption{Traçabilité des sections de la Discussion Générale vers les objectifs de recherche.}
+\label{tab:tracabilite-globale}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccl}
+\toprule
+\textbf{Section de la Discussion} & \textbf{OG} & \textbf{OS1} & \textbf{OS2} & \textbf{OS3} & \textbf{Contribution principale} \\
+\midrule
+\ref{sec:disc-retour-questions} Retour sur les questions de recherche & \checkmark & \checkmark & \checkmark & \checkmark & Validation directe Q1/Q2/Q3 \\
+\ref{sec:disc-alignement} Alignement avec les objectifs & \checkmark & \checkmark & \checkmark & \checkmark & Traçabilité formelle OG/OS1/OS2/OS3 \\
+\ref{sec:disc-transversale} Synergies quantitatives entre couches & \checkmark & \checkmark & \checkmark & \checkmark & Démonstration que la pile $>$ somme des parties \\
+\ref{sec:disc-transversale} Paradigme fusion vs.\ monolithique & & \checkmark & & & Positionnement GAPF face au paysage MARL \\
+\ref{sec:disc-transversale} Complexité Dec-POMDP & & \checkmark & & & Scalabilité pratique de GAPF \\
+\ref{sec:disc-transversale} Robustesse adversariale & \checkmark & \checkmark & \checkmark & \checkmark & Interaction défense-performance des 3 couches \\
+\ref{sec:disc-transversale} Faisabilité TinyML & \checkmark & \checkmark & \checkmark & \checkmark & Déployabilité embarquée de la pile complète \\
+\ref{sec:disc-transversale} Carbone incorporé comme métrique oubliée & & & \checkmark & & Extension conceptuelle de LCI au-delà des WSN \\
+\ref{sec:disc-transversale} Zéro-confiance comme couche systémique & \checkmark & & & \checkmark & Principe architectural exportable \\
+\ref{sec:disc-convergence} Garanties théoriques & \checkmark & \checkmark & \checkmark & \checkmark & Complémentarité des types de convergence \\
+\ref{sec:disc-sensibilite} Analyse de sensibilité & \checkmark & \checkmark & \checkmark & \checkmark & Robustesse aux conditions environnementales \\
+\ref{sec:disc-failure-modes} Modes de défaillance & \checkmark & \checkmark & \checkmark & \checkmark & Limites d'applicabilité du système \\
+\ref{sec:disc-positionnement} Positionnement état de l'art & \checkmark & \checkmark & \checkmark & \checkmark & Originalité de la contribution \\
+\ref{sec:disc-ethique} Considérations éthiques & \checkmark & & \checkmark & \checkmark & Responsabilité du déploiement autonome \\
+\ref{sec:disc-limites} Limites de la discussion & \checkmark & \checkmark & \checkmark & \checkmark & Honnêteté scientifique et travaux futurs \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+La lecture de ce tableau révèle deux propriétés importantes~: (i)~l'OG est adressé par l'ensemble du chapitre, ce qui confirme le caractère intégratif de la discussion~; (ii)~OS2 bénéficie du plus grand nombre de sections qui l'adressent implicitement (via les synergies et la déployabilité), ce qui reflète que la durabilité carbone est le défi le plus transversal de la thèse --- elle dépend de l'efficacité énergétique (OS1) pour sa composante opérationnelle, et de la sécurité (OS3) pour sa composante de robustesse aux attaques.
+
+
+%%
 %%  ANALYSE TRANSVERSALE DES RESULTATS
 %%
 \section{Analyse transversale des résultats}\label{sec:disc-transversale}
@@ -203,7 +325,7 @@ Le Tableau~\ref{tab:positionnement} compare la pile protocolaire proposée avec 
 
 \begin{table}[htbp]
 \centering
-\caption{Positionnement de la pile proposée par rapport aux principales approches de la littérature.}
+\caption{Positionnement de la pile proposée par rapport aux principales approches de la littérature. \hl{Les paramètres des approches de référence sont tirés de}~\cite{heinzelman2000leach,rashid2018qmix,son2019qtran,achiam2017cpo,alshiekh2018shielding}\hl{; les métriques PDR et durée de vie sont issues de nos propres simulations (Section~}\ref{sec:Demarche}\hl{).}}
 \label{tab:positionnement}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lcccccc}
