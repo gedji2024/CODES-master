@@ -1,0 +1,9 @@
+
+En 6G, quand on parle de technologies habilitantes, on désigne les innovations de base qui rendent possibles les nouvelles fonctionnalités du réseau. Ce sont comme les rubriques fondamentales qui permettent \à la 6G d'aller au delà de la 5G.
+En résumé : les technologies habilitantes du 6G sont les innovations de base (fréquences, antennes, IA, edge computing, etc.) qui rendent possibles les applications futuristes de demain.
+
+Les surfaces intelligentes reconfigurables (RIS) permettant le contrôle passif de l'environnement de propagation: 
+Contrôle passif: contrairement à une antenne active qui génère son propre signal, le RIS ne produit pas d'énergie radio. Il agit comme un miroir programmable qui redirige les signaux existants.
+
+NIST SP 800‑207 est le guide officiel du NIST qui définit comment mettre en place une architecture Zero Trust, où chaque accès est contrôlé en continu pour renforcer la cybersécurité.	
+
