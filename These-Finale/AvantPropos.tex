@@ -7,12 +7,13 @@
 %% par articles (section 3.4).
 
 \ifthenelse{\equal{\Langue}{english}}{
-    \chapter*{FOREWORD}\thispagestyle{headings}
-    \addcontentsline{toc}{compteur}{FOREWORD}
+
+\chapter*{FOREWORD}\thispagestyle{headings}
+\addcontentsline{toc}{compteur}{FOREWORD}
+
 }{
-    \chapter*{AVANT-PROPOS}\thispagestyle{headings}
-    \addcontentsline{toc}{compteur}{AVANT-PROPOS}
-}
+\chapter*{AVANT-PROPOS}\thispagestyle{headings}
+\addcontentsline{toc}{compteur}{AVANT-PROPOS}
 
 Cette thèse est présentée sous la forme d'une thèse par articles. Elle regroupe
 trois articles de recherche originaux qui constituent le corps principal du
@@ -36,22 +37,19 @@ en double-aveugle.
 \smallskip
 \noindent\textbf{Revue~:} \emph{IEEE Transactions on Green Communications and
 Networking} (IEEE TGCN).\footnote{%
-    IEEE TGCN est une revue à comité de lecture arbitrée par des pairs, indexée dans
-    les bases de données suivantes~: \textbf{Scopus} (SJR~$\approx$~1.8,
-    Q1 en ingénierie et informatique)~; \textbf{Web of Science} (Science Citation Index
-    Expanded, JIF~$\approx$~7{,}7, Journal Citation Reports 2024)~; \textbf{CORE}
-    (classée~A, ERA~2023). Sa thématique couvre les communications vertes et les
-    réseaux de nouvelle génération, en fort alignement avec les contributions de
-    cette thèse (routage écoénergétique, durabilité carbone, intégration 6G). La
-    soumission de l'Article~1 à cette revue résulte d'une décision éditoriale mûrement
-    réfléchie, prenant en compte l'impact facteur, l'adéquation thématique et la
-    visibilité internationale de la publication. Le DOI définitif sera ajouté dès
-    son attribution par l'éditeur (en cours, Mai~2026).%
+IEEE TGCN est une revue internationale à comité de lecture publiée par l'IEEE,
+indexée notamment dans \textbf{Scopus} et le \textbf{Web of Science}, et
+classée Q1 en «~Computer Networks and Communications~» selon Scimago.
+Sa thématique couvre les communications vertes, l'efficacité énergétique et les
+réseaux de nouvelle génération, en alignement direct avec les contributions de
+cette thèse (routage écoénergétique, durabilité carbone, intégration 6G).
+L’Article~1 est publié dans ce journal sous le DOI
+\texttt{10.1109/TGCN.2026.3690507}.%
 }
 
 \smallskip
 \noindent\textbf{Contribution de l'auteur~:} L'auteur est l'unique concepteur de
-l'architecture GAPF (encodeur GCN, contrôleur CAS, réseau d'attention Q$\cdot$K),
+l'architecture GAPF (encodeur GCN, contrôleur CAS, réseau d'attention Q),
 a réalisé l'ensemble des expériences et des analyses statistiques, et a rédigé
 la totalité du manuscrit. Le directeur de recherche a fourni l'encadrement
 scientifique et des commentaires sur les versions successives du manuscrit.
@@ -76,7 +74,7 @@ Networking} (IEEE TGCN).
 \noindent\textbf{Contribution de l'auteur~:} L'auteur est l'unique concepteur
 des quatre piliers CALASH (CADR, CARE, SHDR, LSE) et de la métrique LCI,
 a réalisé l'ensemble des simulations (30~graines Monte Carlo, 13~variantes
-de protocoles), les analyses statistiques (Kruskal-Wallis, bootstrap) et
+de protocoles), les analyses statistiques (Kruskal--Wallis, bootstrap) et
 a rédigé la totalité du manuscrit. Le directeur de recherche a fourni
 l'encadrement scientifique et des commentaires sur les versions successives
 du manuscrit.
@@ -84,7 +82,8 @@ du manuscrit.
 \section*{Article 3}
 
 \noindent\textbf{Titre~:} \emph{Zero-Trust Shielded Graph-Structured Decision
-Control for Disaster-Monitoring Sensing Networks (CASTER-ZT)}
+Control for Secure Autonomous Recovery in AI-Native 6G Disaster-Monitoring
+Sensing Networks (CASTER-ZT)}
 
 \smallskip
 \noindent\textbf{Auteur principal~:} Georges Parfait Djimefo Kapen
@@ -103,3 +102,5 @@ quantification d'incertitude MC-Dropout, bouclier déterministe gradué à
 2\,420~exécutions et rédigé la totalité du manuscrit. Le directeur de
 recherche a fourni l'encadrement scientifique et des commentaires sur les
 versions successives du manuscrit.
+
+}

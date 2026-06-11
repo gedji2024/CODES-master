@@ -49,9 +49,9 @@ $E_{\text{Rx}}(\ell)$ & Énergie de réception de $\ell$ bits & [J] \\
 \paragraph{Variables de l'apprentissage par renforcement multi-agents (MARL)}
 \begin{longtable}{lp{3in}l}
 $s_i^t$ & État local de l'agent $i$ à l'instant $t$ & --- \\
-$o_i^t$ & Observation partielle de l'agent $i$ & --- \\
+$o_i^t$ & Observation partielle de l'agent $i$ à l'instant $t$ & --- \\
 $a_i^t$ & Action de l'agent $i$ à l'instant $t$ & --- \\
-$r_i^t$ & Récompense individuelle de l'agent $i$ & [sans dim.] \\
+$r_i^t$ & Récompense individuelle de l'agent $i$ à l'instant $t$ & [sans dim.] \\
 $\gamma$ & Facteur d'actualisation des récompenses futures & [sans dim.] \\
 $\pi_\theta$ & Politique paramétrée par $\theta$ & --- \\
 $Q^\pi(s,a)$ & Fonction valeur action-état sous la politique $\pi$ & [sans dim.] \\
@@ -102,8 +102,8 @@ CDL & Borne de Pareto carbone-livraison-durée de vie & --- \\
 \begin{longtable}{lp{3in}l}
 $n$ & Dimension originale du signal capteur & [sans dim.] \\
 $m$ & Dimension compressée ($m = \rho_{\text{CS}} \cdot n$) & [sans dim.] \\
-$s$ & Niveau de sparsité du signal dans le domaine DCT & [sans dim.] \\
-$F$ & Fidélité de reconstruction ($F = 1 - \text{NMSE}$) & [sans dim.] \\
+$s$ & Niveau de sparsité du signal dans le domaine DCT (Discrete Cosine Transform) & [sans dim.] \\
+$F$ & Fidélité de reconstruction ($F = 1 - \text{NMSE}$), NMSE : (Normalized Mean Squared Error) & [sans dim.] \\
 $\delta$ & Seuil de distorsion NMSE acceptable & [sans dim.] \\
 \end{longtable}
 
@@ -243,6 +243,7 @@ CPO        & Constrained Policy Optimization\\
 CS         & Compressive Sensing\\
 CTDE       & Centralized Training with Decentralized Execution\\
 Dec-POMDP  & Decentralized Partially Observable Markov Decision Process\\
+DEEE       & Déchets d'Équipements Électriques et Électroniques\\
 DMSN       & Disaster-Monitoring Sensing Network\\
 DQN        & Deep Q-Network\\
 DRL        & Deep Reinforcement Learning\\
