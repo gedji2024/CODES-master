@@ -5,19 +5,29 @@
 
 \noindent\textbf{Revue~:} IEEE Transactions on Green Communications and Networking.
 
-\noindent\textbf{Statut~:} Soumis.
+\noindent\textbf{Statut~:} Publié.
 
 \vspace{0.3cm}
-\noindent\textit{Ce chapitre pr\'{e}sente le premier article de cette th\`{e}se. Il propose GAPF (Graph-Attentive Policy Fusion), un cadre de m\'{e}ta-apprentissage l\'{e}ger qui fusionne des politiques d'experts MARL (apprentissage par renforcement multi-agent) gel\'{e}es \`{a} travers un encodeur \`{a} r\'{e}seau convolutif sur graphe (GCN) et un contr\^{o}leur de s\'{e}lection contextuelle d'algorithme (CAS). GAPF encode la topologie des capteurs en un plongement de graphe compact et s\'{e}lectionne l'expert le plus performant avec seulement 1\,473 param\`{e}tres entra\^{i}nables. Ce travail constitue la premi\`{e}re contribution de la th\`{e}se en \'{e}tablissant les fondations du routage intelligent \'{e}co\'{e}nerg\'{e}tique pour les r\'{e}seaux de capteurs sans fil (RCsF) de surveillance des catastrophes.}
+\noindent\textit{Ce chapitre présente le premier article de cette thèse. Il propose GAPF (Graph-Attentive Policy Fusion), un cadre de méta-apprentissage léger qui fusionne des politiques d'experts MARL (apprentissage par renforcement multi-agent) gelées à travers un encodeur à réseau convolutif sur graphe (GCN) et un contrôleur de sélection contextuelle d'algorithme (CAS). GAPF encode la topologie des capteurs en un plongement de graphe compact et sélectionne l'expert le plus performant avec seulement 1\,473 paramètres entraînables. Ce travail constitue la première contribution de la thèse en établissant les fondations du routage intelligent écoénergétique pour les réseaux de capteurs sans fil (RCsF) de surveillance des catastrophes.}
 
 \vspace{0.5cm}
 
 \section{Abstract}
-
-Wireless Sensor Networks (WSNs) deployed in disaster-monitoring scenarios require energy-efficient, low-latency multi-hop routing under strict resource constraints. Existing multi-agent reinforcement learning (MARL) approaches such as QMIX and QTRAN treat the routing problem independently, ignoring the network topology and suffering from memory explosion at scale. We propose \textbf{Graph-Attentive Policy Fusion (GAPF)}, a lightweight meta-learning framework that fuses frozen MARL expert policies through a Graph Convolutional Network (GCN) encoder and a Contextual Algorithm Selection (CAS) controller. GAPF encodes the sensor topology into a compact graph embedding at episode onset and selects the best-performing expert with only 1{,}473 trainable parameters. We evaluate GAPF across 7 scenarios spanning 20--100 sensors, 3 seeds each, totalling 21{,}000 test episodes. GAPF achieves near-perfect packet delivery ($\geq$98\%) across all scales, with +43\% to +111\% relative improvement over standalone MARL baselines. It consumes 2--3.5$\times$ less energy, maintains 3--9$\times$ better energy balance, and requires 13$\times$ less memory (951\,MB vs 13.2\,GB), passing all feasibility constraints. The scalability analysis reveals that GAPF's advantage grows superlinearly in sparse networks, where topology-aware relay coordination is most critical. Our results demonstrate that lightweight policy fusion with graph-structural awareness can replace heavyweight monolithic MARL for resource-constrained, safety-critical WSN routing.
+\textit{Abstract—} Wireless Sensor Networks (WSNs) deployed in disaster-monitoring scenarios require energy-efficient, low-latency multi-hop routing under strict resource constraints. Existing multi-agent reinforcement learning (MARL) approaches such as QMIX and QTRAN treat the routing problem independently, ignoring the network topology and suffering from memory explosion at scale. We propose \textbf{Graph-Attentive Policy Fusion (GAPF)}, a lightweight meta-learning framework that fuses frozen MARL expert policies through a Graph Convolutional Network (GCN) encoder and a Contextual Algorithm Selection (CAS) controller. GAPF encodes the sensor topology into a compact graph embedding at episode onset and selects the best-performing expert with only 1{,}473 trainable parameters. We evaluate GAPF across 7 scenarios spanning 20--100 sensors, 3 seeds each, totalling 21{,}000 test episodes. GAPF achieves near-perfect packet delivery ($\geq$98\%) across all scales, with +43\% to +111\% relative improvement over standalone MARL baselines. It consumes 2--3.5$\times$ less energy, maintains 3--9$\times$ better energy balance, and requires 13$\times$ less memory (951\,MB vs 13.2\,GB), passing all feasibility constraints. The scalability analysis reveals that GAPF's advantage grows superlinearly in sparse networks, where topology-aware relay coordination is most critical. Our results demonstrate that lightweight policy fusion with graph-structural awareness can replace heavyweight monolithic MARL for resource-constrained, safety-critical WSN routing.
 
 \section{Introduction}
-
+% The very first letter is a 2 line initial drop letter followed
+% by the rest of the first word in caps.
+% 
+% form to use if the first word consists of a single letter:
+% 
+% form to use if you need the single drop letter followed by
+% normal text (unknown if ever used by the IEEE):
+% 
+% Some journals put the first two words in caps:
+% 
+% Here we have the typical use of a "T" for an initial drop letter
+% and "HIS" in caps to complete the first word.
 According to the European Environment Agency (EEA), a disaster is "a serious disruption of the functioning of society, causing widespread human, material or environmental losses, which exceed the ability of affected society to cope using only its own resources" \cite{noauthor_disaster_nodate}. This scourge is a real handicap for our society according to statistics. Indeed, 398 natural disasters were recorded in 2023  with 95,000 deaths and losses of around 380 billion US dollars \cite{burgueno_salas_global_nodate} \cite{noauthor_number_nodate}. Establishing a disaster monitoring policy thus appears to be essential. 
 
 Wireless Sensor Networks (WSNs) are emerging as an indispensable resource for disaster monitoring \cite{al_qundus_wireless_2020}. They owe this to their ability to collect data more accurately with minimal human intervention \cite{bhatt_wireless_2021-1}. They are also resilient and maintain their connected state even if disasters have led to the destruction of infrastructure. In addition, they benefit from ease of scaling and configuration as required. In the case of wood fires, for example, detection methods such as watchtowers, satellite image processing methods, optical sensors, and methods based on digital cameras have disadvantages including inefficiency, consumption of energy, delay, accuracy, and implementation costs \cite{dampage_forest_2022-1}. This is where WSNs prove valuable, being self-configuring, independent of infrastructure, efficient, and low in energy consumption. Despite the undeniable advantages of WSNs, large-scale issues need to be considered, notably battery life due to the problem of energy consumption \cite{yarali_wireless_2020}. It is therefore important to reduce the waste of energy. This becomes even more critical as rising energy consumption leads to higher CO2 emissions, which is harmful to the environment \cite{thakare_study_2017}. 
@@ -71,6 +81,55 @@ This work intends to overcome these limitations.
 \end{enumerate}
 
 
+The rest of this paper is organized as follows. Section II gives the background and related work. Section III introduces the methodology of this work. Section IV analyzes and discusses the results. Section V presents the conclusion and describes the future work.
+
+
+% Note that \label must occur AFTER (or within) \caption.
+% is designed to preserve the operation of \label within \caption
+% even when the captionsoff option is in effect. However, because
+% of issues like this, it may be the safest practice to put all your
+% \label just after \caption rather than within \caption{}.
+%
+% option should be used if it is desired that the figures are to be
+% displayed while in draft mode.
+%
+% where an .eps filename suffix will be assumed under latex, 
+% and a .pdf suffix will be assumed for pdflatex; or what has been declared
+% via \DeclareGraphicsExtensions.
+
+% results in a large percentage of a column being occupied by floats.
+
+
+% (The subfig.sty package must be loaded for this to work.)
+% The subfigure \label commands are set within each subfloat command,
+% and the \label for the overall figure must come after \caption.
+% Watch out that the combined width of all the subfigures on a 
+% line do not exceed the text width or a line break will occur.
+%
+%
+
+
+% \caption command should come BEFORE the table and, given that table
+% captions serve much like titles, are usually capitalized except for words
+% such as a, an, and, as, at, but, by, for, in, nor, of, on, or, the, to
+% and up, which are usually not capitalized unless they are the first or
+% last word of the caption. Table text will default to \footnotesize as
+% the IEEE normally uses this smaller font for tables.
+% The \label must come after \caption as always.
+%
+% \extrarowheight as needed to properly center the text within the cells
+%% than the plain LaTeX2e tabular which is used here.
+%One & Two\\
+%Three & Four\\
+
+
+% - or typically anywhere on the first page for that matter. Also,
+% is allowed and encouraged for Computer Society conferences (but
+% not Computer Society journals). Most IEEE journals/conferences use
+% top floats exclusively. 
+% Note that, LaTeX2e, unlike IEEE journals/conferences, places
+% \fnbelowfloat command of the stfloats package.
+
 
 \section{Background and Related Work}
 In recent years, a lot of research has been done on the routing problem. Moussa et al. \cite{moussa_reinforcement_2023} propose a Reinforcement Learning (RL) based routing protocol for Software Defined Network (SDN)-enabled WSN forest fire detection. The first step of the protocol was to design a clustering algorithm that introduces a delay in the re-clustering process to reduce energy. Secondly, an optimal path is defined by the SDN controller with the help of RL. Their work shows good results in network performance, however, it suffers from some drawbacks. Mainly, there is a lack of generalization in the RL model and a lack of being able to capture an important part in the factors which are involved in the reward construction. 
@@ -109,10 +168,11 @@ Rao et al. \cite{rao_optimized_2024} propose a secure, cluster-based routing pro
 
 Sefati et al. \cite{sefati_federated_2025} propose AFRL-HGS, a federated reinforcement learning framework combined with hybrid optimization techniques to support secure and adaptive routing in wireless sensor networks (WSNs). In this approach, sensor nodes act as reinforcement learning agents that collaboratively train routing policies through federated aggregation without sharing raw data, thereby preserving privacy and reducing communication overhead, while the hybrid optimization component accelerates convergence and stabilizes routing decisions. Simulation-based evaluation demonstrates improvements in packet delivery ratio, energy efficiency, and resilience to node failures compared with centralized reinforcement learning and conventional routing protocols. However, the framework assumes periodic synchronization and relatively stable connectivity for aggregating local models—conditions that may not hold in disaster environments characterized by network partitioning and high mobility—and it does not integrate additional trust or blockchain-based safeguards, potentially leaving the collaborative learning process vulnerable to model poisoning or adversarial manipulation.
 
-Table~\ref{art1:tab:comparative_metrics} shows a comparative Analysis of Selected Routing Algorithms (2024–2025).
+Table~\ref{tab:comparative_metrics} shows a comparative Analysis of Selected Routing Algorithms (2024–2025).
 
-\begin{center}
-\captionof{table}{Comparative Analysis of Selected Routing Algorithms (2024–2025)}
+\begin{table*}[!t]
+\caption{Comparative Analysis of Selected Routing Algorithms (2024–2025)}
+\renewcommand{\arraystretch}{1.0}
 \resizebox{\textwidth}{!}{
 \begin{tabular}{|p{4cm}|p{3.2cm}|c|c|c|c|}
 \hline
@@ -130,8 +190,8 @@ Sefati et al. (2025) & Federated RL with hybrid optimization (AFRL-HGS) & High &
 \hline
 \end{tabular}
 }
-\label{art1:tab:comparative_metrics}
-\end{center}
+\label{tab:comparative_metrics}
+\end{table*}
 
 
 This literature review shows the extensive work that has been done to achieve the energy efficiency goal of routing protocols and the limitations that they have faced which motivates our current work.
@@ -188,12 +248,12 @@ From \cite{su_q-learning-based_2023} and \cite{guo_optimizing_2019}, the energy 
 where $E_{elec} = 50\frac{nJ}{bit}$, $E_{amp} = 100\frac{pJ}{bit \times m^2}$, $E_T\left(M, d\right)$ is the energy that a sensor consumes to transmit $M$ packets (each packet contains $a$ amount of information) to a receiver at the distance $d$, $E_R\left(M\right)$  is the energy that a sensor consumes to receive $M$ packets from the sender. 
 
 \subsection{Reward Scalarization via Monotonic Q$\cdot$K Attention Network}
-\label{art1:sec:reward_scalarization}
+\label{sec:reward_scalarization}
 
 In cooperative MARL for WSN routing, agents must simultaneously optimize energy efficiency, energy balance, directional progress toward the base station, and load distribution. Fixed linear scalarizations require manual weight tuning that does not generalize across topologies. We introduce a \emph{Monotonic Q$\cdot$K Attention Network} that \textbf{(i)} learns objective importance weights via scaled dot-product attention~\cite{vaswani_attention_2023}, \textbf{(ii)} guarantees monotonicity so that Pareto-improving actions are never penalized~\cite{sill_monotonic_1997}, and \textbf{(iii)} adapts online through an Evolution Strategies (ES) outer loop~\cite{salimans2017evolution}.
 
 \subsubsection{Individual Reward Objectives}
-\label{art1:sec:individual_rewards}
+\label{sec:individual_rewards}
 
 At each step $t$, when sensor $i$ relays packets to neighbor $j$, the environment computes a four-dimensional reward vector $\mathbf{r}_i^{(t)} = [r_1, r_2, r_3, r_4] \in [0,1]^4$:
 \begin{itemize}[nosep]
@@ -205,7 +265,7 @@ At each step $t$, when sensor $i$ relays packets to neighbor $j$, the environmen
 All four components are clipped to $[0,1]$.
 
 \subsubsection{Monotonic Q$\cdot$K Attention Architecture}
-\label{art1:sec:monotonic_architecture}
+\label{sec:monotonic_architecture}
 
 The scalarization function $f_\phi: [0,1]^4 \to \mathbb{R}$ maps the reward vector $\mathbf{r}$ to a scalar via two stages.
 
@@ -216,22 +276,22 @@ A learnable query vector $\mathbf{q} \in \mathbb{R}^d$ and a key matrix $\mathbf
 The weighted input $\mathbf{r}'$ passes through a three-layer feed-forward network ($4 \to 16 \to 16 \to 1$) with softplus activations $\sigma(x) = \log(1 + e^x)$ and non-negative weight matrices enforced via $\mathbf{W}_\ell = \mathrm{softplus}(\mathbf{W}_\ell^{\mathrm{raw}}) \geq 0$. Since the softplus derivative $\sigma'(x) = (1+e^{-x})^{-1} \in (0,1)$ is strictly positive and all weights are non-negative, the Jacobian satisfies $\partial f / \partial r_i \geq 0$ for every component. By the chain rule over all layers, the full network $f_\phi = g_\psi \circ (\boldsymbol{\alpha} \odot \cdot)$ is monotonically non-decreasing: any Pareto-dominating action always receives a higher scalar reward. The output is centered as $\hat{f}_\phi(\mathbf{r}) = f_\phi(\mathbf{r}) - f_\phi(\mathbf{0})$ to improve signal-to-noise ratio, where the baseline $f_\phi(\mathbf{0})$ is recomputed once per episode.
 
 \subsubsection{Composite Step Reward}
-\label{art1:sec:composite_reward}
+\label{sec:composite_reward}
 
 The final reward for sensor $i$ at step $t$ depends on its action: \textbf{(a)}~delivery to the BS yields $r_i^{(t)} = \beta_{\mathrm{del}} \cdot p_i$, where $\beta_{\mathrm{del}} = 100$ is a delivery bonus and $p_i$ the number of packets delivered (bypassing scalarization, as delivery is the terminal objective); \textbf{(b)}~relay to neighbor $j \neq \mathrm{BS}$ yields:
 \begin{equation}
     r_i^{(t)} = \underbrace{\hat{f}_\phi(\mathbf{r}_i^{(t)}) \cdot \lambda_{\mathrm{attn}}}_{\text{attention-scalarized}} \;+\; \underbrace{\frac{d(i, \mathrm{BS}) - d(j, \mathrm{BS})}{R} \cdot 0.5}_{\text{progress shaping}}
-    \label{art1:eq:relay_reward}
+    \label{eq:relay_reward}
 \end{equation}
 where $\lambda_{\mathrm{attn}} = 0.01$ scales the attention output to prevent relay-loop farming, and $d(\cdot, \mathrm{BS})$ denotes the Euclidean distance to the BS; \textbf{(c)}~invalid actions receive penalties of $-0.1$ (self-loops, out-of-range) to $-0.5$ (insufficient energy); inactive sensors receive $0$.
 
 \subsubsection{Evolution Strategies Meta-Learning}
-\label{art1:sec:es_learning}
+\label{sec:es_learning}
 
 The attention network parameters $\phi = (\mathbf{q}, \mathbf{K}, \{\mathbf{W}_\ell^{\mathrm{raw}}, \mathbf{b}_\ell\}_\ell)$ are trained via an outer-loop ES~\cite{salimans2017evolution} operating at episode granularity, without differentiating through the RL episode. At episode end, a meta-objective $J \in [0,2]$ evaluates the true network-level goals:
 \begin{equation}
     J = \underbrace{\left(1 - \frac{\sum_{i=1}^{N}(E_0 - e_i^{\mathrm{rem}})}{N \cdot E_0}\right)}_{\text{energy efficiency}} + \underbrace{\left(1 - \frac{\sigma(\mathbf{e}_{\mathrm{rem}})}{E_0/2}\right)}_{\text{energy balance}}
-    \label{art1:eq:meta_objective}
+    \label{eq:meta_objective}
 \end{equation}
 where $e_i^{\mathrm{rem}}$ is the remaining energy of sensor $i$ at episode end. Each episode: \textbf{(1)}~parameters are perturbed as $\phi' = \phi + \sigma_{\mathrm{ES}}\,\boldsymbol{\varepsilon}$ with $\boldsymbol{\varepsilon} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$ and noise scale $\sigma_{\mathrm{ES}} = 0.01$; \textbf{(2)}~the episode executes with $\phi'$ and $J(\phi')$ is computed; \textbf{(3)}~the advantage $A = J(\phi') - \bar{J}$ is evaluated against an exponential moving average baseline $\bar{J}$ (decay $\beta = 0.9$), and parameters are updated as $\phi \leftarrow \phi + \eta_{\mathrm{ES}} \cdot A \cdot \boldsymbol{\varepsilon}$ with learning rate $\eta_{\mathrm{ES}} = 0.01$ (skipped when $|A| < 0.01$). This bi-level optimization decouples inner-loop RL training from outer-loop reward shaping. Key embeddings for energy ($\mathbf{k}_2$) and dispersion ($\mathbf{k}_3$) are initialized close to $\mathbf{q}$ (higher initial attention), encoding the prior that energy-related objectives are most important, while the ES procedure discovers the optimal weighting. The learned weights $\boldsymbol{\alpha}$ provide direct interpretability of objective importance at any point during training.
 
@@ -239,42 +299,44 @@ where $e_i^{\mathrm{rem}}$ is the remaining energy of sensor $i$ at episode end.
 
 
 \subsection{GAPF: Graph-Attentive Policy Fusion}
-\label{art1:sec:gapf}
+\label{sec:gapf}
 
 We introduce \textbf{GAPF} (Graph-Attentive Policy Fusion), a lightweight meta-algorithm that selects, at the episode level, the best-performing MARL expert for a given WSN topology. Inspired by adaptive-policy approaches that train multiple policies and defer selection to execution time~\cite{wang_adaptive_2019}, and by recent work demonstrating the effectiveness of GNNs for wireless network optimisation~\cite{garcia_camargo_gnn_scheduling_2025}, GAPF uses a graph neural network (GNN) to encode the spatial structure of the sensor network and a meta-controller trained via REINFORCE~\cite{williams1992simple} to choose between two pre-trained, frozen experts (QMIX and QTRAN).
 
 \subsubsection{Problem Formulation}
-\label{art1:sec:gapf_formulation}
+\label{sec:gapf_formulation}
 
 Let $\mathcal{E} = \{\pi_{\text{QMIX}}, \pi_{\text{QTRAN}}\}$ denote pre-trained, frozen MARL policies for the WSN routing Dec-POMDP. At the start of each episode~$k$, the WSN defines a communication graph $\mathcal{G}_k = (\mathcal{V}, \mathcal{E}_k)$, where nodes $\mathcal{V} = \{1, \dots, N\}$ are sensors and an edge $(i,j) \in \mathcal{E}_k$ exists iff $\|p_i - p_j\|_2 \leq R$, with $p_i \in \mathbb{R}^2$ the position of sensor~$i$ and $R$ the communication radius. GAPF learns a parameterised policy $\mu_\theta$ mapping the topology $\mathcal{G}_k$ to a selection $a^{\text{meta}}_k \in \{\text{QMIX}, \text{QTRAN}\}$, maximising the expected episodic return:
 \begin{equation}
     \max_\theta \; \mathbb{E}_{\mathcal{G}_k}\!\left[\, G_k \,\middle|\, \pi_{a^{\text{meta}}_k}\right], \quad a^{\text{meta}}_k \sim \mu_\theta(\cdot \mid \mathcal{G}_k).
-    \label{art1:eq:gapf_objective}
+    \label{eq:gapf_objective}
 \end{equation}
 
 \subsubsection{Architecture}
-\label{art1:sec:gapf_architecture}
+\label{sec:gapf_architecture}
 
-The GAPF model $\mu_\theta$ consists of a \emph{GCN encoder} producing a fixed-dimensional graph embedding, and a \emph{CAS controller} (Contextual Algorithm Selection) mapping this embedding to a Bernoulli selection probability (Figure~\ref{art1:fig:gapf_architecture}).
+The GAPF model $\mu_\theta$ consists of a \emph{GCN encoder} producing a fixed-dimensional graph embedding, and a \emph{CAS controller} (Contextual Algorithm Selection) mapping this embedding to a Bernoulli selection probability (Figure~\ref{fig:gapf_architecture}).
 
 \paragraph{Graph construction.}
 Given the $N$ sensor positions $\{p_i\}_{i=1}^N$ and communication radius~$R$, the binary adjacency matrix $\mathbf{A} \in \{0,1\}^{N \times N}$ is defined as $A_{ij} = \mathbf{1}[\|p_i - p_j\| \leq R] \cdot \mathbf{1}[i \neq j]$, then symmetrically normalised following~\cite{kipf2017semi}:
-\begin{equation}
-    \hat{\mathbf{A}} = \tilde{\mathbf{D}}^{-1/2}\,\tilde{\mathbf{A}}\,\tilde{\mathbf{D}}^{-1/2}, \quad \tilde{\mathbf{A}} = \mathbf{A} + \mathbf{I}_N, \quad \tilde{D}_{ii} = \textstyle\sum_j \tilde{A}_{ij}.
-    \label{art1:eq:norm_adj}
-\end{equation}
+\begin{align}
+    \hat{\mathbf{A}} &= \tilde{\mathbf{D}}^{-1/2}\,\tilde{\mathbf{A}}\,\tilde{\mathbf{D}}^{-1/2}, \nonumber\\
+    \tilde{\mathbf{A}} &= \mathbf{A} + \mathbf{I}_N, \quad \tilde{D}_{ii} = \textstyle\sum_j \tilde{A}_{ij}.
+    \label{eq:norm_adj}
+\end{align}
 Each sensor $i$ is described by a feature vector $\mathbf{x}_i \in \mathbb{R}^4$:
-\begin{equation}
-    \mathbf{x}_i = \left[\; \frac{p_i^{(x)}}{L},\;\; \frac{p_i^{(y)}}{L},\;\; \frac{\|p_i - p_{\text{BS}}\|}{\max_j \|p_j - p_{\text{BS}}\|},\;\; \frac{\deg(i)}{\max_j \deg(j)} \;\right]^\top,
-    \label{art1:eq:node_features}
-\end{equation}
+\begin{align}
+    \mathbf{x}_i = \Bigl[\; &\frac{p_i^{(x)}}{L},\;\; \frac{p_i^{(y)}}{L},\nonumber\\
+    &\frac{\|p_i - p_{\text{BS}}\|}{\max_j \|p_j - p_{\text{BS}}\|},\;\; \frac{\deg(i)}{\max_j \deg(j)} \;\Bigr]^\top,
+    \label{eq:node_features}
+\end{align}
 where $L$ is the field side length, $p_{\text{BS}}$ is the base station position, and $\deg(i) = \sum_j A_{ij}$ is the node degree. All features are normalised to $[0, 1]$.
 
-The complete graph construction procedure is formalised in Algorithm~\ref{art1:alg:graph_construction}.
+The complete graph construction procedure is formalised in Algorithm~\ref{alg:graph_construction}.
 
 \begin{algorithm}[H]
 \caption{Graph Construction --- Pseudocode}
-\label{art1:alg:graph_construction}
+\label{alg:graph_construction}
 \begin{algorithmic}[1]
 \REQUIRE Sensor positions $\{p_i\}_{i=1}^N$, base station position $p_{\text{BS}}$, communication radius $R$, field side length $L$
 \ENSURE Normalised adjacency $\hat{\mathbf{A}} \in \mathbb{R}^{N \times N}$, node feature matrix $\mathbf{X} \in \mathbb{R}^{N \times 4}$
@@ -295,25 +357,26 @@ The complete graph construction procedure is formalised in Algorithm~\ref{art1:a
 
 \paragraph{GCN encoder.}
 The node feature matrix $\mathbf{X} = [\mathbf{x}_1, \dots, \mathbf{x}_N]^\top \in \mathbb{R}^{N \times 4}$ is processed by a two-layer GCN~\cite{kipf2017semi}:
-\begin{equation}
-    \mathbf{H}^{(1)} = \text{ReLU}(\hat{\mathbf{A}}\,\mathbf{X}\,\mathbf{W}_1), \quad
-    \mathbf{Z} = \hat{\mathbf{A}}\,\mathbf{H}^{(1)}\,\mathbf{W}_2, \quad
-    \mathbf{z} = \tfrac{1}{N}\textstyle\sum_{i=1}^{N} \mathbf{Z}_{i,:} \in \mathbb{R}^{d}
-    \label{art1:eq:gcn}
-\end{equation}
+\begin{align}
+    \mathbf{H}^{(1)} &= \text{ReLU}(\hat{\mathbf{A}}\,\mathbf{X}\,\mathbf{W}_1), \quad
+    \mathbf{Z} = \hat{\mathbf{A}}\,\mathbf{H}^{(1)}\,\mathbf{W}_2, \nonumber\\
+    \mathbf{z} &= \tfrac{1}{N}\textstyle\sum_{i=1}^{N} \mathbf{Z}_{i,:} \in \mathbb{R}^{d}
+    \label{eq:gcn}
+\end{align}
 where $\mathbf{W}_1 \in \mathbb{R}^{4 \times d}$, $\mathbf{W}_2 \in \mathbb{R}^{d \times d}$, and $d = 16$ is the embedding dimension. The mean-pool readout is permutation-invariant and handles variable numbers of sensors without architectural changes.
 
 \paragraph{CAS controller.}
 The graph embedding $\mathbf{z}$ is fed to a two-layer MLP that outputs the probability of selecting QMIX:
 \begin{equation}
     p_{\text{QMIX}} = \sigma\!\left(\mathbf{w}_2^\top\,\text{ReLU}\!\left(\mathbf{W}_c\,\mathbf{z} + \mathbf{b}_c\right) + b_2\right),
-    \label{art1:eq:cas_controller}
+    \label{eq:cas_controller}
 \end{equation}
 where $\mathbf{W}_c \in \mathbb{R}^{h \times d}$, $\mathbf{b}_c \in \mathbb{R}^h$, $\mathbf{w}_2 \in \mathbb{R}^h$, $b_2 \in \mathbb{R}$, $h = 64$ is the hidden dimension, and $\sigma$ is the sigmoid function. During training, $a^{\text{meta}} \sim \text{Bernoulli}(p_{\text{QMIX}})$; at evaluation, $a^{\text{meta}} = \text{QMIX}$ if $p_{\text{QMIX}} > 0.5$, QTRAN otherwise. The total number of trainable parameters is:
-\begin{equation}
-    |\theta| = \underbrace{4 \times 16 + 16 \times 16}_{\text{GCN: } 320} \;+\; \underbrace{16 \times 64 + 64 + 64 \times 1 + 1}_{\text{CAS: } 1{,}153} = 1{,}473.
-    \label{art1:eq:param_count}
-\end{equation}
+\begin{align}
+    |\theta| &= \underbrace{4 \times 16 + 16 \times 16}_{\text{GCN: } 320} \nonumber\\
+             &\quad+\; \underbrace{16 \times 64 + 64 + 64 \times 1 + 1}_{\text{CAS: } 1{,}153} = 1{,}473.
+    \label{eq:param_count}
+\end{align}
 This is approximately $26\times$ smaller than a single RNN agent ($38{,}983$ parameters), making GAPF negligible in computational overhead.
 
 % --- FIGURE (tikzpicture unchanged) ---
@@ -361,22 +424,22 @@ This is approximately $26\times$ smaller than a single RNN agent ($38{,}983$ par
 \end{tikzpicture}
 }
 \captionof{figure}{GAPF architecture (CAS mode). Sensor positions and communication radius define a graph encoded by a two-layer GCN with mean-pool readout ($\mathbf{z} \in \mathbb{R}^{16}$). The CAS controller maps $\mathbf{z}$ to a selection probability $p_{\text{QMIX}}$. The chosen frozen expert executes the full episode. The return $G_k$ feeds back (red arrow) as a REINFORCE signal to update only the $1{,}473$ meta-controller parameters.}
-\label{art1:fig:gapf_architecture}
+\label{fig:gapf_architecture}
 \end{center}
 
 \subsubsection{Training Procedure}
-\label{art1:sec:gapf_training}
+\label{sec:gapf_training}
 
 QMIX and QTRAN are trained independently; their parameters are then frozen. Only the GAPF meta-controller ($1{,}473$ parameters) is trained via REINFORCE~\cite{williams1992simple} with an EMA baseline. Let $G_k$ denote the episodic return from executing the selected expert $\pi_{a^{\text{meta}}_k}$ in episode~$k$. The policy gradient is:
 \begin{equation}
     \nabla_\theta J(\theta) = \mathbb{E}\!\left[\left(G_k - b_k\right) \nabla_\theta \log \mu_\theta\!\left(a^{\text{meta}}_k \mid \mathcal{G}_k\right)\right],
-    \label{art1:eq:reinforce}
+    \label{eq:reinforce}
 \end{equation}
-where $b_k$ is the EMA baseline updated as $b_{k+1} = 0.95\, b_k + 0.05\, G_k$. Since the selection is Bernoulli, $\log \mu_\theta = \log p_{\text{QMIX}}$ if QMIX is chosen and $\log(1 - p_{\text{QMIX}})$ otherwise. Parameters are updated via Adam with learning rate $\alpha = 3 \times 10^{-3}$ and gradient clipping $\|\nabla_\theta\|_2 \leq 1.0$. The complete procedure is summarised in Algorithm~\ref{art1:alg:gapf_training}.
+where $b_k$ is the EMA baseline updated as $b_{k+1} = 0.95\, b_k + 0.05\, G_k$. Since the selection is Bernoulli, $\log \mu_\theta = \log p_{\text{QMIX}}$ if QMIX is chosen and $\log(1 - p_{\text{QMIX}})$ otherwise. Parameters are updated via Adam with learning rate $\alpha = 3 \times 10^{-3}$ and gradient clipping $\|\nabla_\theta\|_2 \leq 1.0$. The complete procedure is summarised in Algorithm~\ref{alg:gapf_training}.
 
 \begin{algorithm}[H]
 \caption{GAPF Training --- Pseudocode (CAS Mode)}
-\label{art1:alg:gapf_training}
+\label{alg:gapf_training}
 \begin{algorithmic}[1]
 \REQUIRE Frozen expert policies $\pi_{\text{QMIX}}$, $\pi_{\text{QTRAN}}$; WSN environment $\mathcal{M}$; training episodes $K$
 \ENSURE Trained meta-controller parameters $\theta$
@@ -387,7 +450,7 @@ where $b_k$ is the EMA baseline updated as $b_{k+1} = 0.95\, b_k + 0.05\, G_k$. 
 \FOR{$k = 1, \ldots, K$}
     \STATE \COMMENT{--- Topology encoding (once per episode) ---}
     \STATE Reset $\mathcal{M}$; obtain sensor positions $\{p_i\}$ and radius $R$
-    \STATE $(\hat{\mathbf{A}}_k, \mathbf{X}_k) \leftarrow$ Algorithm~\ref{art1:alg:graph_construction} applied to $(\{p_i\}, p_{\text{BS}}, R, L)$
+    \STATE $(\hat{\mathbf{A}}_k, \mathbf{X}_k) \leftarrow$ Algorithm~\ref{alg:graph_construction} applied to $(\{p_i\}, p_{\text{BS}}, R, L)$
     \STATE $\mathbf{H} \leftarrow \text{ReLU}(\hat{\mathbf{A}}_k \cdot \mathbf{X}_k \cdot \mathbf{W}_1)$ \COMMENT{GCN layer 1}
     \STATE $\mathbf{Z} \leftarrow \hat{\mathbf{A}}_k \cdot \mathbf{H} \cdot \mathbf{W}_2$ \COMMENT{GCN layer 2}
     \STATE $\mathbf{z}_k \leftarrow \frac{1}{N}\sum_{i=1}^{N} \mathbf{Z}_{i,:}$ \COMMENT{Mean-pool graph embedding}
@@ -412,17 +475,17 @@ where $b_k$ is the EMA baseline updated as $b_{k+1} = 0.95\, b_k + 0.05\, G_k$. 
 \end{algorithmic}
 \end{algorithm}
 
-Algorithm~\ref{art1:alg:gapf_execution} describes the full inference-time procedure used during evaluation and deployment.
+Algorithm~\ref{alg:gapf_execution} describes the full inference-time procedure used during evaluation and deployment.
 
 \begin{algorithm}[H]
 \caption{GAPF Episode Execution --- Pseudocode (Inference)}
-\label{art1:alg:gapf_execution}
+\label{alg:gapf_execution}
 \begin{algorithmic}[1]
 \REQUIRE Trained meta-controller $\mu_\theta$; frozen experts $\pi_{\text{QMIX}}$, $\pi_{\text{QTRAN}}$; environment $\mathcal{M}$; episode length $T$
 \ENSURE Episodic return $G$, routing metrics (PDR, $E_{\text{tot}}$, $\sigma_E$)
 \STATE \COMMENT{--- Phase 1: Topology encoding (executed once per episode) ---}
 \STATE Reset $\mathcal{M}$; obtain sensor positions $\{p_i\}_{i=1}^N$ and radius $R$
-\STATE $(\hat{\mathbf{A}}, \mathbf{X}) \leftarrow$ Algorithm~\ref{art1:alg:graph_construction} applied to $(\{p_i\}, p_{\text{BS}}, R, L)$
+\STATE $(\hat{\mathbf{A}}, \mathbf{X}) \leftarrow$ Algorithm~\ref{alg:graph_construction} applied to $(\{p_i\}, p_{\text{BS}}, R, L)$
 \STATE $\mathbf{H} \leftarrow \text{ReLU}(\hat{\mathbf{A}} \cdot \mathbf{X} \cdot \mathbf{W}_1)$ \COMMENT{GCN layer 1: neighbour aggregation}
 \STATE $\mathbf{Z} \leftarrow \hat{\mathbf{A}} \cdot \mathbf{H} \cdot \mathbf{W}_2$ \COMMENT{GCN layer 2}
 \STATE $\mathbf{z} \leftarrow \frac{1}{N} \sum_{i=1}^{N} \mathbf{Z}_{i,:}$ \COMMENT{Mean-pool readout $\to \mathbf{z} \in \mathbb{R}^{16}$}
@@ -454,30 +517,33 @@ Algorithm~\ref{art1:alg:gapf_execution} describes the full inference-time proced
 
 
 \subsubsection{Design Rationale}
-\label{art1:sec:gapf_rationale}
+\label{sec:gapf_rationale}
 
 Five design choices distinguish GAPF from standard ensemble methods and recent mixture-of-experts RL architectures~\cite{yang_pamoe_2026}: \textbf{(1)}~\emph{Topology awareness}: the GCN encodes the spatial graph, allowing the controller to learn that certain topologies favour one expert over another. \textbf{(2)}~\emph{Episode-level granularity}: selection occurs once per episode, avoiding instability from switching experts mid-episode where GRU-based agents have incompatible hidden state dynamics. \textbf{(3)}~\emph{Minimal overhead}: $1{,}473$ parameters vs.\ $38{,}983$ per expert; the GCN runs once per episode and the CAS decision is a single MLP forward pass. \textbf{(4)}~\emph{Frozen experts}: pre-trained policies are not fine-tuned, preserving validated performance and reducing the optimisation landscape to $1{,}473$ dimensions. \textbf{(5)}~\emph{Deployment feasibility}: each agent's GRU ($38{,}983$ parameters $\approx 38$\,KB in int8 quantisation) fits within typical WSN microcontroller RAM (nRF52840: 256\,KB; ESP32: 520\,KB), enabling on-device inference.
 
 \subsubsection{Comparison with Alternative Lightweight Approaches}
-\label{art1:sec:comparison_alternatives}
+\label{sec:comparison_alternatives}
 
-Strategies based on node-degree or local graph metrics (clustering coefficient, betweenness centrality) operate on \emph{pre-defined, single-hop} structural features that cannot encode higher-order topological patterns such as bottleneck corridors or multi-hop connectivity islands. In contrast, GAPF's two-layer GCN propagates information across each node's 2-hop neighbourhood, producing a graph-level embedding $\mathbf{z} \in \mathbb{R}^{16}$ that captures global connectivity structure; notably, node-degree is already one of the four input features (Eq.~\ref{art1:eq:node_features}), which the GCN \emph{enriches} through aggregation. Fuzzy inference systems (e.g., QPSOFL's Mamdani-type controller) require manual specification of linguistic variables, membership functions, and rule bases---a topology-specific process that does not transfer across configurations without re-tuning. GAPF avoids this feature engineering bottleneck: its GCN weights are learned end-to-end via REINFORCE and generalise across 7 scenarios (20--100 sensors, 25--50\,m radius) at $\geq$98\% PDR without per-scenario tuning, whereas QPSOFL collapses below 15\% PDR in sparse topologies. The GCN's per-episode overhead ($\mathcal{O}(n^2 d)$, $d{=}16$, $<0.03$\,ms) is negligible relative to per-step routing costs.
+Strategies based on node-degree or local graph metrics (clustering coefficient, betweenness centrality) operate on \emph{pre-defined, single-hop} structural features that cannot encode higher-order topological patterns such as bottleneck corridors or multi-hop connectivity islands. In contrast, GAPF's two-layer GCN propagates information across each node's 2-hop neighbourhood, producing a graph-level embedding $\mathbf{z} \in \mathbb{R}^{16}$ that captures global connectivity structure; notably, node-degree is already one of the four input features (Eq.~\ref{eq:node_features}), which the GCN \emph{enriches} through aggregation. Fuzzy inference systems (e.g., QPSOFL's Mamdani-type controller) require manual specification of linguistic variables, membership functions, and rule bases---a topology-specific process that does not transfer across configurations without re-tuning. GAPF avoids this feature engineering bottleneck: its GCN weights are learned end-to-end via REINFORCE and generalise across 7 scenarios (20--100 sensors, 25--50\,m radius) at $\geq$98\% PDR without per-scenario tuning, whereas QPSOFL collapses below 15\% PDR in sparse topologies. The GCN's per-episode overhead ($\mathcal{O}(n^2 d)$, $d{=}16$, $<0.03$\,ms) is negligible relative to per-step routing costs.
 
 \subsubsection{Meta-Learning Architecture vs.\ End-to-End Multi-Agent DRL}
-\label{art1:sec:meta_vs_e2e}
+\label{sec:meta_vs_e2e}
 
-GAPF's two-stage design (pre-trained frozen experts $+$ lightweight meta-controller) contrasts with end-to-end multi-agent DRL along three dimensions. \emph{Learning dynamics}: end-to-end MARL must simultaneously optimise agent policies, value decomposition, and implicit topology adaptation through a single gradient signal, creating a non-stationary problem where each agent's optimal policy depends on every other agent's changing policy; GAPF separates these concerns---experts converge independently, and the 1{,}473-parameter meta-controller solves the simpler problem of mapping topology embeddings to binary selection, converging in ${\sim}2{,}000$ episodes versus ${\sim}200{,}000$ steps per expert. \emph{Memory}: the dominant cost in end-to-end MARL is the replay buffer ($15{,}000$ episodes $\times$ $n$ agents); GAPF trains on-policy and eliminates this entirely, yielding a $13\times$ reduction in peak RAM (Table~\ref{art1:tab:consolidated_balance}) and passing the 1{,}024\,MB constraint that standalone QMIX/QTRAN fail in every scenario. \emph{Per-step computation}: at execution time, GAPF's per-step cost is identical to standalone QMIX or QTRAN ($\mathcal{O}(n^2 h + nh^2)$); the GCN adds only a one-time $\mathcal{O}(n^2 d)$ cost amortised over $T{=}100$ steps.
+GAPF's two-stage design (pre-trained frozen experts $+$ lightweight meta-controller) contrasts with end-to-end multi-agent DRL along three dimensions. \emph{Learning dynamics}: end-to-end MARL must simultaneously optimise agent policies, value decomposition, and implicit topology adaptation through a single gradient signal, creating a non-stationary problem where each agent's optimal policy depends on every other agent's changing policy; GAPF separates these concerns---experts converge independently, and the 1{,}473-parameter meta-controller solves the simpler problem of mapping topology embeddings to binary selection, converging in ${\sim}2{,}000$ episodes versus ${\sim}200{,}000$ steps per expert. \emph{Memory}: the dominant cost in end-to-end MARL is the replay buffer ($15{,}000$ episodes $\times$ $n$ agents); GAPF trains on-policy and eliminates this entirely, yielding a $13\times$ reduction in peak RAM (Table~\ref{tab:consolidated_balance}) and passing the 1{,}024\,MB constraint that standalone QMIX/QTRAN fail in every scenario. \emph{Per-step computation}: at execution time, GAPF's per-step cost is identical to standalone QMIX or QTRAN ($\mathcal{O}(n^2 h + nh^2)$); the GCN adds only a one-time $\mathcal{O}(n^2 d)$ cost amortised over $T{=}100$ steps.
 
+Here is the complete time-complexity analysis. 
 \subsection{Time Complexity Analysis}
-\label{art1:sec:complexity}
+\label{sec:complexity}
 
 Let $n$ denote the number of sensor agents, $h = 64$ the RNN hidden dimension, $d = 16$ the GNN embedding dimension, and $T$ the number of steps per episode.
 
 At each routing step, only the frozen expert executes; across all $n$ agents the per-step cost is $\mathcal{O}_{\text{step}} = \mathcal{O}(n^2 h + n h^2)$, \textbf{identical for QMIX, QTRAN, and GAPF}. GAPF adds a one-time per-episode overhead for adjacency construction ($\mathcal{O}(n^2)$), a two-layer GCN forward pass ($\mathcal{O}(n^2 d + n d^2)$), and the CAS MLP ($\mathcal{O}(dm)$), yielding $\mathcal{O}_{\text{GAPF-init}} = \mathcal{O}(n^2 d)$. For an episode of $T$ steps the total is $\mathcal{O}(Tn^2 h + Tnh^2 + n^2 d)$; since $Th \gg d$ the GCN overhead is amortised and the dominant term $\mathcal{O}(Tn^2 h)$ matches standalone QMIX/QTRAN.
 
-\begin{center}
-\captionof{table}{Time complexity comparison. $n$: number of sensors, $T$: steps per episode, $h$: RNN hidden dimension (64), $d$: GNN embedding dimension (16), $N_p$: PSO particles (32), $I$: PSO iterations (50).}
-\label{art1:tab:complexity}
+\begin{table}[!ht]
+\caption{Time complexity comparison. $n$: sensors, $T$: steps/episode, $h$: RNN hidden dim (64), $d$: GNN embed dim (16), $N_p$: PSO particles (32), $I$: PSO iterations (50).}
+\label{tab:complexity}
+\renewcommand{\arraystretch}{1.0}
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{lcc}
 \toprule
 Algorithm & Per-Step & Per-Episode \\
@@ -487,7 +553,8 @@ QPSOFL  & $\mathcal{O}(N_p \cdot n^2)$ & $\mathcal{O}(T \cdot I \cdot N_p \cdot 
 \textbf{GAPF} & $\mathcal{O}(n^2 h + n h^2)$ & $\mathcal{O}(T(n^2 h + n h^2) + n^2 d)$ \\
 \bottomrule
 \end{tabular}
-\end{center}
+}
+\end{table}
 
 \noindent GAPF adds only $\mathcal{O}(n^2 d)$ per episode, where $d = 16 \ll h = 64$, making its per-step complexity identical to standalone QMIX/QTRAN. In contrast, QPSOFL's cost grows as $\mathcal{O}(T \cdot I \cdot N_p \cdot n^2)$ due to repeated swarm optimisation at every step, explaining its longer wall-clock times despite having no neural network.
 
@@ -495,12 +562,13 @@ QPSOFL  & $\mathcal{O}(N_p \cdot n^2)$ & $\mathcal{O}(T \cdot I \cdot N_p \cdot 
 
 \section{Results and Discussion}
 
-Table~\ref{art1:table_setting} presents the custom Gym environment setting.
+Table~\ref{table_setting} presents the custom Gym environment setting.
 
-\begin{center}
-\captionof{table}{Custom Gym Environment setting.}
-\label{art1:table_setting}
-\resizebox{0.6\textwidth}{!}{
+\begin{table}[!ht]
+\caption{Custom Gym Environment setting.}
+\label{table_setting}
+\renewcommand{\arraystretch}{1.0}
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{|>{\columncolor{gray!50}}c|>{\columncolor{gray!10}}c|}
 \hline
 \textbf{Key} & \textbf{Value} \\
@@ -523,13 +591,13 @@ Total timesteps / Max per episode & 200,000 / 100 \\
 \hline
 \end{tabular}
 }
-\end{center}
+\end{table}
 
-Table~\ref{art1:tab:hyperparameters} displays the training hyperparameters. QMIX and QTRAN are trained independently as separate expert policies; their parameters are then frozen, and only the lightweight GAPF meta-controller (${\sim}1{,}473$ parameters) is trained to dynamically select between them based on network topology.
+Table~\ref{tab:hyperparameters} displays the training hyperparameters. QMIX and QTRAN are trained independently as separate expert policies; their parameters are then frozen, and only the lightweight GAPF meta-controller (${\sim}1{,}473$ parameters) is trained to dynamically select between them based on network topology.
 
-\begin{center}
-\captionof{table}{Training Hyperparameters for QMIX, QTRAN, and GAPF.}
-\label{art1:tab:hyperparameters}
+\begin{table*}[!t]
+\caption{Training Hyperparameters for QMIX, QTRAN, and GAPF.}
+\label{tab:hyperparameters}
 \resizebox{\textwidth}{!}{
 \begin{tabular}{llccc}
 \toprule
@@ -559,17 +627,19 @@ Evaluation & Test episodes / eval $\varepsilon$ & 1,000 / 0.01 & 1,000 / 0.01 & 
 \bottomrule
 \end{tabular}
 }
-\end{center}
+\end{table*}
+\renewcommand{\arraystretch}{1.0}
 
 Our evaluation includes QPSOFL~\cite{hu_energy_2024}, a metaheuristic baseline using Quantum PSO with Sobol-initialized particles and L'evy flight for cluster-head selection, followed by Mamdani-type Fuzzy Inference for relay selection.
 
 \paragraph{Execution-time instrumentation.}
-The framework records per-step wall-clock times (mean, p95, p99) as versioned \texttt{.npy} arrays. A standalone benchmark tool measures latency over 30 iterations (3 warmup), peak RAM via \texttt{tracemalloc}, analytical MACs/FLOPs, and estimated energy per inference ($\mu$J). Table~\ref{art1:tab:reviewer7_latency} reports results for the worst case ($N{=}70$).
+The framework records per-step wall-clock times (mean, p95, p99) as versioned \texttt{.npy} arrays. A standalone benchmark tool measures latency over 30 iterations (3 warmup), peak RAM via \texttt{tracemalloc}, analytical MACs/FLOPs, and estimated energy per inference ($\mu$J). Table~\ref{tab:reviewer7_latency} reports results for the worst case ($N{=}70$).
 
-\begin{center}
-\captionof{table}{Inference metrics (Apple M-series CPU, 0.1,W reference). All algorithms achieve sub-millisecond latency.}
-\label{art1:tab:reviewer7_latency}
-\renewcommand{\arraystretch}{1.15}
+\begin{table}[!ht]
+\caption{Inference metrics (Apple M-series CPU, 0.1\,W reference). All algorithms achieve sub-millisecond latency.}
+\label{tab:reviewer7_latency}
+\renewcommand{\arraystretch}{1.0}
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{@{}lcccc@{}}
 \toprule
 \textbf{Algorithm} & \textbf{Latency p95 (ms)} & \textbf{Peak RAM (KB)} & \textbf{MACs} & \textbf{Energy ($\mu$J)} \\
@@ -581,15 +651,18 @@ GAPF (GCN, gateway)     & 0.03 & 4.12  & 181{,}408     & 3.0  \\
 Agent only (deployed)    & $<$1 & $\sim$2 & $\sim$29K  & $<$10 \\
 \bottomrule
 \end{tabular}
-\end{center}
+}
+\end{table}
 
 Even scaling by $50\times$ for a resource-constrained ARM Cortex-M4 at 80,MHz, the per-step decision time remains under 15,ms---well within real-time WSN budgets.
 
-Seven scenarios (Table~\ref{art1:tab:scenarios}) systematically vary network density ($n$) and coverage radius ($R$), each evaluated over three random seeds (42, 123, 456).
+Seven scenarios (Table~\ref{tab:scenarios}) systematically vary network density ($n$) and coverage radius ($R$), each evaluated over three random seeds (42, 123, 456).
 
-\begin{center}
-\captionof{table}{Overview of the seven evaluation scenarios.}
-\label{art1:tab:scenarios}
+\begin{table}[!ht]
+\caption{Overview of the seven evaluation scenarios.}
+\label{tab:scenarios}
+\renewcommand{\arraystretch}{1.0}
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{cccl}
 \hline
 \textbf{\#} & $n$ & $R$ (m) & \textbf{Rationale} \\
@@ -603,15 +676,17 @@ Seven scenarios (Table~\ref{art1:tab:scenarios}) systematically vary network den
 7 & 100 & 50 & Large-scale, long range --- high connectivity stress \\
 \hline
 \end{tabular}
-\end{center}
+}
+\end{table}
 
 \subsubsection{Consolidated Results Across All Scenarios}
 
-Table~\ref{art1:tab:consolidated_perf} presents key performance metrics for all seven scenarios. All values are mean $\pm$ std aggregated over three seeds on the 1{,}000-episode test set. PDR denotes packet delivery ratio, $E_{\text{tot}}$ total energy consumed (J), $\sigma_{E}$ standard deviation of remaining energy (lower is better balanced), and Throughput is packets delivered per step.
+Table~\ref{tab:consolidated_perf} presents key performance metrics for all seven scenarios. All values are mean $\pm$ std aggregated over three seeds on the 1{,}000-episode test set. PDR denotes packet delivery ratio, $E_{\text{tot}}$ total energy consumed (J), $\sigma_{E}$ standard deviation of remaining energy (lower is better balanced), and Throughput is packets delivered per step.
 
-\begin{center}
-\captionof{table}{Performance metrics across all scenarios (three seeds, test set). Best values per scenario in \textbf{bold}.}
-\label{art1:tab:consolidated_perf}
+\begin{table*}[!t]
+\caption{Performance metrics across all scenarios (three seeds, test set). Best values per scenario in \textbf{bold}.}
+\label{tab:consolidated_perf}
+\renewcommand{\arraystretch}{1.0}
 \resizebox{\textwidth}{!}{
 \begin{tabular}{cc|cccc|cccc}
 \toprule
@@ -628,11 +703,12 @@ $n$ & $R$ & QMIX & QTRAN & QPSOFL & \textbf{GAPF} & QMIX & QTRAN & QPSOFL & \tex
 \bottomrule
 \end{tabular}
 }
-\end{center}
+\end{table*}
 
-\begin{center}
-\captionof{table}{Energy balance ($\sigma_E$) and feasibility compliance across all scenarios.}
-\label{art1:tab:consolidated_balance}
+\begin{table*}[!t]
+\caption{Energy balance ($\sigma_E$) and feasibility compliance across all scenarios.}
+\label{tab:consolidated_balance}
+\renewcommand{\arraystretch}{1.0}
 \resizebox{\textwidth}{!}{
 \begin{tabular}{cc|cccc|cc|cc}
 \toprule
@@ -649,7 +725,7 @@ $n$ & $R$ & QMIX & QTRAN & QPSOFL & \textbf{GAPF} & QMIX/QTRAN & GAPF & QMIX/QTR
 \bottomrule
 \end{tabular}
 }
-\end{center}
+\end{table*}
 
 \subsubsection{Key Findings}
 
@@ -671,15 +747,15 @@ QPSOFL's PDR degrades from $7.5\%$ ($n{=}20$) to below $10\%$ at $n{=}100$, $R{=
 QMIX/QTRAN \textbf{fail} the 1{,}024,MB memory constraint in every scenario (peak memory $3.2$--$13.8$,GB), while GAPF stays within budget ($684$--$951$,MB). All algorithms pass the $p_{99}{<}50$,ms latency constraint. GAPF's memory footprint at $n{=}100$ ($951$,MB) leaves only $7\%$ headroom, warranting attention for even larger deployments.
 
 \subsection{Deployment Feasibility on Resource-Constrained Nodes}
-\label{art1:sec:deployment_feasibility}
+\label{sec:deployment_feasibility}
 
 The CTDE paradigm~\cite{kraemer2016multi,lowe2017multi} decouples training from deployment complexity. At inference time, the heavy training-only components---value-decomposition mixers, reward scalarization network, ES loop---are \emph{discarded entirely}.
 
-\begin{center}
-\captionof{table}{Component deployment map under CTDE. Only the per-sensor agent and GAPF controller are active at inference.}
-\label{art1:tab:deployment_components}
-\renewcommand{\arraystretch}{1.15}
-\resizebox{\textwidth}{!}{
+\begin{table*}[!t]
+\caption{Component deployment map under CTDE. Only the per-sensor agent and GAPF controller are active at inference.}
+\label{tab:deployment_components}
+\renewcommand{\arraystretch}{1.0}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}lccc@{}}
 \toprule
 \textbf{Component} & \textbf{Runs on} & \textbf{Deployed?} & \textbf{Size} \\
@@ -691,22 +767,23 @@ Per-sensor agent (GRU) & Each sensor & Yes (1$\times$/step) & $\sim$25K params (
 \bottomrule
 \end{tabular}
 }
-\end{center}
+\end{table*}
 
 Each sensor executes a single-layer GRU agent:
-\begin{equation}
-a_i = \argmax_{j}; \mathbf{W}_2 ;\mathrm{GRU}!\bigl(\mathrm{ReLU}(\mathbf{W}_1 \mathbf{o}_i + \mathbf{b}1),; \mathbf{h}{i}^{(t-1)}\bigr) + \mathbf{b}_2
-\label{art1:eq:agent_forward}
-\end{equation}
+\begin{multline}
+a_i = \argmax_{j}\; \mathbf{W}_2 \;\mathrm{GRU}\!\bigl(\mathrm{ReLU}(\mathbf{W}_1 \mathbf{o}_i + \mathbf{b}_1),\\
+\mathbf{h}_{i}^{(t-1)}\bigr) + \mathbf{b}_2
+\label{eq:agent_forward}
+\end{multline}
 where $\mathbf{o}_i \in \mathbb{R}^5$ is the local observation (remaining energy, consumed energy, $x$-$y$ position, packet count), $\mathbf{h}_i^{(t-1)} \in \mathbb{R}^{64}$ is the recurrent hidden state, and $|\mathcal{A}|{=}N{+}1$. A single forward pass requires ${\sim}29$K MACs (${\sim}320$ for the input layer, ${\sim}24{,}576$ for the GRU cell, ${\sim}4{,}544$ for the output layer at $n{=}70$), which completes in $<1$,ms even on an ARM Cortex-M4 at 80,MHz. The full model fits in ${\sim}100$,KB of flash, well within the capacity of commercial WSN platforms such as the STM32L4 (1,MB flash, 320,KB SRAM) or nRF52840 (1,MB flash, 256,KB RAM).
 
 \subsection{Limitations}
-\label{art1:sec:limitations}
+\label{sec:limitations}
 
 Despite GAPF's strong empirical performance, several limitations warrant discussion:
 
 \begin{enumerate}
-    \item \textbf{Simulation-only validation.} All experiments are conducted in a custom OpenAI Gym simulator. While we provide deployment feasibility analysis (Section~\ref{art1:sec:deployment_feasibility}) showing that the deployed agent requires only ${\sim}100$ lines of C and $<30$\,\textmu J per inference on a Cortex-M4 MCU, no hardware-in-the-loop experiments have been performed. Real-world factors such as channel fading, packet collisions, and clock drift are not modelled.
+    \item \textbf{Simulation-only validation.} All experiments are conducted in a custom OpenAI Gym simulator. While we provide deployment feasibility analysis (Section~\ref{sec:deployment_feasibility}) showing that the deployed agent requires only ${\sim}100$ lines of C and $<30$\,\textmu J per inference on a Cortex-M4 MCU, no hardware-in-the-loop experiments have been performed. Real-world factors such as channel fading, packet collisions, and clock drift are not modelled.
     
     \item \textbf{Static topology assumption.} GAPF computes the graph embedding once per episode and selects a fixed expert for the entire episode. In scenarios with mobile sensors or rapidly changing channel conditions, step-level re-evaluation may be necessary. Three extensions can address this, ordered by complexity: (i)~\emph{periodic re-evaluation} every $K$ steps with GRU hidden state reset (overhead: $\lceil T/K \rceil \times 0.03$\,ms); (ii)~\emph{confidence-triggered re-evaluation} when $|p_{\text{QMIX}} - 0.5| < \delta$; and (iii)~\emph{step-level Q-value fusion} blending both experts' outputs via a learned weight $\alpha_t$ at the cost of doubled per-step computation. In practice, WSN topologies change on the order of minutes to hours while a routing episode spans seconds, making option~(i) sufficient for most deployments.
     
@@ -716,15 +793,13 @@ Despite GAPF's strong empirical performance, several limitations warrant discuss
     
     \item \textbf{Memory constraint tightness.} At $n{=}100$, GAPF's memory footprint reaches 951\,MB---within the 1\,GB constraint but with only 7\% headroom. Scaling beyond $n{=}100$ may require model compression techniques (pruning, quantisation) to remain feasible on resource-constrained gateways.
     
-    \item \textbf{Homogeneous sensor assumption.} All sensors are identical in hardware capability and initial energy. Heterogeneous deployments with mixed sensor types, varying transmission power, or asymmetric energy budgets are not evaluated. However, the architecture accommodates heterogeneity with minimal changes: the node feature vector (Eq.~\ref{art1:eq:node_features}) extends from $\mathbb{R}^4$ to $\mathbb{R}^{4+k}$ by appending sensor-specific attributes (battery capacity, transmission power, sensor type), requiring only a resized $\mathbf{W}_1 \in \mathbb{R}^{(4+k) \times d}$; the CAS controller and readout are unchanged. Heterogeneous radii yield an asymmetric adjacency handled by row-normalised propagation. For $k{=}4$ additional features the parameter increase is 64 (4\% of 1{,}473), confirming no significant redesign is needed.
+    \item \textbf{Homogeneous sensor assumption.} All sensors are identical in hardware capability and initial energy. Heterogeneous deployments with mixed sensor types, varying transmission power, or asymmetric energy budgets are not evaluated. However, the architecture accommodates heterogeneity with minimal changes: the node feature vector (Eq.~\ref{eq:node_features}) extends from $\mathbb{R}^4$ to $\mathbb{R}^{4+k}$ by appending sensor-specific attributes (battery capacity, transmission power, sensor type), requiring only a resized $\mathbf{W}_1 \in \mathbb{R}^{(4+k) \times d}$; the CAS controller and readout are unchanged. Heterogeneous radii yield an asymmetric adjacency handled by row-normalised propagation. For $k{=}4$ additional features the parameter increase is 64 (4\% of 1{,}473), confirming no significant redesign is needed.
 \end{enumerate}
-
-\FloatBarrier
 
 
 
 \section{Conclusion}
-\label{art1:sec:conclusion}
+\label{sec:conclusion}
 
 This paper introduced \textbf{Graph-Attentive Policy Fusion (GAPF)}, a lightweight meta-learning framework for energy-efficient multi-hop routing in Wireless Sensor Networks. GAPF fuses frozen MARL expert policies (QMIX, QTRAN) through a two-layer Graph Convolutional Network that encodes the sensor topology into a compact 16-dimensional embedding, enabling a Contextual Algorithm Selection controller to choose the best expert per deployment with only 1{,}473 trainable parameters.
 
@@ -763,6 +838,3 @@ We identify five directions for future research, ordered by expected impact:
 \medskip
 \noindent In summary, GAPF bridges the gap between the theoretical promise of MARL and the practical constraints of real-world sensor networks, achieving reliable, energy-efficient, and deployable routing at scale---a step toward responsible and sustainable AI for public safety.
 
-
-\vspace{0.5cm}
-\noindent Les hyperparamètres complets, la preuve formelle de monotonicité, les résultats détaillés par scénario, l'analyse de faisabilité de déploiement et un tableau comparatif des approches de routage récentes (2024--2025) sont fournis à l'Annexe~\ref{ann:gapf-suppl}.

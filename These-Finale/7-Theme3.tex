@@ -8,16 +8,16 @@
 \noindent\textbf{Statut~:} Soumis.
 
 \vspace{0.3cm}
-\noindent\textit{Ce chapitre pr\'{e}sente le troisi\`eme article de cette th\`ese. Il propose CASTER-ZT (Zero-Trust Shielded Decision-Control), un cadre combinant un encodeur par r\'eseau de neurones sur graphe (GNN), une politique de reprise apprise et un \'evaluateur neuronal double hypoth\`ese confiance--risque avec un bouclier d\'eterministe formellement v\'erifi\'e qui impose l'admissibilit\'e born\'ee avant l'ex\'ecution. Dix propri\'et\'es th\'eoriques sont d\'emontr\'ees, incluant une borne de d\'efense en profondeur, une garantie conforme sans distribution et un taux de convergence de calibration. Ce travail constitue la troisi\`eme contribution de la th\`ese en \'etablissant un cadre de s\'ecurit\'e formellement fond\'e pour les d\'ecisions autonomes dans les r\'eseaux de capteurs 6G.}
+\noindent\textit{Ce chapitre présente le troisième article de cette thèse. Il propose CASTER-ZT (Zero-Trust Shielded Decision-Control), un cadre combinant un encodeur par réseau de neurones sur graphe (GNN), une politique de reprise apprise et un évaluateur neuronal double hypothèse confiance--risque avec un bouclier déterministe formellement vérifié qui impose l'admissibilité bornée avant l'exécution. Dix propriétés théoriques sont démontrées, incluant une borne de défense en profondeur, une garantie conforme sans distribution et un taux de convergence de calibration. Ce travail constitue la troisième contribution de la thèse en établissant un cadre de sécurité formellement fondé pour les décisions autonomes dans les réseaux de capteurs 6G.}
 
 \vspace{0.5cm}
 
 \section{Abstract}
-
 Disaster-monitoring sensing networks require autonomous recovery under adversarial conditions, yet no existing framework combines graph-structured decision making with formally bounded zero-trust admissibility for near-real-time actuation under attack.
 We propose \emph{CASTER-ZT}, coupling a graph neural network encoder, learned recovery policy, and neural dual-hypothesis trust--risk evaluator with a deterministic shield that enforces bounded admissibility before execution.
 Ten formal properties are proved, including a defense-in-depth bound, a distribution-free conformal coverage guarantee, and a calibration convergence rate.
 A 2,420-run campaign across eleven methods, four attack conditions, two severity levels, twenty seeds, and three scales (12/36/100-cell) shows 74.2\% rogue detection with zero false positives at 12-cell (rising to 98.3\% at 100-cell), recovery quality 0.733 vs.\ 0.14--0.20 for non-shielding baselines (p less than 0.001), and 3.07\,ms per-decision latency within the O-RAN 10\,ms budget.
+
 
 \section{Introduction}
 \label{art3:sec:introduction}
@@ -54,6 +54,7 @@ Section~\ref{art3:sec:framework} presents the CASTER-ZT framework, algorithms, t
 Section~\ref{art3:sec:evaluation} details the experimental evaluation.
 Section~\ref{art3:sec:discussion} discusses findings and limitations.
 Section~\ref{art3:sec:conclusion} concludes.
+
 
 %% ======================================================================
 \section{Related Work}
@@ -121,6 +122,7 @@ Agentic AI~\cite{toward_autonomous_oran_2026,demirel2026agentic} & \pmark & \xma
 \end{tabular}
 \end{table}
 
+
 %% ======================================================================
 \section{CASTER-ZT Framework}
 \label{art3:sec:framework}
@@ -174,6 +176,7 @@ AI-native coverage $\eta_{\mathrm{AI}} = |\{S_k : S_k\text{ is learned}\}|/K$.
 CASTER-ZT achieves $\eta_{\mathrm{AI}} = 5/6$: five neural stages plus one deliberately deterministic shield.
 \end{definition}
 
+
 \subsection{Architecture}
 \label{art3:sec:architecture}
 
@@ -189,7 +192,6 @@ $\text{telemetry} \to \underbrace{\text{GNN enc.}}_{\theta} \to \underbrace{\tex
 
 \begin{figure*}[t]
 \centering
-\resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[
     node distance=1.15cm and 0.9cm,
     block/.style={draw, rounded corners=2pt, align=center, minimum height=0.95cm, minimum width=2.45cm, fill=gray!6},
@@ -216,8 +218,7 @@ $\text{telemetry} \to \underbrace{\text{GNN enc.}}_{\theta} \to \underbrace{\tex
 \draw[line] (shield) -- (outcome);
 \draw[line] (shield) -- (exec);
 \draw[line] (outcome.south) |- (exec.east);
-\end{tikzpicture}%
-}%
+\end{tikzpicture}
 \caption{CASTER-ZT architecture.  The policy proposes; the zero-trust shield $\Gamma$ controls execution via trust, risk, divergence, authorization, and uncertainty signals.}
 \label{art3:fig:caster_architecture}
 \end{figure*}
@@ -237,6 +238,7 @@ The architecture contains five layers, of which the first four are \emph{learned
     \item \textbf{Zero-trust shield} ($\Gamma$, deterministic).
     Formal admissibility gate (Algorithm~\ref{art3:alg:casterzt}) with 14 scalar parameters set by offline calibration.  No learned weights.
 \end{enumerate}
+
 
 \subsection{Shield design and algorithms}
 
@@ -302,6 +304,7 @@ Algorithm~\ref{art3:alg:calibration} sets shield thresholds via offline calibrat
 \end{algorithmic}
 \end{algorithm}
 
+
 \subsection{Training pipeline}
 \label{art3:sec:training_pipeline}
 
@@ -340,6 +343,7 @@ Shield (deterministic) & 14 scalars & Calibration & --- \\
 \end{tabular}
 \end{table}
 
+
 \begin{table}[t]
 \centering
 \caption{Complete hyperparameter specification.}
@@ -377,6 +381,7 @@ Component & Parameter & Value \\
 \end{tabular}
 \end{table}
 
+
 \subsection{Theoretical properties}
 \label{art3:sec:theory}
 
@@ -397,21 +402,10 @@ We state ten propositions; all proofs are provided below.
 Under Assumption~\ref{art3:asm:standing} with $\alpha_t=1$, decreasing $\tau_t$ or increasing $\rho_t$, $u_t$, or $\Delta_t$ cannot move the output to a less conservative decision.
 \end{proposition}
 
-\begin{proof}
-Since $w_1, w_2, w_3, w_4 > 0$, the composite gate score $g_t = w_1(1-\tau_t)+w_2\rho_t+w_3 u_t+w_4\Delta_t$ is monotonically decreasing in $\tau_t$ and increasing in $\rho_t, u_t, \Delta_t$.
-Since $\kappa_1, \kappa_2 \ge 0$, $\tau_{\min} = \tau_0 + \kappa_1\rho_t + \kappa_2 u_t$ is non-decreasing in $\rho_t, u_t$, making the trust condition harder to satisfy.
-The \textsc{allow} branch requires $g_t < \gamma_1$, $\tau_t \ge \tau_{\min}$, and $\Delta_t \le \delta_{\max}$.
-Worsening any input can only increase $g_t$, raise $\tau_{\min}$, or violate the divergence bound, pushing the output toward a more conservative branch.
-\end{proof}
-
 \begin{proposition}[Unauthorized-actuation exclusion]
 \label{art3:prop:authz}
 If $\alpha_t = 0$, then $d_t \neq \textup{\textsc{allow}}$.
 \end{proposition}
-
-\begin{proof}
-In the shield algorithm, $\alpha_t=0$ triggers $d_t=\textsc{block}$ at the authorization check, before any permissive branch is evaluated.
-\end{proof}
 
 \begin{proposition}[Divergence-triggered safeguard]
 \label{art3:prop:divergence}
@@ -419,32 +413,15 @@ If $\Delta_t > \delta_{\max}^{\mathrm{hard}}$, then $d_t = \textup{\textsc{block
 If $\Delta_t > \delta_{\max}$, then $d_t \neq \textup{\textsc{allow}}$.
 \end{proposition}
 
-\begin{proof}
-$\Delta_t > \delta_{\max}^{\mathrm{hard}}$ triggers $d_t=\textsc{block}$ at the hard-divergence check.
-$\Delta_t > \delta_{\max}$ violates the \textsc{allow} condition, preventing permissive decisions.
-\end{proof}
-
 \begin{proposition}[Bounded decision completeness]
 \label{art3:prop:completeness}
 $\Gamma$ is a total function: every valid input maps to exactly one $d_t \in \mathcal{D}$.
 \end{proposition}
 
-\begin{proof}
-The shield algorithm is a finite ordered branching structure with mutually exclusive branches (strict threshold ordering) and a final \textsc{else} clause catching all remaining cases.
-Every valid input therefore maps to exactly one $d_t \in \mathcal{D}$.
-\end{proof}
-
 \begin{proposition}[Per-decision complexity]
 \label{art3:prop:complexity}
 Total per-decision complexity is $\mathcal{O}(L|E_t|d + |\mathcal{A}|k)$.
 \end{proposition}
-
-\begin{proof}
-Graph encoding: $\mathcal{O}(L|E_t|d)$.
-Candidate scoring and trust--risk evaluation: $\mathcal{O}(|\mathcal{A}|k)$ each.
-Shield evaluation: $\mathcal{O}(1)$.
-Total: $\mathcal{O}(L|E_t|d + |\mathcal{A}|k)$.
-\end{proof}
 
 \begin{proposition}[Defense-in-depth bound]
 \label{art3:prop:depth}
@@ -452,56 +429,26 @@ Let $\varepsilon_\alpha$ and $\varepsilon_\tau$ be false-negative probabilities 
 Under combined attack with conditionally independent gates: $\Pr[\textup{\textsc{allow}} \mid \text{attack}] \le \varepsilon_\alpha \cdot \varepsilon_\tau$.
 \end{proposition}
 
-\begin{proof}
-Under identity attack, an unsafe \textsc{allow} requires an authorization false negative: $\Pr \le \varepsilon_\alpha$.
-Under telemetry attack: $\Pr \le \varepsilon_\tau$.
-Under combined attack with conditional independence:
-$\Pr[\textsc{allow} \mid \text{combined}] = \Pr[\alpha_t=1 \mid \text{id}] \cdot \Pr[g_t<\gamma_1 \mid \text{telem}] \le \varepsilon_\alpha \varepsilon_\tau$.
-\end{proof}
-
 \begin{proposition}[Calibration-consistent accuracy]
 \label{art3:prop:calibration}
 For empirical false-allow rate $\hat{\varepsilon}$ on $n$ i.i.d.\ episodes: $\Pr[\varepsilon^\star \le \hat{\varepsilon} + \sqrt{\ln(1/\delta)/(2n)}] \ge 1-\delta$.
 \end{proposition}
-
-\begin{proof}
-Each episode produces Bernoulli $y_i$ with $\mathbb{E}[y_i]=\varepsilon^\star$.
-By Hoeffding's inequality: $\Pr[\varepsilon^\star - \hat\varepsilon > t] \le \exp(-2nt^2)$.
-Setting $\exp(-2nt^2)=\delta$ gives $t=\sqrt{\ln(1/\delta)/(2n)}$.
-\end{proof}
 
 \begin{proposition}[Bounded price of safety]
 \label{art3:prop:price_safety}
 Under clean conditions with scope-reduction rate $\eta$ and utility gap $U_{\mathrm{gap}}$: $\mathbb{E}[\text{utility loss}] \le \eta \cdot U_{\mathrm{gap}} + \eta_{\mathrm{block}} \cdot U_{\max}$.
 \end{proposition}
 
-\begin{proof}
-With probability $(1-\eta-\eta_{\mathrm{block}})$, the shield allows (loss~0).
-With probability $\eta$, scope-reduction yields loss $\le U_{\mathrm{gap}}$.
-With probability $\eta_{\mathrm{block}}$, blocking yields loss $\le U_{\max}$.
-Summing: $\mathbb{E}[\text{loss}] \le \eta U_{\mathrm{gap}} + \eta_{\mathrm{block}} U_{\max}$.
-\end{proof}
-
 \begin{proposition}[Conformal admissibility coverage]
 \label{art3:prop:conformal}
 With $\gamma_1$ set as the $(1-\alpha)$-quantile of calibration nonconformity scores and exchangeable test episodes: $\Pr[y_{n+1}=1 \Rightarrow d_{n+1} \neq \textup{\textsc{allow}}] \ge 1-\alpha$.
 \end{proposition}
-
-\begin{proof}
-By the conformal framework~\cite{angelopoulos2023conformal}, if scores $(r_1,\ldots,r_{n+1})$ are exchangeable, $\Pr[r_{n+1} \le r_{(\lceil(1-\alpha)(n+1)\rceil)}] \ge 1-\alpha$.
-The shield allows only if $g_t < \gamma_1$, which corresponds to $r_{n+1} > r_{(\lceil(1-\alpha)(n+1)\rceil)}$, occurring with probability $\le \alpha$.
-\end{proof}
 
 \begin{proposition}[Calibration convergence rate]
 \label{art3:prop:convergence}
 Under continuous, strictly increasing $\varepsilon(\gamma)$ with $\varepsilon'(\gamma) \ge c_\varepsilon > 0$: $|\gamma_1^{(n)} - \gamma_1^\star| = \mathcal{O}_P(1/\sqrt{n})$.
 \end{proposition}
 
-\begin{proof}
-By Hoeffding's concentration, $|\hat\varepsilon(\gamma) - \varepsilon(\gamma)| \le \sqrt{\ln(2/\delta)/(2n)}$ w.h.p.
-Since $\varepsilon'(\gamma) \ge c_\varepsilon > 0$, the mean value theorem gives $|\varepsilon(\gamma_1^{(n)}) - \varepsilon(\gamma_1^\star)| \ge c_\varepsilon |\gamma_1^{(n)} - \gamma_1^\star|$.
-The triangle inequality yields $c_\varepsilon |\gamma_1^{(n)} - \gamma_1^\star| = \mathcal{O}(1/\sqrt{n})$, so $|\gamma_1^{(n)} - \gamma_1^\star| = \mathcal{O}_P(1/\sqrt{n})$.
-\end{proof}
 
 \begin{figure*}[t]
 \centering
@@ -550,6 +497,7 @@ Three topology scales: \textbf{Small} (12-cell, 2-zone, primary), \textbf{Medium
 \noindent\textbf{Campaign.}
 $11 \times 7 \times 20 = 1{,}540$ primary runs + 880 multi-scale = \textbf{2,420 total runs}.
 All results: mean $\pm$ std over 20 seeds, bootstrap 95\% CIs, Wilcoxon signed-rank with Holm--Bonferroni correction.
+
 
 \subsection{Results}
 
@@ -648,6 +596,7 @@ Removing trust assessment is the most critical ablation: RogueDet drops from 0.7
 Removing authorization produces similar results (RogueDet $=0.763$), \emph{expected} because the adversary uses stolen credentials.
 Removing risk moderately degrades results (RogueDet $=0.665$, $\omega_{\mathrm{rec}}=0.678$).
 
+
 \subsubsection{RQ3: Generalization}
 
 \begin{table}[t]
@@ -688,6 +637,7 @@ $\gamma_1$ & Block\% & RogueDet & FalseBlk & $\omega_{\mathrm{rec}}$ \\
 
 Severity scaling is consistent: RogueDet $=0.806$ at \textsc{medium}, 0.742 at \textsc{high} (identity abuse); $\omega_{\mathrm{rec}}=0.810$ and 0.733 respectively.
 
+
 \subsubsection{RQ4: 6G deployment compliance}
 
 \begin{table}[t]
@@ -713,6 +663,7 @@ At 100-cell, latency (10.25\,ms) marginally exceeds the budget, motivating infer
 Fig.~\ref{art3:fig:training_curves} confirms rapid convergence for all four learned components.
 Fig.~\ref{art3:fig:radar_comparison} provides a multi-metric radar comparison across methods.
 Fig.~\ref{art3:fig:multiscale} depicts the scaling behaviour of detection accuracy and latency.
+
 
 %% ======================================================================
 \section{Discussion and Limitations}
@@ -761,6 +712,7 @@ The EU AI Act~\cite{euaiact2024} classifies critical-infrastructure AI as high-r
 (4)~External baselines are faithful adaptations, not original-author code.
 (5)~$\omega_{\mathrm{rec}}$ does not model cascading failures.
 
+
 %% ======================================================================
 \section{Conclusion}
 \label{art3:sec:conclusion}
@@ -773,12 +725,76 @@ A 2,420-run campaign demonstrated 74.2--98.3\% rogue detection with zero false p
 The framework achieves AI-native coverage $\eta_{\mathrm{AI}}=5/6$ and 6G deployment compliance at the primary evaluation scale.
 Future work includes adversarial training of the trust autoencoder, RL-based policy optimization, cross-source GNN consistency checking, and evaluation under adaptive adversaries.
 
+
 %% ======================================================================
 % Note: Per IEEE TMC guidelines, all appendices are supplemental material
 % and must be submitted as separate files.  See supplemental_proofs.pdf.
 %% ======================================================================
 
 
+\section*{Supplemental Material: Proofs of Theoretical Properties}
 
-\vspace{0.5cm}
-\noindent Les hyperparamètres complets, les preuves des dix propositions théoriques, les résultats détaillés par échelle et par scénario d'attaque, ainsi que les analyses de sensibilité aux seuils sont fournis à l'Annexe~\ref{ann:caster-suppl}.
+This supplemental document provides the complete proofs for the ten propositions stated in the main paper.
+All proposition numbers and references correspond to those above.
+
+\bigskip
+
+\begin{proof}[Proof of Proposition~1 (Monotone conservatism)]
+Since $w_1, w_2, w_3, w_4 > 0$, the composite gate score $g_t = w_1(1-\tau_t)+w_2\rho_t+w_3 u_t+w_4\Delta_t$ is monotonically decreasing in $\tau_t$ and increasing in $\rho_t, u_t, \Delta_t$.
+Since $\kappa_1, \kappa_2 \ge 0$, $\tau_{\min} = \tau_0 + \kappa_1\rho_t + \kappa_2 u_t$ is non-decreasing in $\rho_t, u_t$, making the trust condition harder to satisfy.
+The \textsc{allow} branch requires $g_t < \gamma_1$, $\tau_t \ge \tau_{\min}$, and $\Delta_t \le \delta_{\max}$.
+Worsening any input can only increase $g_t$, raise $\tau_{\min}$, or violate the divergence bound, pushing the output toward a more conservative branch.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~2 (Unauthorized-actuation exclusion)]
+In the shield algorithm, $\alpha_t=0$ triggers $d_t=\textsc{block}$ at the authorization check, before any permissive branch is evaluated.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~3 (Divergence-triggered safeguard)]
+$\Delta_t > \delta_{\max}^{\mathrm{hard}}$ triggers $d_t=\textsc{block}$ at the hard-divergence check.
+$\Delta_t > \delta_{\max}$ violates the \textsc{allow} condition, preventing permissive decisions.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~4 (Bounded decision completeness)]
+The shield algorithm is a finite ordered branching structure with mutually exclusive branches (strict threshold ordering) and a final \textsc{else} clause catching all remaining cases.
+Every valid input therefore maps to exactly one $d_t \in \mathcal{D}$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~5 (Per-decision complexity)]
+Graph encoding: $\mathcal{O}(L|E_t|d)$.
+Candidate scoring and trust--risk evaluation: $\mathcal{O}(|\mathcal{A}|k)$ each.
+Shield evaluation: $\mathcal{O}(1)$.
+Total: $\mathcal{O}(L|E_t|d + |\mathcal{A}|k)$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~6 (Defense-in-depth bound)]
+Under identity attack, an unsafe \textsc{allow} requires an authorization false negative: $\Pr \le \varepsilon_\alpha$.
+Under telemetry attack: $\Pr \le \varepsilon_\tau$.
+Under combined attack with conditional independence:
+$\Pr[\textsc{allow} \mid \text{combined}] = \Pr[\alpha_t=1 \mid \text{id}] \cdot \Pr[g_t<\gamma_1 \mid \text{telem}] \le \varepsilon_\alpha \varepsilon_\tau$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~7 (Calibration-consistent accuracy)]
+Each episode produces Bernoulli $y_i$ with $\mathbb{E}[y_i]=\varepsilon^\star$.
+By Hoeffding's inequality: $\Pr[\varepsilon^\star - \hat\varepsilon > t] \le \exp(-2nt^2)$.
+Setting $\exp(-2nt^2)=\delta$ gives $t=\sqrt{\ln(1/\delta)/(2n)}$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~8 (Bounded price of safety)]
+With probability $(1-\eta-\eta_{\mathrm{block}})$, the shield allows (loss~0).
+With probability $\eta$, scope-reduction yields loss $\le U_{\mathrm{gap}}$.
+With probability $\eta_{\mathrm{block}}$, blocking yields loss $\le U_{\max}$.
+Summing: $\mathbb{E}[\text{loss}] \le \eta U_{\mathrm{gap}} + \eta_{\mathrm{block}} U_{\max}$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~9 (Conformal admissibility coverage)]
+By the conformal framework~\cite{angelopoulos2023conformal}, if scores $(r_1,\ldots,r_{n+1})$ are exchangeable, $\Pr[r_{n+1} \le r_{(\lceil(1-\alpha)(n+1)\rceil)}] \ge 1-\alpha$.
+The shield allows only if $g_t < \gamma_1$, which corresponds to $r_{n+1} > r_{(\lceil(1-\alpha)(n+1)\rceil)}$, occurring with probability $\le \alpha$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~10 (Calibration convergence rate)]
+By Hoeffding's concentration, $|\hat\varepsilon(\gamma) - \varepsilon(\gamma)| \le \sqrt{\ln(2/\delta)/(2n)}$ w.h.p.
+Since $\varepsilon'(\gamma) \ge c_\varepsilon > 0$, the mean value theorem gives $|\varepsilon(\gamma_1^{(n)}) - \varepsilon(\gamma_1^\star)| \ge c_\varepsilon |\gamma_1^{(n)} - \gamma_1^\star|$.
+The triangle inequality yields $c_\varepsilon |\gamma_1^{(n)} - \gamma_1^\star| = \mathcal{O}(1/\sqrt{n})$, so $|\gamma_1^{(n)} - \gamma_1^\star| = \mathcal{O}_P(1/\sqrt{n})$.
+\end{proof}
+

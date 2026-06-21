@@ -1,6 +1,6 @@
 \Chapter{REVUE DE LITTÉRATURE}\label{sec:RevLitt}
 
-Avant de présenter les trois articles qui forment le c\oe{}ur de cette thèse, il convient de cartographier le terrain sur lequel ils s'inscrivent. La littérature est vaste, parfois contradictoire, et les contributions récentes s'accumulent à un rythme qui rend difficile toute synthèse exhaustive. Nous avons donc choisi une organisation thématique en sept axes, depuis le routage écoénergétique de base jusqu'aux paradigmes émergents, en passant par les questions de sécurité et les technologies 6G qui forment le contexte de déploiement visé. Pour chaque axe, la question que nous posons n'est pas seulement ``qu'est-ce qui a été fait ?'' mais aussi ``qu'est-ce qui manque ?'' --- et c'est sur ces manques que repose la justification de chacun des trois articles.
+Ce chapitre présente une synthèse critique et détaillée des travaux existants dans les domaines couverts par les trois articles de cette thèse. L'objectif est double~: (1) situer nos contributions par rapport à l'état de l'art et (2) identifier les lacunes spécifiques qui justifient la nécessité de chacun des trois articles. La revue est organisée en sept axes thématiques~: le routage écoénergétique dans les WSN (Section~\ref{sec:revlit-routing}), l'apprentissage par renforcement et les réseaux de neurones de graphes (Section~\ref{sec:revlit-rl-gnn}), l'intelligence embarquée et TinyML (Section~\ref{sec:revlit-tinyml}), la durabilité carbone dans les TIC (Section~\ref{sec:revlit-carbon}), la sécurité et la confiance dans les systèmes autonomes (Section~\ref{sec:revlit-security}), les technologies habilitantes 6G (Section~\ref{sec:revlit-6g}), et les paradigmes émergents (Section~\ref{sec:revlit-emerging}). Le chapitre se conclut par un tableau récapitulatif des lacunes (Section~\ref{sec:revlit-gap-table}) et une synthèse (Section~\ref{sec:revlit-synthese}) qui établit explicitement le lien entre les lacunes identifiées et les contributions de cette thèse.
 
 %%
 %%  ROUTAGE ECONERGÉTIQUE
@@ -9,7 +9,7 @@ Avant de présenter les trois articles qui forment le c\oe{}ur de cette thèse, 
 
 \subsection{Protocoles de routage hiérarchique}
 
-Le routage hiérarchique, où les n\oe{}uds sont organisés en grappes (\emph{clusters}) avec des chefs de grappe (CH) assurant l'agrégation et le relais des données, constitue le paradigme dominant dans les WSN. LEACH (Low-Energy Adaptive Clustering Hierarchy), proposé par Heinzelman et al.\ \cite{heinzelman2000leach,heinzelman2002leach}, fut le premier protocole à introduire la rotation aléatoire des CH pour équilibrer la consommation d'énergie. Le protocole opère en tours~: une phase de configuration élit les CH avec une probabilité $p$ et une phase de transmission achemine les données des membres vers le CH, puis du CH vers la BS. Vingt ans après, LEACH reste la référence de comparaison dans la quasi-totalité des travaux sur les WSN --- ce qui est à la fois un témoignage de son élégance et un signe que ses limitations sont bien connues~:
+Le routage hiérarchique, où les n\oe{}uds sont organisés en grappes (\emph{clusters}) avec des chefs de grappe (CH) assurant l'agrégation et le relais des données, constitue le paradigme dominant dans les WSN. LEACH (Low-Energy Adaptive Clustering Hierarchy), proposé par Heinzelman et al.\ \cite{heinzelman2000leach,heinzelman2002leach}, fut le premier protocole à introduire la rotation aléatoire des CH pour équilibrer la consommation d'énergie. Le protocole opère en tours~: une phase de configuration élit les CH avec une probabilité $p$ et une phase de transmission achemine les données des membres vers le CH, puis du CH vers la BS. Cependant, LEACH souffre de plusieurs limitations fondamentales~:
 
 \begin{itemize}
     \item \textbf{Élection sans considération de l'énergie résiduelle}~: la probabilité de devenir CH est uniforme, ce qui peut élire des n\oe{}uds à énergie critique~;
@@ -18,9 +18,7 @@ Le routage hiérarchique, où les n\oe{}uds sont organisés en grappes (\emph{cl
     \item \textbf{Nombre de grappes non optimisé}~: le nombre optimal dépend de la topologie et varie avec les défaillances de n\oe{}uds.
 \end{itemize}
 
-De nombreuses variantes ont été proposées pour remédier à ces lacunes~: EE-LEACH \cite{kumar2012eeleach} intègre l'énergie résiduelle dans l'élection des CH via une probabilité pondérée~; LEACH-C \cite{heinzelman2002leach} utilise une optimisation centralisée (k-means) à la BS~; HEED \cite{younis2004heed} combine l'énergie résiduelle et le coût de communication intra-cluster dans un processus d'élection itératif~; EERP \cite{sha2013eerp} optimise les chemins multi-sauts inter-CH via une métrique de coût combinant distance et énergie~; SEP \cite{smaragdakis2004sep} introduit l'hétérogénéité énergétique en différenciant les n\oe{}uds normaux et avancés avec des probabilités d'élection distinctes~; PEGASIS \cite{lindsey2002pegasis} construit une chaîne de collecte de données plutôt que des clusters, réduisant la redondance de communication. Malgré ces améliorations, \textbf{ces protocoles restent fondamentalement réactifs et ne s'adaptent pas aux conditions dynamiques imposées par les catastrophes}, où la topologie peut changer brutalement (30--50\% de n\oe{}uds détruits simultanément~\cite{AbuGhazaleh2007WSNSurvivability}).
-
-Des travaux récents témoignent de l'activité continue dans ce domaine~: EMRAR~\cite{emrar_sensors2024} propose un routage multi-chemin écoénergétique basé sur l'énergie résiduelle pondérée; DOS-RL~\cite{dosrl_sensors2023} combine DQN avec une stratégie de routage orientée durée de vie pour les WSN denses; une revue de 2025~\cite{wsn_routing_survey2025} identifie les lacunes persistantes dans l'optimisation multi-objectifs. Malgré cette activité, \textbf{à notre connaissance, peu de travaux proposent un protocole de routage intégrant simultanément la fusion de politiques MARL, l'encodage GNN de la topologie et une métrique de carbone du cycle de vie.}
+De nombreuses variantes ont été proposées pour remédier à ces lacunes~: EE-LEACH \cite{kumar2012eeleach} intègre l'énergie résiduelle dans l'élection des CH via une probabilité pondérée~; LEACH-C \cite{heinzelman2002leach} utilise une optimisation centralisée (k-means) à la BS~; HEED \cite{younis2004heed} combine l'énergie résiduelle et le coût de communication intra-cluster dans un processus d'élection itératif~; EERP \cite{sha2013eerp} optimise les chemins multi-sauts inter-CH via une métrique de coût combinant distance et énergie~; SEP \cite{smaragdakis2004sep} introduit l'hétérogénéité énergétique en différenciant les n\oe{}uds normaux et avancés avec des probabilités d'élection distinctes~; PEGASIS \cite{lindsey2002pegasis} construit une chaîne de collecte de données plutôt que des clusters, réduisant la redondance de communication. Malgré ces améliorations, \textbf{ces protocoles restent fondamentalement réactifs et ne s'adaptent pas aux conditions dynamiques imposées par les catastrophes}, où la topologie peut changer brutalement (30--50\% de n\oe{}uds détruits simultanément).
 
 Le Tableau~\ref{tab:routing-comparison} résume les caractéristiques principales de ces protocoles de routage hiérarchique classiques.
 
@@ -49,56 +47,13 @@ EERP \cite{sha2013eerp} & Coût combiné & Oui & Oui & $O(n^2)$ & Non & Non \\
 
 \subsection{Modèle énergétique de premier ordre}
 
-% FICHIER RÉVISÉ — Juin 2026 — Réponse C2b au rapport Tiam Kapen
-% Formule Heinzelman convertie en équation display numérotée (non inline)
-
-Le modèle énergétique de Heinzelman~et~al.\ \cite{heinzelman2000leach} constitue le standard de facto pour l'évaluation des protocoles de routage dans les WSN. Ce modèle de premier ordre définit l'énergie nécessaire à la transmission de $\ell$~bits sur une distance~$d$~:
-%
-\begin{equation}\label{eq:etx}
-  E_{\text{Tx}}(\ell, d) = \ell \cdot E_{\text{elec}} + \ell \cdot \varepsilon(d) \cdot d^{\alpha},
-  \qquad
-  \varepsilon(d) =
-  \begin{cases}
-    \varepsilon_{\text{fs}} & \text{si } d \leq d_0 \text{ (espace libre)}\\
-    \varepsilon_{\text{mp}} & \text{si } d > d_0 \text{ (multi-chemins)}
-  \end{cases}
-\end{equation}
-%
-où $E_{\text{elec}} = 50$\,nJ/bit, $\varepsilon_{\text{fs}} = 10$\,pJ/bit/m\textsuperscript{2}, $\varepsilon_{\text{mp}} = 0.0013$\,pJ/bit/m\textsuperscript{4} et $\alpha \in \{2,4\}$ est l'exposant de perte de chemin. L'énergie de réception est simplement $E_{\text{Rx}}(\ell) = \ell \cdot E_{\text{elec}}$. Malgré ses simplifications (absence de contention MAC, de consommation d'état inactif et d'évanouissement stochastique), ce modèle permet une comparaison équitable entre protocoles. Les trois articles de cette thèse l'utilisent comme référence commune.
+Le modèle de Heinzelman et al.\ \cite{heinzelman2000leach} --- où l'énergie de transmission suit $E_{\text{Tx}}(\ell, d) = \ell \cdot E_{\text{elec}} + \ell \cdot \varepsilon(d) \cdot d^\alpha$ avec deux régimes de propagation (espace libre $d \leq d_0$, multi-chemins $d > d_0$) --- constitue le standard de facto pour l'évaluation des protocoles de routage. Malgré ses simplifications (absence de contention MAC, de consommation d'état inactif et d'évanouissement stochastique), il permet une comparaison équitable entre protocoles. Les trois articles de cette thèse l'utilisent comme référence commune.
 
 \subsection{Approches métaheuristiques}
 
-% RÉVISION C2b : section enrichie avec équations display numérotées et NSGA-II
+Les métaheuristiques bio-inspirées ont été largement appliquées au problème de routage dans les WSN pour dépasser les limites des heuristiques déterministes. L'optimisation par colonie de fourmis (ACO) modélise les chemins de routage comme des traces de phéromones déposées par des agents-fourmis, favorisant les chemins à faible coût énergétique par renforcement positif \cite{salama2016aco}. La colonie d'abeilles artificielles (ABC) \cite{karaboga2005abc} encode les solutions de routage comme des sources de nourriture évaluées par des abeilles ouvrières, spectatrices et éclaireuses, offrant un bon équilibre entre exploitation et exploration. Les approches hybrides ABC-ACO combinent les forces des deux paradigmes~: exploration globale d'ABC et convergence locale d'ACO.
 
-Les métaheuristiques bio-inspirées ont été largement appliquées au problème de routage dans les WSN pour dépasser les limites des heuristiques déterministes.
-
-\paragraph{Optimisation par colonie de fourmis (ACO).}
-ACO~\cite{salama2016aco} modélise les chemins de routage comme des traces de phéromones déposées par des agents-fourmis. La règle de mise à jour des phéromones sur le lien $(i,j)$ à l'itération $t$ est~:
-\begin{equation}\label{eq:aco-update}
-  \tau_{ij}(t+1) = (1-\rho)\,\tau_{ij}(t) + \sum_{k=1}^{m} \Delta\tau_{ij}^k(t),
-\end{equation}
-où $\rho \in (0,1)$ est le coefficient d'évaporation, $m$ est le nombre de fourmis et $\Delta\tau_{ij}^k = Q / L_k$ si la fourmi~$k$ a emprunté le lien $(i,j)$ (0 sinon). La probabilité de sélection du lien est~:
-\begin{equation}\label{eq:aco-prob}
-  p_{ij}^k = \frac{[\tau_{ij}]^\alpha \cdot [\eta_{ij}]^\beta}{\sum_{l \in \mathcal{N}_k} [\tau_{il}]^\alpha \cdot [\eta_{il}]^\beta},
-\end{equation}
-où $\eta_{ij} = 1/E_{\text{Tx}}(\ell, d_{ij})$ est l'heuristique énergétique locale. La complexité par itération est $O(n^2 \cdot m)$.
-
-\paragraph{Optimisation par essaim de particules (PSO).}
-PSO~\cite{kennedy1995pso} maintient une population de $P$ particules dont la vitesse et la position sont mises à jour selon~:
-\begin{align}
-  \mathbf{v}_i^{t+1} &= w\,\mathbf{v}_i^t + c_1\,r_1\,(\mathbf{p}_i^\text{best} - \mathbf{x}_i^t) + c_2\,r_2\,(\mathbf{g}^\text{best} - \mathbf{x}_i^t), \label{eq:pso-v}\\
-  \mathbf{x}_i^{t+1} &= \mathbf{x}_i^t + \mathbf{v}_i^{t+1}, \label{eq:pso-x}
-\end{align}
-où $w$ est le facteur d'inertie, $c_1$ et $c_2$ sont les coefficients cognitif et social, et $r_1, r_2 \sim \mathcal{U}(0,1)$ sont des tirages uniformes indépendants. La variante quantique QPSOFL~\cite{hu_energy_2024} combine un modèle de potentiel gaussien et une logique floue pour l'élection des CH.
-
-\paragraph{Comportement de convergence et critères d'arrêt.}
-Pour ACO et PSO, la convergence asymptotique est garantie sous hypothèses de stationnarité (environnement fixe, phéromones/vitesses bornées), mais n'est que \emph{probabiliste}~: avec probabilité~1, l'algorithme visite l'optimum global en un nombre fini d'itérations~\cite{dorigo2004ant}. En pratique, trois critères d'arrêt sont utilisés~: (i)~nombre maximal d'itérations $T_{\max}$ fixé a priori ($T_{\max} = 500$ dans nos simulations)~; (ii)~stagnation des phéromones/du meilleur fitness sur $\delta$ itérations consécutives ($\delta = 50$)~; (iii)~seuil de qualité de solution $J^* \leq J_{\text{target}}$. Dans les WSN post-catastrophe où la topologie change à chaque ronde, ces critères sont difficilement satisfaits~: la convergence doit être relancée à chaque changement, ce qui justifie le choix de l'apprentissage par renforcement dans cette thèse (politique mémorisée, aucune re-convergence requise).
-
-\paragraph{Algorithmes génétiques et optimisation multi-objectif (NSGA-II).}
-Les algorithmes génétiques opèrent par sélection, croisement et mutation sur une population de solutions encodées. Pour les problèmes multi-objectif (minimiser l'énergie \emph{et} la latence), NSGA-II~\cite{deb2002nsga2} construit explicitement le front de Pareto à chaque génération par tri de non-dominance, permettant de sélectionner le meilleur compromis. Cette propriété est directement pertinente pour contextualiser la scalarisation Pareto monotone proposée dans GAPF (Article~1).
-
-\paragraph{Autres métaheuristiques récentes.}
-ABC~\cite{karaboga2005abc} encode les solutions comme des sources de nourriture évaluées par des abeilles ouvrières, spectatrices et éclaireuses. GWO~\cite{mirjalili2014gwo} s'inspire de la hiérarchie sociale des loups gris ($\alpha$, $\beta$, $\delta$), et WOA~\cite{mirjalili2016woa} imite la stratégie de chasse en spirale des baleines à bosse.
+L'optimisation par essaim de particules (PSO) \cite{kennedy1995pso} et ses variantes (QPSO --- \emph{Quantum-behaved PSO}) ont également été appliquées au routage hiérarchique. QPSOFL (\emph{Quantum PSO with Fuzzy Logic}) \cite{hu_energy_2024} combine l'optimisation de la formation des grappes par QPSO avec une logique floue pour l'élection des CH, permettant de pondérer simultanément l'énergie résiduelle, la distance à la BS et la densité de voisinage. Les algorithmes génétiques (GA) ont été utilisés pour optimiser les positions des CH et les routes inter-CH, tandis que l'optimisation par loups gris (GWO) \cite{mirjalili2014gwo} et par baleines (WOA) \cite{mirjalili2016woa} constituent des ajouts plus récents au portefeuille des métaheuristiques pour le routage.
 
 Le Tableau~\ref{tab:metaheuristic-comparison} compare les principales métaheuristiques appliquées au routage dans les WSN.
 
@@ -125,17 +80,17 @@ GWO \cite{mirjalili2014gwo} & $O(n \cdot P)$ & Hiérarchique & Partiel & Non & A
 
 \noindent ($n$~: n\oe{}uds, $m$~: fourmis, SN~: sources de nourriture, $P$~: taille de population, $G$~: générations.)
 
-Ces méthodes butent toutefois sur des limitations importantes dès lors qu'on les confronte aux scénarios de surveillance des catastrophes~:
+Cependant, ces méthodes présentent des limitations importantes pour les scénarios de surveillance des catastrophes~:
 \begin{itemize}
-    \item \textbf{Temps de convergence élevé}~: typiquement $O(n^2)$ à $O(n^3)$ par itération~\cite{dorigo2004ant,kennedy1995pso}, incompatible avec les contraintes de temps réel~;
+    \item \textbf{Temps de convergence élevé}~: typiquement $O(n^2)$ à $O(n^3)$ par itération, incompatible avec les contraintes de temps réel~;
     \item \textbf{Pas de garantie d'optimalité}~: les métaheuristiques ne convergent que vers des optima locaux~;
     \item \textbf{Inadaptation aux environnements non stationnaires}~: la convergence doit être relancée à chaque changement de topologie, ce qui est problématique lorsque des catastrophes modifient continuellement le réseau~;
     \item \textbf{Surcoût de communication}~: les messages de contrôle (phéromones, évaluation de fitness) consomment de l'énergie supplémentaire.
 \end{itemize}
-Une revue systématique récente couvrant 48~études métaheuristiques appliquées aux WSN sur la période 2019--2024 confirme que PSO et ACO dominent, avec des objectifs exclusivement énergétiques et de durée de vie~; aucune des études recensées n'intègre le carbone de fabrication ou l'ACV dans la fonction d'optimisation \cite{metaheuristic_wsn_slr2026}. Ce constat renforce la lacune que CALASH (Article~2) vient combler.
+
 \subsection{Détection comprimée, récupération d'énergie et résilience}
 
-La détection comprimée (CS) \cite{candes2006cs} réduit le volume de données transmises en exploitant la parcimonie des signaux capteurs. Trois schémas d'adaptation du ratio CS existent~: ratio fixe, adaptative à la qualité et adaptative à l'énergie. \textbf{Toutefois, aucun ne module le ratio en fonction de l'intensité carbone du réseau électrique} --- lacune comblée par le pilier CADR de CALASH (Article~2). La récupération d'énergie (EH) transforme le modèle énergétique (budget stochastique avec recharge) mais les composants EH ajoutent un carbone incorporé de 2\,000--5\,000\,gCO$_2$eq par module~\cite{pirson2021embodied}. Les trois articles de cette thèse supposent un modèle sans récupération (batterie 0.5\,J) conformément à Heinzelman \cite{heinzelman2000leach}. Pour la résilience, trois approches coexistent~: redondance statique ($k$-couverture), mobilité (drones/robots, coût énergétique prohibitif), et reconfiguration logique via le paradigme MAPE-K adopté par CALASH. Les protocoles de consensus byzantins (PBFT \cite{castro1999pbft}) sont trop coûteux en communication ($O(n^2)$)~; CASTER-ZT vérifie chaque actuation individuellement.
+La détection comprimée (CS) \cite{candes2006cs} réduit le volume de données transmises en exploitant la parcimonie des signaux capteurs. Trois schémas d'adaptation du ratio CS existent~: ratio fixe, adaptative à la qualité et adaptative à l'énergie. \textbf{Toutefois, aucun ne module le ratio en fonction de l'intensité carbone du réseau électrique} --- lacune comblée par le pilier CADR de CALASH (Article~2). La récupération d'énergie (EH) transforme le modèle énergétique (budget stochastique avec recharge) mais les composants EH ajoutent un carbone incorporé de 2\,000--5\,000\,gCO$_2$eq par module. Les trois articles de cette thèse supposent un modèle sans récupération (batterie 0.5\,J) conformément à Heinzelman \cite{heinzelman2000leach}. Pour la résilience, trois approches coexistent~: redondance statique ($k$-couverture), mobilité (drones/robots, coût énergétique prohibitif), et reconfiguration logique via le paradigme MAPE-K adopté par CALASH. Les protocoles de consensus byzantins (PBFT \cite{castro1999pbft}) sont trop coûteux en communication ($O(n^2)$)~; CASTER-ZT vérifie chaque actuation individuellement.
 
 \subsection{Synthèse taxonomique du routage dans les WSN}
 
@@ -162,9 +117,9 @@ Consensus byzantin (PBFT) & Vote majoritaire & Réactive & Non & Forte & \ding{5
 }
 \end{table}
 
-Cette taxonomie met en évidence deux lacunes structurelles de l'état de l'art~: (1)~à notre connaissance, peu de travaux dans la littérature proposent une approche qui combine conscience topologique (via GNN) et tolérance aux pannes, et (2)~aucune n'intègre de mécanisme d'adaptation carbone-conscient. La pile GAPF+CALASH+CASTER-ZT est la première à couvrir ces cinq dimensions simultanément.
+Cette taxonomie met en évidence deux lacunes structurelles de l'état de l'art~: (1)~aucune approche existante ne combine conscience topologique (via GNN) et tolérance aux pannes, et (2)~aucune n'intègre de mécanisme d'adaptation carbone-conscient. La pile GAPF+CALASH+CASTER-ZT est la première à couvrir ces cinq dimensions simultanément.
 
-Les déploiements réels de WSN pour la surveillance des catastrophes \cite{Aslan2012ForestFireWSN,AbuGhazaleh2007WSNSurvivability} révèlent un taux de défaillance de 32\% sur 6~mois et une perte de connectivité de 40--60\% après destruction de 30\% des n\oe{}uds. Le Cadre de Sendai \cite{UNDRR2015Sendai}, le Rapport de Synthèse GIEC~2023 \cite{IPCC2021AR6,IPCC2023SYR} et l'OMM \cite{wmo2025climate} confirment l'urgence de systèmes d'alerte précoce résilients. Ces constats motivent directement la conscience topologique (GNN), l'auto-guérison (SHDR) et la légèreté computationnelle ($<$2\,000 paramètres) de nos contributions.
+Les déploiements réels de WSN pour la surveillance des catastrophes \cite{Aslan2012ForestFireWSN,AbuGhazaleh2007WSNSurvivability} révèlent un taux de défaillance de 32\% sur 6~mois et une perte de connectivité de 40--60\% après destruction de 30\% des n\oe{}uds. Le Cadre de Sendai \cite{UNDRR2015Sendai} et le GIEC \cite{IPCC2021AR6} confirment l'urgence de systèmes d'alerte précoce résilients. Ces constats motivent directement la conscience topologique (GNN), l'auto-guérison (SHDR) et la légèreté computationnelle ($<$2\,000 paramètres) de nos contributions.
 
 
 %%
@@ -184,20 +139,9 @@ Cette propriété assure que l'action jointe optimale peut être obtenue par max
 
 \textbf{QTRAN} \cite{son2019qtran} relâche cette contrainte de monotonie en apprenant des transformations affines entre les Q-valeurs individuelles et jointes, permettant une classe plus riche de fonctions de valeur factorisées. QTRAN introduit deux conditions de factorisation --- la condition d'optimalité jointe et la condition de non-optimalité --- qui sont nécessaires et suffisantes pour la consistance IGM sans contrainte de monotonie. En pratique, QTRAN gère mieux les interactions complexes (coordination dans des environnements avec obstacles) mais est plus difficile à entraîner et présente une variance plus élevée.
 
-\textbf{Complémentarité QMIX/QTRAN.} Ces deux algorithmes présentent des forces complémentaires~: QMIX excelle dans les tâches nécessitant une coordination étroite entre agents proches (grâce à la stabilité de sa contrainte monotone), tandis que QTRAN gère mieux les interactions non monotones dans les topologies complexes. \textbf{À notre connaissance, peu de travaux dans la littérature proposent de \emph{fusionner dynamiquement} ces expertises complémentaires dans un cadre unifié qui sélectionne le meilleur expert en fonction du contexte topologique.}
+\textbf{Complémentarité QMIX/QTRAN.} Ces deux algorithmes présentent des forces complémentaires~: QMIX excelle dans les tâches nécessitant une coordination étroite entre agents proches (grâce à la stabilité de sa contrainte monotone), tandis que QTRAN gère mieux les interactions non monotones dans les topologies complexes. \textbf{Aucun travail antérieur ne propose de \emph{fusionner dynamiquement} ces expertises complémentaires dans un cadre unifié qui sélectionne le meilleur expert en fonction du contexte topologique.}
 
 Le formalisme sous-jacent est le Dec-POMDP \cite{OliehoekAmato2016}, dont la résolution optimale est NEXP-complète \cite{Bernstein2002DecPOMDP}, justifiant le recours au paradigme CTDE. Plusieurs extensions de QMIX ont été proposées~: WQMIX \cite{Rashid2020WQMIX} (pondération des échantillons), QPLEX \cite{Wang2021QPLEX} (dualité duplexe), MAVEN \cite{Mahajan2019MAVEN} (exploration par variable latente) et FOP \cite{Zhang2021FOP} (entropie maximale). Toutes augmentent la complexité du réseau de mélange ($\sim$40--50K paramètres/agent). GAPF adopte une stratégie orthogonale~: \emph{sélectionner dynamiquement} l'expert le mieux adapté, avec un budget total de 1\,473 paramètres. Pour la gestion multi-objectifs, les trois articles adoptent des stratégies complémentaires~: scalarisation (GAPF), contrainte de Lyapunov (CALASH) et vérification formelle (CASTER-ZT).
-
-\subsubsection{Extensions récentes de QMIX et QTRAN (2022--2026)}
-
-Plusieurs travaux étendent QMIX depuis sa publication originale~\cite{rashid2018qmix}.
-DDWQMIX~\cite{ddwqmix_cac2024} introduit un double réseau Q pondéré pour corriger le biais de sur-estimation de QMIX dans les environnements non stationnaires.
-PPS-QMIX~\cite{pps_qmix_arxiv2024} intègre un échantillonnage de politiques prioritaires pour accélérer la convergence dans les grands espaces d'action.
-CoMIX~\cite{comix_arxiv2024} propose une décomposition de valeur coopérative permettant une coopération modulaire entre sous-groupes d'agents.
-
-Concernant QTRAN~\cite{son2019qtran}, QTRAN++~\cite{qtranpp_arxiv2020} améliore la stabilité d'entraînement en reformulant la contrainte de factorisation affine, réduisant les instabilités identifiées dans QTRAN original.
-
-\textbf{Lacune persistante~:} À notre connaissance, peu de travaux dans la littérature proposent une fusion de ces algorithmes complémentaires (QMIX pour sa robustesse, QTRAN pour sa capacité d'expression) via un méta-contrôleur topologique pour le routage dans les WSN. GAPF (Article~1) comble précisément cette lacune.
 
 \subsection{Réseaux de neurones de graphes (GNN)}
 
@@ -213,9 +157,9 @@ où $\tilde{A} = A + I_N$ est la matrice d'adjacence augmentée (avec auto-boucl
 \begin{equation}
     h_v^{(k)} = \sigma\!\left(W^{(k)} \cdot \text{CONCAT}\!\left(h_v^{(k-1)},\; \text{AGG}\!\left(\{h_u^{(k-1)} : u \in \mathcal{N}(v)\}\right)\right)\right)
 \end{equation}
-où AGG peut être MEAN, LSTM ou un pooling max. GraphSAGE permet la \textbf{généralisation à des n\oe{}uds non vus lors de l'entraînement} --- une propriété cruciale pour les WSN dynamiques où la topologie change après catastrophe (n\oe{}uds détruits, nouveaux CH élus). Le cadre MPNN (\emph{Message Passing Neural Network}) de Gilmer et al.\ \cite{gilmer2017mpnn} unifie ces architectures~; Xu et al.\ \cite{xu2019gin} montrent que l'expressivité des GNN est bornée par le test de Weisfeiler-Leman. Des enquêtes récentes soulignent l'intérêt des GNN dynamiques, capables d'adapter leur agrégation à une topologie en mutation, pour les réseaux dont la structure varie fréquemment --- tels que les WSN post-catastrophe \cite{dynamic_gnn_tkde2026}. Le choix du GCN (GAPF) et du GraphSAGE (CASTER-ZT) représente un compromis entre expressivité et coût computationnel linéaire en $|E|$, compatible avec les contraintes embarquées.
+où AGG peut être MEAN, LSTM ou un pooling max. GraphSAGE permet la \textbf{généralisation à des n\oe{}uds non vus lors de l'entraînement} --- une propriété cruciale pour les WSN dynamiques où la topologie change après catastrophe (n\oe{}uds détruits, nouveaux CH élus). Le cadre MPNN (\emph{Message Passing Neural Network}) de Gilmer et al.\ \cite{gilmer2017mpnn} unifie ces architectures~; Xu et al.\ \cite{xu2019gin} montrent que l'expressivité des GNN est bornée par le test de Weisfeiler-Leman. Le choix du GCN (GAPF) et du GraphSAGE (CASTER-ZT) représente un compromis entre expressivité et coût computationnel linéaire en $|E|$, compatible avec les contraintes embarquées.
 
-\textbf{Application des GNN au routage.} L'application des GNN au routage dans les WSN est relativement récente. Liu et al.\ \cite{liu2024gnncomm} proposent le paradigme GNNComm-MARL, un tutoriel systématique qui structure la communication inter-agents via des réseaux d'attention de graphes pour atténuer l'observabilité partielle et la non-stationnarité dans les systèmes sans fil. Bhavanasi et al.\ \cite{bhavanasi2023resilient} formulent le routage résilient comme un problème MADRL et utilisent un GCN pour encoder conjointement la topologie et le trafic, démontrant des améliorations de débit et de délai sous conditions dynamiques. La factorisation de valeur basée sur les GNN (GraphMIX, ICLR~2025) \cite{graphmix_iclr2025} décompose $Q_{\text{tot}}$ via un réseau convolutionnel de graphes appliqué au graphe des agents, améliorant la coordination dans les environnements structurés~; néanmoins, GraphMIX réalise une décomposition de valeur \emph{unique} et ne fusionne pas des \emph{politiques expertes distinctes} (QMIX~vs~QTRAN) en fonction du contexte topologique. Cependant, \textbf{à notre connaissance, peu de travaux dans la littérature combinent un encodeur GNN avec une fusion de politiques MARL}, et \textbf{aucun ne couple un GNN avec un mécanisme de confiance-risque pour la sécurité des décisions de routage.}
+\textbf{Application des GNN au routage.} L'application des GNN au routage dans les WSN est relativement récente. Liu et al.\ \cite{liu2024gnncomm} proposent le paradigme GNNComm-MARL, un tutoriel systématique qui structure la communication inter-agents via des réseaux d'attention de graphes pour atténuer l'observabilité partielle et la non-stationnarité dans les systèmes sans fil. Bhavanasi et al.\ \cite{bhavanasi2023resilient} formulent le routage résilient comme un problème MADRL et utilisent un GCN pour encoder conjointement la topologie et le trafic, démontrant des améliorations de débit et de délai sous conditions dynamiques. Cependant, \textbf{aucun de ces travaux ne combine un encodeur GNN avec une fusion de politiques MARL}, et \textbf{aucun ne couple un GNN avec un mécanisme de confiance-risque pour la sécurité des décisions de routage.}
 
 \subsection{Apprentissage par renforcement profond pour le routage}
 
@@ -227,16 +171,9 @@ Le Q-Routing de Boyan et Littman \cite{boyan1994packet} fut le premier à appliq
     \item \textbf{RIS-DRL} combine les surfaces intelligentes reconfigurables avec l'apprentissage par renforcement profond pour optimiser conjointement le beamforming et le routage.
 \end{itemize}
 
-Or, \textbf{ces approches ne considèrent ni l'empreinte carbone du cycle de vie ni la résilience aux catastrophes} dans leurs fonctions de récompense ou leurs contraintes d'optimisation. De plus, elles requièrent typiquement des dizaines de milliers de paramètres, les rendant difficilement déployables sur des microcontrôleurs de classe capteur.
+Cependant, \textbf{ces approches ne considèrent ni l'empreinte carbone du cycle de vie ni la résilience aux catastrophes} dans leurs fonctions de récompense ou leurs contraintes d'optimisation. De plus, elles requièrent typiquement des dizaines de milliers de paramètres, les rendant difficilement déployables sur des microcontrôleurs de classe capteur.
 
 \textbf{Méta-apprentissage et fusion de politiques.} Des travaux récents explorent la sélection dynamique d'algorithmes via l'apprentissage par renforcement~: Guo et al.\ \cite{guo2024rldas} proposent RL-DAS, un cadre DRL qui apprend à sélectionner parmi un portefeuille d'optimiseurs en fonction de caractéristiques contextuelles de paysage, agissant comme une méta-politique sur des algorithmes de base. Le paradigme Mixture-of-Experts (MoE) a également été adapté à l'apprentissage par renforcement, où des modèles de décision routent les tâches vers des experts spécialisés. Yang et Thomason \cite{yang2025meta_deliberation} introduisent le cadre MPDF, où chaque agent dans un système multi-agent apprend une méta-politique décentralisée sur des actions de collaboration de haut niveau. \textbf{Ces travaux valident le concept de fusion de politiques mais n'adressent pas le routage dans les WSN ni n'exploitent la topologie du réseau via GNN}~--- la lacune exacte que GAPF (Article~1) comble.
-
-\subsection{Fusion de politiques et méta-apprentissage MARL}\label{sec:revlit-policy-fusion}
-
-La fusion de politiques multiples constitue un domaine émergent en apprentissage par renforcement multi-agent, visant à combiner les forces de différentes politiques spécialisées.
-MPRS-MAPPO~\cite{mprs_mappo2025} développe une fusion de récompenses multi-potentiel qui combine des fonctions de récompense hétérogènes via pondération adaptative pour les missions de drone en essaim.
-
-Ces travaux confirment l'intérêt croissant pour la fusion de politiques dans les systèmes multi-agents. Cependant, \textbf{à notre connaissance, aucun de ces cadres n'exploite un encodeur GNN pour sélectionner dynamiquement la politique optimale en fonction de la topologie courante du réseau} --- une lacune que GAPF (Article~1) comble avec son méta-contrôleur GCN+CAS.
 
 \subsection{Synthèse comparative des approches MARL et DRL}
 
@@ -274,15 +211,15 @@ MAPPO \cite{yu2022mappo} & CTDE & Acteur-critique & Non & $\sim$80\,K/agent & No
 %%
 \section{Intelligence embarquée et TinyML pour les réseaux de capteurs}\label{sec:revlit-tinyml}
 
-Déployer des modèles d'apprentissage automatique directement sur les n\oe{}uds capteurs --- plutôt que de déléguer le traitement à un serveur distant --- n'est pas un luxe~: dans un scénario post-catastrophe où la connectivité peut être partiellement rompue, l'intelligence doit être embarquée là où elle est nécessaire. Reste à savoir si les contraintes matérielles le permettent réellement.
+Le déploiement de modèles d'apprentissage automatique sur les n\oe{}uds capteurs eux-mêmes --- plutôt que sur des serveurs distants --- est un enjeu central pour les WSN autonomes. Cette section examine les avancées récentes en TinyML et en intelligence de bord (\emph{edge AI}) qui rendent ce déploiement réaliste.
 
 \subsection{Le paradigme TinyML}
 
-Le terme \textbf{TinyML} désigne l'exécution de modèles d'apprentissage automatique sur des microcontrôleurs (MCU) de classe ARM Cortex-M0 à M4, avec des budgets mémoire de 16~KB à 256~KB de RAM et des fréquences de 48--168~MHz \cite{Warden2020TinyML,tinyml_review_acm2024}. Ce paradigme impose des contraintes radicalement différentes de l'apprentissage classique~:
+Le terme \textbf{TinyML} désigne l'exécution de modèles d'apprentissage automatique sur des microcontrôleurs (MCU) de classe ARM Cortex-M0 à M4, avec des budgets mémoire de 16~KB à 256~KB de RAM et des fréquences de 48--168~MHz \cite{Warden2020TinyML}. Ce paradigme impose des contraintes radicalement différentes de l'apprentissage classique~:
 
 \begin{itemize}
     \item \textbf{Mémoire}~: le modèle complet (poids + activations + code d'inférence) doit tenir dans la mémoire Flash ($\leq$ 1~MB) et la RAM ($\leq$ 256~KB) du MCU.
-    \item \textbf{Calcul}~: l'inférence doit s'exécuter en temps réel (typiquement $<$ 100~ms~\cite{Warden2020TinyML}) sans unité de calcul en virgule flottante (FPU) sur les Cortex-M0/M3, nécessitant une arithmétique en point fixe.
+    \item \textbf{Calcul}~: l'inférence doit s'exécuter en temps réel (typiquement $<$ 100~ms) sans unité de calcul en virgule flottante (FPU) sur les Cortex-M0/M3, nécessitant une arithmétique en point fixe.
     \item \textbf{Énergie}~: chaque inférence consomme de l'énergie prélevée sur la batterie limitée du capteur ($\sim$0.5~J au total).
 \end{itemize}
 
@@ -324,15 +261,15 @@ Les développements récents en GNN pour l'IoT \cite{Nguyen2025GNNIoT} confirmen
 
 \subsection{Analyse du cycle de vie (ACV)}
 
-L'analyse du cycle de vie, normalisée par ISO~14040/14044 \cite{iso14040}, évalue les impacts environnementaux d'un produit ou service ``du berceau à la tombe'' à travers quatre phases~: (1) définition des objectifs et du périmètre, (2) inventaire du cycle de vie (ICV --- \emph{Life Cycle Inventory}), (3) évaluation de l'impact du cycle de vie et (4) interprétation.
+L'analyse du cycle de vie, normalisée par ISO~14040/14044 \cite{iso14040}, évalue les impacts environnementaux d'un produit ou service ``du berceau à la tombe'' à travers quatre phases~: (1) définition des objectifs et du périmètre, (2) inventaire du cycle de vie (LCI --- \emph{Life Cycle Inventory}), (3) évaluation de l'impact du cycle de vie et (4) interprétation.
 
-Pour les WSN, l'unité fonctionnelle naturelle est le ``paquet utile livré à la BS''. CALASH adopte le périmètre ``du berceau à la tombe'' avec correction pour le recyclage partiel. L'inventaire du cycle de vie (ICV) révèle que la fabrication domine ($\sim$95\% du carbone total), impliquant que le levier principal n'est pas la réduction de la consommation mais la maximisation de l'utilité par unité de carbone incorporé.
+Pour les WSN, l'unité fonctionnelle naturelle est le ``paquet utile livré à la BS''. CALASH adopte le périmètre ``du berceau à la tombe'' avec correction pour le recyclage partiel. L'inventaire du cycle de vie (LCI) révèle que la fabrication domine ($\sim$95\% du carbone total), impliquant que le levier principal n'est pas la réduction de la consommation mais la maximisation de l'utilité par unité de carbone incorporé.
 
 Appliquée aux dispositifs IoT, l'ACV révèle une répartition très asymétrique du carbone~:
 \begin{itemize}
     \item \textbf{Carbone incorporé (\emph{embodied})}~: fabrication des semi-conducteurs, assemblage, transport. Pirson et Bol \cite{pirson2021embodied} estiment $\sim$10\,000\,gCO$_2$eq pour un n\oe{}ud capteur typique, dominé par la fabrication du microcontrôleur et de l'émetteur-récepteur radio.
     \item \textbf{Carbone opérationnel}~: consommation d'énergie pendant le fonctionnement. Pour un capteur de 0.5\,J de budget énergétique total, le carbone opérationnel est de $\sim$0.01\,gCO$_2$eq --- environ six ordres de grandeur inférieur au carbone incorporé ($10\,000/0{,}01 = 10^6$).
-    \item \textbf{Carbone de fin de vie}~: traitement des déchets électroniques, recyclage partiel. Estimé à $\sim$500\,gCO$_2$eq par n\oe{}ud, ajusté au taux de recyclage effectif~\cite{pirson2021embodied}.
+    \item \textbf{Carbone de fin de vie}~: traitement des déchets électroniques, recyclage partiel. Estimé à $\sim$500\,gCO$_2$eq par n\oe{}ud, ajusté au taux de recyclage effectif.
 \end{itemize}
 
 \textbf{Implication clé~:} la métrique habituelle d'efficacité énergétique (Joules par paquet) est une approximation grossière de l'impact environnemental réel. Une métrique \emph{par paquet utile livré} intégrant les trois phases du cycle de vie serait bien plus pertinente.
@@ -351,13 +288,13 @@ La fonction de Lyapunov quadratique $L(\mathbf{Q}(t)) = \frac{1}{2}\sum_k Q_k(t)
 \end{equation}
 où $f_0$ est la fonction objectif et $V > 0$ contrôle le compromis optimalité-stabilité. Neely \cite{neely2010lyapunov} prouve que cet algorithme est $O(1/V)$-optimal avec une taille de file moyenne $O(V)$, un compromis fondamental connu sous le nom de \emph{compromis $[O(1/V), O(V)]$}.
 
-\textbf{Avantages pour les WSN.} Ce cadre est particulièrement adapté aux WSN pour trois raisons~: (i)~il ne nécessite pas de modèle statistique du canal ou du trafic (opération en ligne), (ii)~il fournit des garanties de performance déterministes via la borne sur le drift, et (iii)~il permet d'intégrer naturellement des contraintes hétérogènes (énergie, carbone, qualité de service) via des files virtuelles distinctes. Le pilier CARE de CALASH (Article~2) exploite ce cadre en définissant une file carbone virtuelle (CARE) dont la stabilité garantit le respect du budget carbone à long terme.
+\textbf{Avantages pour les WSN.} Ce cadre est particulièrement adapté aux WSN pour trois raisons~: (i)~il ne nécessite pas de modèle statistique du canal ou du trafic (opération en ligne), (ii)~il fournit des garanties de performance déterministes via la borne sur le drift, et (iii)~il permet d'intégrer naturellement des contraintes hétérogènes (énergie, carbone, qualité de service) via des files virtuelles distinctes. Le pilier CDR de CALASH (Article~2) exploite ce cadre en définissant une file carbone virtuelle (CARE) dont la stabilité garantit le respect du budget carbone à long terme.
 
 \textbf{Limitations.} Le paramètre $V$ doit être choisi a priori et fixe un compromis global. Des extensions récentes (\emph{adaptive $V$}) permettent de faire varier $V$ au cours du temps en fonction de l'état des files, offrant une meilleure adaptabilité. De plus, la borne $O(1/V)$ est asymptotique~; pour des horizons courts (quelques centaines de tours dans les WSN post-catastrophe), les performances réelles peuvent s'éloigner de cette borne théorique.
 
 \subsection{Intensité carbone des réseaux électriques}
 
-L'intensité carbone du réseau électrique (CI, en gCO$_2$/kWh) varie considérablement selon~: le mix énergétique national (France $\sim$60\,gCO$_2$/kWh grâce au nucléaire vs.\ Pologne $\sim$700\,gCO$_2$/kWh dominée par le charbon), l'heure de la journée (pointe vs.\ creux), la saison (chauffage hivernal vs.\ solaire estival) et les conditions météorologiques (vent, ensoleillement). Les traces historiques de CI, disponibles en temps réel via des API comme UK Carbon Intensity \cite{uk_carbon_api,carbon_signals_acm2025} et Electricity Maps, permettent de moduler la consommation énergétique des systèmes en fonction de la ``propreté'' de l'électricité disponible.
+L'intensité carbone du réseau électrique (CI, en gCO$_2$/kWh) varie considérablement selon~: le mix énergétique national (France $\sim$60\,gCO$_2$/kWh grâce au nucléaire vs.\ Pologne $\sim$700\,gCO$_2$/kWh dominée par le charbon), l'heure de la journée (pointe vs.\ creux), la saison (chauffage hivernal vs.\ solaire estival) et les conditions météorologiques (vent, ensoleillement). Les traces historiques de CI, disponibles en temps réel via des API comme UK Carbon Intensity \cite{uk_carbon_api} et Electricity Maps, permettent de moduler la consommation énergétique des systèmes en fonction de la ``propreté'' de l'électricité disponible.
 
 Cette variabilité temporelle représente une \textbf{opportunité sous-exploitée} pour les WSN~: moduler le ratio de détection comprimée en fonction de l'intensité carbone permet de réduire les transmissions lorsque l'électricité est ``sale'' et de les augmenter lorsqu'elle est ``propre'', sans impact sur la mission globale de surveillance.
 
@@ -367,9 +304,9 @@ Plusieurs travaux récents enrichissent la compréhension de l'empreinte carbone
 
 \subsection{Réseaux verts et communication écoénergétique}
 
-La communauté des communications vertes (\emph{green communications}) s'est principalement concentrée sur la réduction de la consommation énergétique opérationnelle~: ordonnancement sensible à l'énergie (\emph{energy-aware scheduling}), mise en veille dynamique des stations de base (\emph{base station sleep mode}), et optimisation de la puissance de transmission \cite{freitag2021ict,andrae2021real_climate,itu_ict2025}. Des travaux récents intègrent les énergies renouvelables (\emph{energy harvesting}) pour alimenter les réseaux de manière durable.
+La communauté des communications vertes (\emph{green communications}) s'est principalement concentrée sur la réduction de la consommation énergétique opérationnelle~: ordonnancement sensible à l'énergie (\emph{energy-aware scheduling}), mise en veille dynamique des stations de base (\emph{base station sleep mode}), et optimisation de la puissance de transmission \cite{freitag2021ict}. Des travaux récents intègrent les énergies renouvelables (\emph{energy harvesting}) pour alimenter les réseaux de manière durable.
 
-Or, \textbf{ces travaux ignorent systématiquement le carbone incorporé et de fin de vie}, qui --- comme l'ACV le démontre --- dominent l'empreinte carbone des dispositifs IoT à faible consommation. À notre connaissance, \textbf{CALASH (Article~2) est le premier protocole de routage pour WSN à intégrer les trois phases du cycle de vie dans les décisions de routage conformément à ISO~14040.}
+Cependant, \textbf{ces travaux ignorent systématiquement le carbone incorporé et de fin de vie}, qui --- comme l'ACV le démontre --- dominent l'empreinte carbone des dispositifs IoT à faible consommation. À notre connaissance, \textbf{CALASH (Article~2) est le premier protocole de routage pour WSN à intégrer les trois phases du cycle de vie dans les décisions de routage conformément à ISO~14040.}
 
 \subsection{Synthèse comparative des approches de durabilité dans les réseaux}
 
@@ -416,9 +353,9 @@ où $c_t^{(i)}$ est le coût de la contrainte $i$ et $d_i$ la borne supérieure 
 
 \textbf{Shielding (blindage).} L'approche de blindage \cite{alshiekh2018shielding} synthétise un bouclier réactif à partir d'une spécification de sécurité formelle (typiquement en logique temporelle linéaire, LTL) qui filtre les actions non sûres avant leur exécution. Le bouclier est un automate déterministe qui observe l'état courant et l'action proposée, puis autorise ou bloque l'action. Les boucliers existants sont \textbf{binaires} (autoriser/bloquer), ce qui est inadapté aux WSN de surveillance des catastrophes~: le blocage systématique des actions dégrade progressivement la connectivité du réseau et peut compromettre la mission de surveillance.
 
-\textbf{Lacune identifiée~:} À notre connaissance, peu de travaux dans la littérature proposent un mécanisme de blindage à \textbf{décisions graduées} qui offre un spectre de réponses entre l'autorisation complète et le blocage total, permettant une dégradation gracieuse (\emph{graceful degradation}) plutôt qu'un arrêt binaire.
+\textbf{Lacune identifiée~:} il n'existe aucun mécanisme de blindage à \textbf{décisions graduées} qui offre un spectre de réponses entre l'autorisation complète et le blocage total, permettant une dégradation gracieuse (\emph{graceful degradation}) plutôt qu'un arrêt binaire.
 
-\textbf{Avancées récentes en blindage (2024--2025).} Corsi et al.\ \cite{corsi2024verification} proposent un blindage guidé par la vérification formelle qui partitionne l'espace d'entrée en régions sûres et potentiellement dangereuses, activant le bouclier uniquement dans les régions risquées --- un mécanisme gradué basé sur les régions plutôt qu'un filtre binaire systématique. Le blindage probabiliste \cite{corsi2025prob_shielding} étend cette approche en augmentant l'état et en restreignant les actions disponibles pour satisfaire des contraintes de sécurité avec haute probabilité. Une revue exhaustive de Könighofer et al.\ \cite{pranger2025shields} dans Communications of the ACM synthétise les choix de conception des boucliers (agressivité, séparation sécurité/performance, extension aux cas probabilistes et multi-agents). Gu et al.\ (NeurIPS~2024) \cite{dmps_shielding2024} proposent le blindage prédictif dynamique (DMPS), qui combine un contrôleur prédictif (é\emph{model predictive control}) avec un bouclier réactif pour fournir des garanties de sécurité formelles \emph{à la fois avant et pendant} l'exécution de l'agent~; le mécanisme de décision demeure néanmoins binaire (remplacer ou laisser passer l'action). Cependant, \textbf{à notre connaissance, aucun de ces travaux ne propose un bouclier à cinq niveaux de décision graduée avec quantification d'incertitude épistémique} dans le contexte des réseaux autonomes.
+\textbf{Avancées récentes en blindage (2024--2025).} Corsi et al.\ \cite{corsi2024verification} proposent un blindage guidé par la vérification formelle qui partitionne l'espace d'entrée en régions sûres et potentiellement dangereuses, activant le bouclier uniquement dans les régions risquées --- un mécanisme gradué basé sur les régions plutôt qu'un filtre binaire systématique. Le blindage probabiliste \cite{corsi2025prob_shielding} étend cette approche en augmentant l'état et en restreignant les actions disponibles pour satisfaire des contraintes de sécurité avec haute probabilité. Une revue exhaustive de Könighofer et al.\ \cite{pranger2025shields} dans Communications of the ACM synthétise les choix de conception des boucliers (agressivité, séparation sécurité/performance, extension aux cas probabilistes et multi-agents). Cependant, \textbf{à notre connaissance, aucun de ces travaux ne propose un bouclier à cinq niveaux de décision graduée avec quantification d'incertitude épistémique} dans le contexte des réseaux autonomes.
 
 \subsection{Vérification formelle des systèmes autonomes}
 
@@ -434,30 +371,21 @@ La vérification formelle consiste à prouver mathématiquement qu'un système s
 
 \subsection{Attaques adversariales sur les politiques d'apprentissage par renforcement}
 
-L'intégration de politiques RL dans les boucles de contrôle réseau crée des surfaces d'attaque spécifiques qui vont au-delà des menaces classiques de cybersécurité. Huang et al.\ \cite{Huang2017AdvRL} ont été les premiers à démontrer que des perturbations imperceptibles appliquées aux observations d'un agent DRL (attaques par empoisonnement d'observations) peuvent dégrader ses performances de manière catastrophique, même lorsque les perturbations sont bornées par une norme $\ell_\infty < 0.01$. Gleave et al.\ \cite{Gleave2020AdvPolicies} ont étendu cette menace au cadre multi-agent en montrant qu'un adversaire peut entraîner une \emph{politique adversariale} qui exploite les faiblesses de la politique victime sans modifier directement ses observations, mais simplement en adoptant un comportement stratégiquement trompeur dans l'environnement partagé. Li et al.~\cite{ami_attack_marl2024} proposent l'attaque AMI (Adversarial Manipulation of Inputs), qui démontre qu'un adversaire peut compromettre significativement une politique MARL coopérative en manipulant les observations d'un seul agent. Ces travaux confirment la nécessité d'une couche de vérification indépendante de la politique, comme CASTER-ZT.
+L'intégration de politiques RL dans les boucles de contrôle réseau crée des surfaces d'attaque spécifiques qui vont au-delà des menaces classiques de cybersécurité. Huang et al.\ \cite{Huang2017AdvRL} ont été les premiers à démontrer que des perturbations imperceptibles appliquées aux observations d'un agent DRL (attaques par empoisonnement d'observations) peuvent dégrader ses performances de manière catastrophique, même lorsque les perturbations sont bornées par une norme $\ell_\infty < 0.01$. Gleave et al.\ \cite{Gleave2020AdvPolicies} ont étendu cette menace au cadre multi-agent en montrant qu'un adversaire peut entraîner une \emph{politique adversariale} qui exploite les faiblesses de la politique victime sans modifier directement ses observations, mais simplement en adoptant un comportement stratégiquement trompeur dans l'environnement partagé.
 
-Dans le contexte multi-agent, les \textbf{attaques par porte dérobée} (\emph{backdoor attacks}) \cite{Kiourti2021BackdoorDRL} représentent une menace particulièrement insidieuse~: l'adversaire injecte un déclencheur (\emph{trigger}) dans le modèle pendant l'entraînement, de sorte que la politique se comporte normalement en conditions nominales mais active un comportement malveillant lorsque le déclencheur est présent dans l'observation. Pour les WSN, un adversaire compromettant la phase d'entraînement pourrait injecter une porte dérobée qui active le mal-routage uniquement lorsqu'un motif spécifique de données capteurs est détecté --- rendant l'attaque indétectable par les tests de performance standard. Plus récemment, l'attaque SUB-PLAY \cite{subplay_marl2025} démontre qu'un adversaire contrôlant un sous-ensemble d'agents MARL peut dégrader significativement la performance globale sans modifier directement les observations des agents victimes --- une menace directe pour les WSN coopératifs de surveillance.
+Dans le contexte multi-agent, les \textbf{attaques par porte dérobée} (\emph{backdoor attacks}) \cite{Kiourti2021BackdoorDRL} représentent une menace particulièrement insidieuse~: l'adversaire injecte un déclencheur (\emph{trigger}) dans le modèle pendant l'entraînement, de sorte que la politique se comporte normalement en conditions nominales mais active un comportement malveillant lorsque le déclencheur est présent dans l'observation. Pour les WSN, un adversaire compromettant la phase d'entraînement pourrait injecter une porte dérobée qui active le mal-routage uniquement lorsqu'un motif spécifique de données capteurs est détecté --- rendant l'attaque indétectable par les tests de performance standard.
 
 Sur le plan défensif, le cadre des \textbf{MDP robustes} (\emph{robust MDPs}) \cite{Iyengar2005RobustMDP} modélise l'incertitude sur la dynamique de transition comme un ensemble d'ambiguïté~: l'agent optimise le pire cas sur un ensemble $\mathcal{P}$ de modèles de transition plausibles, garantissant des performances minimales même sous perturbation. Xu et Mannor \cite{Xu2010DistRobustMDP} étendent cette approche aux MDP distributionnellement robustes, où l'ensemble d'ambiguïté est défini par une distance statistique (Kullback-Leibler, Wasserstein) autour du modèle nominal.
 
 Ces menaces justifient directement la nécessité du bouclier CASTER-ZT (Article~3)~: plutôt que de certifier la robustesse de chaque politique individuellement (ce qui est computationnellement coûteux et ne protège pas contre les portes dérobées), le bouclier vérifie \emph{chaque actuation} en temps réel, indépendamment de l'origine de la politique --- une approche conforme au principe de zéro-confiance.
 
-\subsection{Détection d'anomalies dans les séquences d'états RL}\label{sec:revlit-anomaly}
-
-La détection précoce des comportements aberrants des agents RL constitue un défi distinct des attaques adversariales classiques.
-Kweider et al.~\cite{anoseqs2024} proposent AnoSeqs, un détecteur de séquences d'états anomales dans les trajectoires RL, qui utilise des modèles de séquence pour identifier les comportements hors distribution sans modifier la politique. Testé sur plusieurs environnements de contrôle, AnoSeqs atteint une détection de 85--92\% avec un faible taux de faux positifs ($<$3\%).
-
-\textbf{Pertinence pour CASTER-ZT~:} CASTER-ZT adopte une approche complémentaire --- plutôt que de détecter les anomalies dans les séquences d'états, il évalue chaque actuation individuelle via une double-hypothèse confiance/risque. Cette granularité décisionnelle permet des réponses graduées (réduire, différer, escalader) plutôt que la simple détection binaire d'AnoSeqs.
-
 \subsection{Architecture zéro-confiance (\emph{Zero-Trust})}
 
 Le modèle zéro-confiance, formalisé par le NIST SP 800-207 \cite{rose2020nist}, postule qu'aucun acteur --- interne ou externe --- ne doit être implicitement approuvé. Chaque requête d'accès doit être~: (1) authentifiée, (2) autorisée, et (3) continuellement validée, indépendamment de l'emplacement du requérant. Ce paradigme, initialement développé pour la cybersécurité des réseaux d'entreprise, a été récemment étendu aux systèmes cyber-physiques et à l'IoT.
 
-Des travaux récents étendent formellement le paradigme ZTA aux systèmes IoT~: Shakya et al.~\cite{shakya_zt_iot2025} proposent un cadre ZTA pour l'IoT intégrant l'apprentissage automatique pour l'évaluation continue des risques~; Kaur et al.~\cite{kaur_zta_iot2024} fournissent une revue exhaustive des architectures ZTA pour l'IoT, identifiant les défis de déploiement dans les environnements à ressources contraintes~; Mohseni-Ejiyeh~\cite{mohseni_zt_iot2023} propose une implémentation légère de ZTA pour l'IoT contraint.
-
 Appliqué aux réseaux autonomes gérés par AI, le principe zéro-confiance implique que \textbf{chaque actuation de politique doit être vérifiée avant exécution, indépendamment de l'origine de la politique}. Cette vérification doit être~: (i)~suffisamment rapide pour respecter les contraintes de temps réel (10\,ms pour le near-RT RIC O-RAN)~; (ii)~suffisamment légère pour être déployée sur des accélérateurs de bord ($<$ 2\,MB)~; (iii)~dotée de garanties formelles de sécurité.
 
-Des travaux récents progressent dans cette direction. Moudoud et al.\ \cite{moudoud2025oran_zt} proposent une architecture de sécurité zéro-confiance pour Open RAN intégrant un module d'évaluation des risques par RL et un agent de contrôle d'accès dynamique qui ajuste continuellement les scores de confiance. Katsaros et al.\ \cite{katsaros2024reason} présentent l'architecture REASON, un cadre modulaire AI-natif avec contrôle en boucle fermée utilisant l'apprentissage par renforcement à plusieurs couches, définissant la sécurité et la confiance comme des composants de première classe. Ahmadi et al.\ \cite{ahmadi2025zt_segmentation} développent un système de segmentation autonome basé sur l'identité qui ajuste les politiques sur un spectre de niveaux de confiance plutôt qu'un simple autoriser/refuser. Par ailleurs, l'architecture ZTA-IoT \cite{ztaiot_acm2025} étend formellement le paradigme zéro-confiance aux systèmes IoT distribués avec un modèle de contrôle d'usage associé. \textbf{Toutefois, aucun de ces cadres ne satisfait simultanément les trois exigences (latence $<$ 10\,ms, mémoire $<$ 2\,MB, garanties formelles) pour les réseaux de détection natifs en AI.}
+Des travaux récents progressent dans cette direction. Moudoud et al.\ \cite{moudoud2025oran_zt} proposent une architecture de sécurité zéro-confiance pour Open RAN intégrant un module d'évaluation des risques par RL et un agent de contrôle d'accès dynamique qui ajuste continuellement les scores de confiance. Katsaros et al.\ \cite{katsaros2024reason} présentent l'architecture REASON, un cadre modulaire AI-natif avec contrôle en boucle fermée utilisant l'apprentissage par renforcement à plusieurs couches, définissant la sécurité et la confiance comme des composants de première classe. Ahmadi et al.\ \cite{ahmadi2025zt_segmentation} développent un système de segmentation autonome basé sur l'identité qui ajuste les politiques sur un spectre de niveaux de confiance plutôt qu'un simple autoriser/refuser. \textbf{Toutefois, aucun de ces cadres ne satisfait simultanément les trois exigences (latence $<$ 10\,ms, mémoire $<$ 2\,MB, garanties formelles) pour les réseaux de détection natifs en AI.}
 
 \subsection{Quantification d'incertitude}
 
@@ -508,7 +436,7 @@ Les réseaux 6G, dont la standardisation par le 3GPP est prévue à partir de Re
 
 \subsection{Communication sub-térahertz}
 
-Les bandes sub-THz (100--300\,GHz) offrent des largeurs de bande multi-gigahertz, permettant des débits théoriques de l'ordre du térabit par seconde \cite{saad2020vision6g,etri_6g_disaster2024}. Pour les WSN, la communication sub-THz à 140\,GHz avec modulation OFDM permet une agrégation de données ultra-rapide au sein des clusters, réduisant la durée des phases de transmission et donc la consommation d'énergie.
+Les bandes sub-THz (100--300\,GHz) offrent des largeurs de bande multi-gigahertz, permettant des débits théoriques de l'ordre du térabit par seconde \cite{saad2020vision6g}. Pour les WSN, la communication sub-THz à 140\,GHz avec modulation OFDM permet une agrégation de données ultra-rapide au sein des clusters, réduisant la durée des phases de transmission et donc la consommation d'énergie.
 
 Le modèle de perte de propagation à 140\,GHz inclut l'absorption moléculaire par la vapeur d'eau et l'oxygène~:
 \begin{equation}
@@ -521,23 +449,23 @@ où FSPL est la perte en espace libre et $\alpha_{\text{abs}} \approx 1$--$5$\,d
 Les RIS sont des métasurfaces composées de nombreux éléments réflecteurs passifs ($N_{\text{RIS}} = 16$ à $1\,024$), chacun capable de contrôler indépendamment la phase du signal réfléchi. Pour les WSN, les RIS offrent trois avantages~:
 \begin{itemize}
     \item \textbf{Extension de couverture}~: création de chemins de réflexion dans les zones obstruées (bâtiments effondrés, débris)~;
-    \item \textbf{Gain de beamforming passif}~: le gain effectif d'un RIS à $M$ éléments est approximé par $G_{\text{RIS}} \approx M^2 \cdot G_{\text{elem}}$ en conditions de phase optimale~\cite{huang2021ris}, offrant un gain quadratique sans consommation RF supplémentaire~;
-    \item \textbf{Efficacité énergétique}~: les RIS ne requièrent pas d'amplificateurs RF actifs, leur consommation étant limitée au circuit de contrôle des déphaseurs ($\sim$5\,mW pour 64 éléments)~\cite{huang2021ris}.
+    \item \textbf{Gain de beamforming passif}~: le gain effectif d'un RIS à $M$ éléments est approximé par $G_{\text{RIS}} \approx M^2 \cdot G_{\text{elem}}$ en conditions de phase optimale, offrant un gain quadratique sans consommation RF supplémentaire~;
+    \item \textbf{Efficacité énergétique}~: les RIS ne requièrent pas d'amplificateurs RF actifs, leur consommation étant limitée au circuit de contrôle des déphaseurs ($\sim$5\,mW pour 64 éléments).
 \end{itemize}
 
 \subsection{Détection--communication intégrée (ISAC)}
 
-L'ISAC (\emph{Integrated Sensing and Communication}) utilise la même forme d'onde (typiquement OFDM) pour la communication et la détection radar. Pour les WSN de surveillance des catastrophes, l'ISAC permet à la même infrastructure de~: (i)~transmettre les données des capteurs vers la BS et (ii)~détecter les anomalies environnementales (mouvements de terrain, variations de température, glissements) par analyse des échos radar de la forme d'onde de communication. Cette dualité réduit le matériel nécessaire, économise de l'énergie et améliore la conscience situationnelle. Des analyses récentes confirment l'intérêt de l'ISAC pour la localisation de cibles sous débris et la surveillance de zones inaccessibles en contexte post-catastrophe \cite{isac_disaster_lwc2025}.
+L'ISAC (\emph{Integrated Sensing and Communication}) utilise la même forme d'onde (typiquement OFDM) pour la communication et la détection radar. Pour les WSN de surveillance des catastrophes, l'ISAC permet à la même infrastructure de~: (i)~transmettre les données des capteurs vers la BS et (ii)~détecter les anomalies environnementales (mouvements de terrain, variations de température, glissements) par analyse des échos radar de la forme d'onde de communication. Cette dualité réduit le matériel nécessaire, économise de l'énergie et améliore la conscience situationnelle.
 
 \subsection{Architecture O-RAN}
 
-L'architecture O-RAN (Open Radio Access Network) décompose le réseau d'accès en composants ouverts et interopérables. Le contrôleur intelligent near-RT RIC (\emph{near-Real-Time RAN Intelligent Controller}) opère avec un budget de latence de 10\,ms, imposant une contrainte stricte sur le temps de décision de tout algorithme de contrôle déployé. Les applications réseau (xApps) déployées sur le near-RT RIC et les rApps sur le non-RT RIC doivent respecter des enveloppes mémoire de quelques mégaoctets, rendant la \textbf{légèreté des modèles} un impératif de conception --- un critère que GAPF (${~}1\,473$ paramètres) et CASTER-ZT (${~}20$K paramètres) satisfont explicitement.
+L'architecture O-RAN (Open Radio Access Network) décompose le réseau d'accès en composants ouverts et interopérables. Le contrôleur intelligent near-RT RIC (\emph{near-Real-Time RAN Intelligent Controller}) opère avec un budget de latence de 10\,ms, imposant une contrainte stricte sur le temps de décision de tout algorithme de contrôle déployé. Les applications réseau (xApps) déployées sur le near-RT RIC et les rApps sur le non-RT RIC doivent respecter des enveloppes mémoire de quelques mégaoctets, rendant la \textbf{légèreté des modèles} un impératif de conception --- un critère que GAPF (${\sim}1\,473$ paramètres) et CASTER-ZT (${\sim}20$K paramètres) satisfont explicitement.
 
-L'écosystème multi-vendeur de l'O-RAN introduit de nouvelles frontières de confiance~\cite{rose2020nist,oran_survey_acm2024} qui motivent directement l'approche zéro confiance de CASTER-ZT~: CASTER-ZT s'insère comme couche de vérification entre l'inférence xApp et l'actuation, évaluant chaque décision via son spectre de décisions graduées (autoriser, réduire, différer, escalader, bloquer)~\cite{alshiekh2018shielding}.
+L'écosystème multi-vendeur de l'O-RAN introduit de nouvelles frontières de confiance~\cite{rose2020nist} qui motivent directement l'approche zéro confiance de CASTER-ZT~: CASTER-ZT s'insère comme couche de vérification entre l'inférence xApp et l'actuation, évaluant chaque décision via son spectre de décisions graduées (autoriser, réduire, différer, escalader, bloquer)~\cite{alshiekh2018shielding}.
 
 \subsection{Travaux récents sur le 6G pour la gestion des catastrophes (2024--2026)}
 
-Plusieurs travaux récents appliquent explicitement les technologies 6G à la surveillance des catastrophes et à la récupération post-catastrophe. Amatetti et al.\ \cite{amatetti2024ntn} proposent une architecture NTN 6G intégrée avec conception distribuée pour les scénarios PPDR (\emph{Public Protection and Disaster Relief}), détaillant comment les réseaux 3D multi-couches avec n\oe{}uds aériens et satellitaires peuvent maintenir la connectivité lorsque l'infrastructure terrestre est endommagée. Chen et al.\ \cite{chen2024ris_uav} modélisent les canaux radio post-catastrophe avec évanouissement induit par les débris et proposent un système UAV équipé de RIS pour restaurer la connectivité, démontrant des gains significatifs de débit et de fiabilité. Une solution conjointe UAV-monté-RIS avec station de calcul sur plateforme à haute altitude (HAP) \cite{uav_hap_ris_ppdr2025} démontre une optimisation conjointe du placement, de la configuration RIS et de la puissance pour les scénarios PPDR, permettant une couverture persistante des zones post-catastrophe en l'absence d'infrastructure terrestre. L'architecture Open6GRAN \cite{open6gran2024} propose un cadre auto-organisé pour la récupération rapide du réseau après catastrophe à grande échelle, combinant des nœuds terrestres, aériens et satellitaires dans une architecture RAN résiliente. Des travaux en cours explorent également l'intégration de l'ISAC dans les modèles de service O-RAN pour exposer nativement les observables de détection, ouvrant la voie à la surveillance environnementale intégrée au RAN.
+Plusieurs travaux récents appliquent explicitement les technologies 6G à la surveillance des catastrophes et à la récupération post-catastrophe. Amatetti et al.\ \cite{amatetti2024ntn} proposent une architecture NTN 6G intégrée avec conception distribuée pour les scénarios PPDR (\emph{Public Protection and Disaster Relief}), détaillant comment les réseaux 3D multi-couches avec n\oe{}uds aériens et satellitaires peuvent maintenir la connectivité lorsque l'infrastructure terrestre est endommagée. Chen et al.\ \cite{chen2024ris_uav} modélisent les canaux radio post-catastrophe avec évanouissement induit par les débris et proposent un système UAV équipé de RIS pour restaurer la connectivité, démontrant des gains significatifs de débit et de fiabilité. Des travaux en cours explorent également l'intégration de l'ISAC dans les modèles de service O-RAN pour exposer nativement les observables de détection, ouvrant la voie à la surveillance environnementale intégrée au RAN.
 
 \subsection{Synthèse comparative des technologies 6G pour les WSN}
 
@@ -571,7 +499,37 @@ L'intégration des technologies 6G en environnement post-catastrophe pose des d�
 %%
 \section{Paradigmes émergents pour les WSN intelligents}\label{sec:revlit-emerging}
 
-Au-delà des technologies directement employées dans les trois articles, trois paradigmes émergents sont susceptibles de transformer les WSN de surveillance à moyen terme~: (i)~l'\textbf{apprentissage fédéré} \cite{McMahan2017FedAvg,Li2020FedProx}, qui permet l'entraînement sans centralisation des données tout en posant des défis d'hétérogénéité et d'empoisonnement de modèle~; (ii)~les \textbf{jumeaux numériques} \cite{Nguyen2024DTORAN}, qui offrent un environnement d'entraînement continu et de prédiction de pannes sans perturber le réseau réel~; (iii)~la \textbf{communication sémantique} (JSCC), qui ne transmet que l'information pertinente à la tâche, réduisant la consommation de manière complémentaire à la détection comprimée de CALASH. Ces paradigmes ne sont pas implémentés dans les travaux actuels mais informent directement les directions de recherche futures (Chapitre~\ref{sec:Conclusion}).
+Au-delà des technologies directement employées dans les trois articles de cette thèse, plusieurs paradigmes émergents sont susceptibles de transformer les WSN de surveillance des catastrophes à moyen terme. Cette section examine trois directions particulièrement prometteuses qui informent les perspectives futures de cette thèse.
+
+\subsection{Apprentissage fédéré pour les réseaux de capteurs}
+
+L'\textbf{apprentissage fédéré} (FL --- \emph{Federated Learning}) permet d'entraîner des modèles partagés sans centraliser les données brutes. Le protocole \textbf{FedAvg} \cite{McMahan2017FedAvg} --- où chaque client effectue plusieurs étapes de SGD local avant d'envoyer les gradients au serveur d'agrégation --- a démontré une réduction de la communication de $10\times$ à $100\times$ par rapport au SGD distribué synchrone. \textbf{FedProx} \cite{Li2020FedProx} généralise FedAvg aux environnements hétérogènes en ajoutant un terme proximal $\frac{\mu}{2} \|w - w^t\|^2$ qui régularise les mises à jour locales par rapport au modèle global, stabilisant la convergence lorsque les distributions de données et les capacités de calcul varient entre clients.
+
+Pour les WSN de surveillance des catastrophes, l'apprentissage fédéré offre trois avantages spécifiques~:
+\begin{itemize}
+    \item \textbf{Confidentialité}~: les données capteurs brutes (potentiellement sensibles dans les zones de conflit) restent sur les n\oe{}uds.
+    \item \textbf{Communication}~: seuls les gradients ou les mises à jour de modèle sont transmis, préservant la bande passante et l'énergie.
+    \item \textbf{Adaptation locale}~: chaque cluster peut adapter sa politique de routage aux conditions locales (topologie post-catastrophe, intensité carbone locale) tout en bénéficiant de l'apprentissage collectif.
+\end{itemize}
+
+Cependant, l'application de FL aux WSN de classe capteur pose des défis non résolus~: hétérogénéité des dispositifs, non-i.i.d.ité des données, risque d'empoisonnement de modèle et surcharge de communication. L'intégration du bouclier CASTER-ZT dans la boucle fédérée constitue une direction de recherche prometteuse identifiée au Chapitre~\ref{sec:Conclusion}.
+
+\subsection{Jumeaux numériques pour la gestion des réseaux}
+
+Un \textbf{jumeau numérique} (\emph{digital twin}) est une réplique virtuelle haute fidélité d'un système physique, mise à jour en temps réel par les données du système réel. Nguyen et al.\ \cite{Nguyen2024DTORAN} proposent un cadre de jumeau numérique pour l'architecture O-RAN servant d'environnement d'entraînement continu pour les xApps et rApps du RIC. Pour les WSN de surveillance des catastrophes, un jumeau numérique pourrait prédire les pannes, accélérer la récupération via le mécanisme SHDR de CALASH et permettre l'affinage continu des politiques GAPF et CASTER-ZT sans perturber le réseau réel. Le maintien de la fidélité du jumeau en conditions post-catastrophe (changements topologiques rapides, surcharge de communication, coût énergétique) reste un problème ouvert~\cite{saad2020vision6g}.
+
+\subsection{Communication sémantique pour l'IoT}
+
+La \textbf{communication sémantique} (\emph{semantic communication}) remplace la transmission fidèle de bits par la transmission du \emph{sens} pertinent pour la tâche en cours. Au lieu de coder et transmettre l'intégralité des mesures capteurs, un encodeur sémantique conjoint source-canal (\emph{Joint Source-Channel Coding}, JSCC) extrait et transmet uniquement les caractéristiques nécessaires à la décision (par exemple, ``anomalie détectée'' plutôt que les 1\,000 échantillons de données brutes).
+
+Ce paradigme est particulièrement pertinent pour les WSN de surveillance des catastrophes, où~:
+\begin{itemize}
+    \item La bande passante est limitée et l'énergie de transmission domine la consommation.
+    \item La tâche (détection d'anomalie, alerte précoce) ne nécessite pas la reconstruction parfaite des signaux bruts.
+    \item La détection comprimée (CADR dans CALASH) opère déjà une réduction de données, mais de manière agnostique à la tâche. Un encodeur sémantique adaptatif pourrait aller plus loin en ne transmettant que l'information pertinente pour la mission de surveillance.
+\end{itemize}
+
+Ces trois paradigmes émergents ne sont pas implémentés dans les travaux actuels de cette thèse mais informent directement les directions de recherche futures (Section~\ref{sec:concl-futures}). Leur intégration progressive dans la pile protocolaire GAPF+CALASH+CASTER-ZT constituerait une extension naturelle des contributions présentées.
 
 
 %%
@@ -579,7 +537,7 @@ Au-delà des technologies directement employées dans les trois articles, trois 
 %%
 \section{Tableau récapitulatif des lacunes}\label{sec:revlit-gap-table}
 
-Le Tableau~\ref{tab:gap-analysis} synthétise les capacités et les lacunes des travaux existants à travers douze critères pertinents pour les WSN de surveillance des catastrophes intégrés au 6G. Ce tableau justifie la nécessité des trois articles~: aucun travail existant ne couvre plus de quatre critères simultanément, tandis que la pile complète GAPF+CALASH+CASTER-ZT en couvre les douze.
+Le Tableau~\ref{tab:gap-analysis} synthétise les capacités et les lacunes des travaux existants à travers douze critères pertinents pour les WSN de surveillance des catastrophes intégrés au 6G. Ce tableau justifie la nécessité de chacun des trois articles de cette thèse~: aucun travail existant ne couvre plus de quatre critères simultanément, tandis que la pile complète GAPF+CALASH+CASTER-ZT en couvre les douze.
 
 \begin{table}[htbp]
 \centering
@@ -634,13 +592,13 @@ Shield binaire \cite{alshiekh2018shielding}     & $\circ$   & \ding{51} & \ding{
 %%
 \section{Synthèse et lacunes identifiées}\label{sec:revlit-synthese}
 
-La revue qui précède fait apparaître trois lacunes que cette thèse cherche à combler. Le Tableau~\ref{tab:gap-analysis} le confirme~: aucun travail existant ne couvre plus de quatre des douze critères identifiés, et aucun ne traite simultanément les trois dimensions --- efficacité, durabilité, sécurité.
+La revue de littérature présentée dans ce chapitre révèle \textbf{trois lacunes majeures} que cette thèse vise à combler. Ces lacunes sont clairement visibles dans le Tableau~\ref{tab:gap-analysis}~: aucune approche existante ne couvre plus de quatre des douze critères identifiés.
 
-\textbf{Lacune 1 --- Absence de fusion de politiques MARL pour le routage dans les WSN (colonnes E2+E3).} Les algorithmes MARL existants (QMIX, QTRAN) traitent le routage de manière isolée sans exploiter l'information topologique du réseau. De plus, leurs forces sont complémentaires, mais aucun travail existant ne propose un cadre qui les fusionne. Les GNN, pourtant naturellement adaptés aux données structurées en graphe des WSN, n'ont jamais été combinés avec une stratégie de fusion de politiques. GAPF (Article~1) comble cette lacune en proposant le premier méta-contrôleur GCN+CAS ($<$2\,000 paramètres) qui sélectionne dynamiquement l'expert optimal.
+\textbf{Lacune 1 --- Absence de fusion de politiques MARL pour le routage dans les WSN (colonnes E2+E3).} Les algorithmes MARL existants (QMIX, QTRAN) traitent le routage de manière isolée sans exploiter l'information topologique du réseau. De plus, leurs forces sont complémentaires mais aucun cadre ne les fusionne. Les GNN, pourtant naturellement adaptés aux données structurées en graphe des WSN, n'ont jamais été combinés avec une stratégie de fusion de politiques. GAPF (Article~1) comble cette lacune en proposant le premier méta-contrôleur GCN+CAS ($<$2\,000 paramètres) qui sélectionne dynamiquement l'expert optimal.
 
 \textbf{Lacune 2 --- Absence de routage conscient du carbone du cycle de vie (colonnes D1+D2).} La communauté des communications vertes s'est concentrée exclusivement sur le carbone opérationnel, ignorant le carbone incorporé qui domine de six ordres de grandeur pour les dispositifs IoT. Aucun protocole de routage pour WSN n'intègre les trois phases du cycle de vie (ISO~14040) dans ses décisions, et aucun ne module la détection comprimée en fonction de l'intensité carbone du réseau électrique. CALASH (Article~2) comble cette lacune en introduisant la métrique LCI et quatre piliers intégrés avec garanties de Lyapunov.
 
-\textbf{Lacune 3 --- Absence de contrôle de décision zéro-confiance pour les réseaux autonomes (colonnes S1+S2).} Les mécanismes existants de Safe RL (CPO) ne fournissent que des garanties en espérance, et les boucliers existants sont binaires (autoriser/bloquer). Aucun travail existant ne combine un encodeur GNN, un évaluateur de confiance-risque et un bouclier déterministe à décisions graduées avec des garanties formelles dans le budget de latence O-RAN. CASTER-ZT (Article~3) comble cette lacune en proposant le premier cadre zéro-confiance avec dix propositions formelles.
+\textbf{Lacune 3 --- Absence de contrôle de décision zéro-confiance pour les réseaux autonomes (colonnes S1+S2).} Les mécanismes existants de Safe RL (CPO) ne fournissent que des garanties en espérance, et les boucliers existants sont binaires (autoriser/bloquer). Aucun cadre ne combine un encodeur GNN, un évaluateur de confiance-risque et un bouclier déterministe à décisions graduées avec des garanties formelles, le tout dans le budget de latence O-RAN. CASTER-ZT (Article~3) comble cette lacune en proposant le premier cadre zéro-confiance avec dix propositions formelles.
 
 \medskip
-Ces trois lacunes motivent respectivement les trois articles présentés dans les chapitres~\ref{sec:Theme1}, \ref{sec:Theme2} et~\ref{sec:Theme3} de cette thèse. Ensemble, les trois articles forment une pile protocolaire complète couvrant les douze critères du Tableau~\ref{tab:gap-analysis} --- une couverture qu'aucun travail existant, seul ou combiné, ne peut égaler.
+Ces trois lacunes motivent respectivement les trois articles présentés dans les chapitres~\ref{sec:Theme1}, \ref{sec:Theme2} et~\ref{sec:Theme3} de cette thèse. Ensemble, les trois articles forment une pile protocolaire complète qui couvre les douze critères du Tableau~\ref{tab:gap-analysis} --- une couverture qu'aucune approche existante, seule ou combinée, ne peut égaler.

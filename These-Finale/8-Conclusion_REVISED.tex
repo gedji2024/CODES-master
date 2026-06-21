@@ -2,17 +2,15 @@
 % Modifications : (1) titres de sections simplifiés ; (2) recommandations décideurs renforcées
 \Chapter{CONCLUSION}\label{sec:Conclusion}
 
-Le point de départ de cette thèse était simple à énoncer, difficile à résoudre~: comment faire fonctionner un réseau de capteurs sans fil dans les décombres d'une catastrophe, avec des nœuds détruits, des batteries qui s'épuisent, une empreinte carbone à maîtriser, et des politiques d'IA qui peuvent être compromises~? Aucun protocole existant ne répondait à plus de quatre des douze critères que nous avions identifiés. Ce chapitre fait le point sur ce que nous avons accompli (Section~\ref{sec:concl-synthese}), sur les retombées concrètes pour les entreprises, la société et les gouvernements (Section~\ref{sec:concl-retombees}), sur les limites honnêtes du travail (Section~\ref{sec:concl-limitations}), et sur les pistes de recherche que ces travaux ouvrent (Section~\ref{sec:concl-futures}).
+Cette thèse a abordé le problème du routage intelligent dans les réseaux de capteurs sans fil (WSN) déployés pour la surveillance des catastrophes naturelles, en proposant trois cadres complémentaires formant une pile protocolaire complète --- efficacité énergétique, durabilité carbone du cycle de vie et sécurité zéro-confiance --- pour les réseaux natifs en intelligence artificielle (AI) intégrés aux technologies de sixième génération (6G). Ce chapitre conclut la thèse en synthétisant les travaux réalisés (Section~\ref{sec:concl-synthese}), en détaillant les contributions et retombées pour les entreprises, la société et les gouvernements (Section~\ref{sec:concl-retombees}), en reconnaissant les limitations (Section~\ref{sec:concl-limitations}), et en identifiant les directions de recherche futures (Section~\ref{sec:concl-futures}).
 
 %%
 %%  SYNTHESE DES TRAVAUX
 %%
 \section{Synthèse des travaux}\label{sec:concl-synthese}
 
-\textbf{Article 1 --- GAPF (Article~1,~\cite{gapf_tgcn2026}).}
+\textbf{Article 1 --- GAPF.}
 GAPF propose un méta-contrôleur de fusion de politiques MARL (QMIX et QTRAN) via un encodeur GCN à 2 couches et un sélecteur contextuel (CAS), totalisant seulement 1\,473 paramètres. L'évaluation sur 7 scénarios a démontré~: PDR $\geq$ 98\%, consommation d'énergie 2 à 3.5$\times$ inférieure aux références et empreinte mémoire 13$\times$ moindre, rendant le déploiement sur Cortex-M4 réaliste.
-
-L'Article~1 (GAPF) a été publié dans IEEE Transactions on Green Communications and Networking~\cite{gapf_tgcn2026}, revue classée Q1 selon le SCImago Journal Rankings, ce qui valide la contribution dans un forum de premier plan pour les thématiques d'efficacité énergétique dans les réseaux de communication.
 
 \textbf{Article 2 --- CALASH.}
 CALASH est le premier protocole de routage pour WSN à minimiser conjointement l'intensité carbone du cycle de vie (LCI) à travers quatre piliers intégrés (CADR, CARE, SHDR, LSE) sur une couche physique 6G bi-bande. Il a atteint 60\% de durée de vie supérieure, 82.9\% de PDR et 33\% de LCI inférieur, validé sur 30 graines Monte Carlo. L'aperçu clé est que la réduction du volume de données transmises constitue le levier le plus efficace pour réduire l'empreinte carbone des WSN.
@@ -26,28 +24,22 @@ CASTER-ZT est le premier cadre de contrôle de décision conforme au paradigme z
 %%
 \section{Contributions scientifiques originales}\label{sec:concl-contributions}
 
-Six contributions originales se dégagent de l'ensemble de ces travaux.
+Cette thèse apporte six contributions scientifiques originales à l'état de l'art, dont l'importance et la portée sont détaillées ci-dessous.
 
 \textbf{Contribution 1~: Premier cadre de fusion de politiques MARL via GNN pour le routage dans les WSN.}
-GAPF (Article~1,~\cite{gapf_tgcn2026}) est, à notre connaissance, le premier méta-contrôleur qui exploite un encodeur GCN pour capturer la structure topologique d'un WSN et sélectionner dynamiquement la politique MARL la plus adaptée. Avec seulement 1\,473 paramètres entraînables ($26\times$ moins qu'un seul agent RNN), GAPF démontre que la fusion de politiques peut être plus efficace que l'entraînement d'une politique monolithique unique, ouvrant une nouvelle direction en méta-apprentissage pour les systèmes multi-agents. La portée de cette contribution dépasse les WSN~: le paradigme GNN+CAS est applicable à tout système multi-agent où des experts complémentaires coexistent.
-
-Des travaux publiés en 2024--2026 confirment la pertinence de cette direction~: DDWQMIX~\cite{ddwqmix_cac2024} propose une extension de QMIX améliorant la robustesse dans les environnements non stationnaires, mais sans encodage GNN de la topologie ni méta-contrôleur de sélection dynamique. Ces travaux confirment l'intérêt des extensions QMIX sans pour autant converger vers la solution légère et topologiquement consciente de GAPF.
+GAPF est, à notre connaissance, le premier méta-contrôleur qui exploite un encodeur GCN pour capturer la structure topologique d'un WSN et sélectionner dynamiquement la politique MARL la plus adaptée. Avec seulement 1\,473 paramètres entraînables ($26\times$ moins qu'un seul agent RNN), GAPF démontre que la fusion de politiques peut être plus efficace que l'entraînement d'une politique monolithique unique, ouvrant une nouvelle direction de recherche en méta-apprentissage pour les systèmes multi-agents. La portée de cette contribution dépasse les WSN~: le paradigme GNN+CAS est applicable à tout système multi-agent où des experts complémentaires existent.
 
 \textbf{Contribution 2~: Réseau d'attention monotone Q$\cdot$K pour la scalarisation de récompenses multi-objectifs.}
 L'architecture combinant un mécanisme d'attention requête-clé et un réseau à poids non-négatifs garantit formellement la monotonie Pareto de la scalarisation~: si une solution domine au sens de Pareto une autre, son score scalaire sera strictement supérieur. Cette garantie, absente des méthodes de scalarisation existantes (somme pondérée, Tchebycheff), élimine les artefacts qui peuvent tromper l'optimiseur dans les régions non convexes du front de Pareto.
 
 \textbf{Contribution 3~: Première métrique d'intensité carbone du cycle de vie (LCI) pour les WSN conforme à ISO~14040.}
-La métrique LCI intègre le carbone incorporé, opérationnel et de fin de vie dans un indicateur unique exprimé en gCO$_2$eq par paquet utile livré. Cette métrique comble une lacune fondamentale dans l'évaluation des protocoles de routage~: les métriques existantes (Joules/paquet, durée de vie) ne reflètent pas l'impact environnemental réel. Le LCI offre un cadre de comparaison équitable qui pourrait être adopté par la communauté pour l'évaluation de tout protocole IoT.
+La métrique LCI intègre le carbone incorporé, opérationnel et de fin de vie dans un indicateur unique exprimé en gCO$_2$eq par paquet utile livré. Cette métrique comble une lacune fondamentale dans l'évaluation des protocoles de routage~: les métriques existantes (Joules/paquet, durée de vie) ne reflètent pas l'impact environnemental réel. Le LCI offre un cadre de comparaison équitable qui peut être adopté par la communauté pour l'évaluation de tout protocole IoT.
 
 \textbf{Contribution 4~: Premier protocole de routage pour WSN à quatre piliers avec garanties de Lyapunov pour le budget carbone.}
-L'intégration de CADR, CARE, SHDR et LSE dans un cadre unifié avec une preuve mathématique de la borne de Pareto CDL est, à notre connaissance, inédite dans la littérature. La borne prouve que CALASH converge simultanément vers un taux de livraison quasi-optimal \emph{et} un budget carbone borné, fournissant les premières garanties théoriques sur la durabilité carbone d'un protocole de routage.
-
-Les travaux récents de Vaccaro et al.~\cite{vaccaro_sustainable2025} sur les centres de données durables et la méthodologie AIOTI~\cite{aioti2024carbon} pour la mesure de l'empreinte carbone IoT confirment la tendance vers une comptabilité carbone holistique~; aucun de ces travaux n'intègre cependant cette comptabilité dans les décisions de routage d'un protocole WSN.
+L'intégration de CADR, CARE, SHDR et LSE dans un cadre unifié avec une preuve mathématique de la borne de Pareto CDL est, à notre connaissance, inédite. La borne prouve que CALASH converge simultanément vers un taux de livraison quasi-optimal \emph{et} un budget carbone borné, fournissant les premières garanties théoriques sur la durabilité carbone d'un protocole de routage.
 
 \textbf{Contribution 5~: Premier cadre de contrôle de décision zéro-confiance pour les réseaux de détection natifs en AI.}
 CASTER-ZT est le premier système qui vérifie chaque actuation de politique apprise avec un spectre de cinq décisions graduées, soutenu par dix propositions formelles. Cette approche dépasse fondamentalement les mécanismes binaires existants en offrant une dégradation gracieuse qui maintient la mission de surveillance tout en contenant les menaces. Le bouclier déterministe, avec ses 14 paramètres non apprenables, est entièrement explicable et auditable --- une propriété cruciale pour la certification de systèmes critiques.
-
-L'attaque SUB-PLAY~\cite{subplay_marl2025} (2024), qui démontre la vulnérabilité des systèmes MARL coopératifs à des agents adversariaux contrôlant un sous-ensemble d'agents, renforce a posteriori la nécessité de la couche de vérification CASTER-ZT. De même, les avancées récentes en ZTA pour l'IoT~\cite{shakya_zt_iot2025, kaur_zta_iot2024} progressent vers des architectures de confiance zéro adaptées aux dispositifs contraints, mais sans décisions graduées ni garanties formelles dans le budget O-RAN.
 
 \textbf{Contribution 6~: Démonstration de la complémentarité entre efficacité énergétique, durabilité carbone et sécurité.}
 Collectivement, les trois articles démontrent que ces trois objectifs se renforcent mutuellement plutôt que de s'opposer~: un routage plus efficace (GAPF) réduit le carbone opérationnel~; la réduction de données sensible au carbone (CALASH) prolonge la durée de vie et amortit le carbone incorporé~; le bouclier zéro-confiance (CASTER-ZT) protège les gains des deux premiers contre les compromissions. Cette complémentarité, formalisée comme une pile protocolaire intégrée, constitue un résultat d'intérêt systémique pour la conception des futurs réseaux IoT.
@@ -103,18 +95,18 @@ Les contributions s'alignent avec cinq ODD des Nations Unies, comme synthétisé
 %%
 \section{Limitations de la solution proposée}\label{sec:concl-limitations}
 
-Ces contributions, aussi prometteuses soient-elles, reposent sur des hypothèses et des choix de modélisation qui méritent d'être discutés sans détour.
+Malgré les contributions significatives de cette thèse, plusieurs limitations doivent être reconnues et mises en perspective.
 
 \begin{enumerate}
     \item \textbf{Évaluation par simulation.} Les trois articles reposent sur des simulations numériques. Bien que validées contre des données réelles (Intel Lab pour les traces capteurs, UK Carbon Intensity API pour les données carbone, USGS ShakeMap pour les modèles sismiques) et utilisant des modèles physiques bien établis (modèle de premier ordre de Heinzelman \cite{heinzelman2000leach} pour l'énergie, propagation sub-THz avec absorption moléculaire pour la couche 6G), les résultats ne peuvent garantir un comportement identique lors d'un déploiement sur matériel réel. Les effets de la variabilité du canal radio, des interférences, de la température ambiante sur l'électronique des capteurs, et des imprécisions de synchronisation n'ont pas été caractérisés.
 
     \item \textbf{Modèle de catastrophe simplifié.} Le modèle de catastrophe gaussienne, bien que calibré sur les données sismiques réelles du séisme Turquie-Syrie 2023 (Mw~7.8), ne capture pas toute la complexité des phénomènes naturels. En particulier~: (i)~les répliques sismiques qui peuvent détruire des n\oe{}uds supplémentaires dans les heures et jours suivant le choc principal~; (ii)~les catastrophes en cascade (séisme $\to$ tsunami $\to$ glissement de terrain)~; (iii)~les inondations à propagation lente dont l'impact spatial est anisotrope~; (iv)~les feux de forêt dont le front se déplace en fonction du vent et de la végétation. L'extension à ces modèles nécessiterait des simulateurs spatio-temporels dédiés.
 
-    \item \textbf{Intégration non validée entre articles.} Bien que les trois cadres soient conçus comme une pile protocolaire complémentaire (GAPF $\to$ CALASH $\to$ CASTER-ZT), leur intégration en un système unifié n'a pas été évaluée expérimentalement. Les interactions potentielles --- par exemple, l'impact du bouclier CASTER-ZT sur la convergence de GAPF, ou la modification des décisions de routage de CALASH par les décisions graduées du bouclier --- restent à caractériser. Des effets émergents non anticipés pourraient apparaître lors de l'intégration.
+    \item \textbf{Intégration non validée entre articles.} Bien que les trois cadres soient conçus comme une pile protocolaire complémentaire (GAPF $\to$ CALASH $\to$ CASTER-ZT), leur intégration en un système unifié n'a pas été évaluée expérimentalement. Les interactions potentielles --- par exemple, l'impact du bouclier CASTER-ZT sur la convergence de GAPF, ou la modification des décisions de routage de CALASH par les décisions graduées du bouclier --- restent à caractériser. Il est possible que des effets émergents non anticipés apparaissent lors de l'intégration.
 
     \item \textbf{Couche physique 6G analytique.} Les modèles de propagation sub-THz et RIS utilisés dans CALASH sont basés sur des modèles analytiques standard (perte en espace libre + absorption moléculaire pour le sub-THz, gain quadratique pour le RIS). L'intégration avec des simulateurs de couche physique haute fidélité --- par exemple, le ray tracing 3D ou les simulateurs de canal stochastique conformes au 3GPP TR~38.901 --- n'a pas été réalisée. Les performances réelles de la couche 6G dans un environnement post-catastrophe (débris, poussière, fumée) pourraient différer sensiblement des prédictions analytiques.
 
-    \item \textbf{Scalabilité non caractérisée à très grande échelle.} Les évaluations couvrent jusqu'à 200 n\oe{}uds (Articles~1 et~2) et 100 cellules hexagonales (Article~3). Le comportement à très grande échelle --- milliers de n\oe{}uds, couverture régionale de centaines de km$^2$ --- n'a pas été caractérisé. La scalabilité du GCN (dont la complexité est $O(|E| \cdot d)$ par couche) et du GraphSAGE (avec échantillonnage de voisinage) mérite une étude dédiée pour des graphes de grande taille.
+    \item \textbf{Scalabilité non caractérisée à très grande échelle.} Les évaluations couvrent jusqu'à 200 n\oe{}uds (Articles~1 et~2) et 100 cellules hexagonales (Article~3). Le comportement à très grande échelle --- milliers de n\oe{}uds, couverture régionale de centaines de km$^2$ --- n'a pas été caractérisé. En particulier, la scalabilité du GCN (dont la complexité est $O(|E| \cdot d)$ par couche) et du GraphSAGE (avec échantillonnage de voisinage) mérite une étude dédiée pour des graphes de grande taille.
 
     \item \textbf{Hypothèse de rationalité des adversaires.} Le modèle d'attaque de CASTER-ZT suppose des politiques voyous qui mal-routent de manière systématique (30\% des n\oe{}uds compromis). Des adversaires adaptatifs, capables de modifier leur stratégie en réponse aux décisions du bouclier (attaques par évasion), n'ont pas été considérés. Une analyse de robustesse adversariale serait nécessaire pour les déploiements à haut risque.
 
@@ -138,8 +130,6 @@ Ces contributions, aussi prometteuses soient-elles, reposent sur des hypothèses
 
 \begin{enumerate}[resume]
     \item \textbf{Apprentissage fédéré.} Entraînement distribué des GNN/DRL via FedAvg \cite{McMahan2017FedAvg} / FedProx \cite{Li2020FedProx}, avec détection du \emph{model poisoning} par CASTER-ZT.
-    \item \textbf{Extension aux paradigmes émergents de MARL.} Les avancées récentes en MARL --- extensions de QMIX~\cite{ddwqmix_cac2024}, QTRAN++~\cite{qtranpp_arxiv2020}, et la fusion de politiques coopératives --- ouvrent des opportunités pour enrichir le portefeuille d'experts de GAPF au-delà du duo QMIX/QTRAN. L'intégration de DDWQMIX comme troisième expert pour les environnements non stationnaires serait une extension naturelle.
-    \item \textbf{Standardisation de la métrique LCI.} La soumission de la métrique LCI aux organismes de normalisation ISO TC 207/SC 7 (ISO~14067 pour les empreintes carbone des produits) permettrait son adoption comme standard d'évaluation pour les protocoles IoT, consolidant ainsi la Contribution~3 de cette thèse.
     \item \textbf{Jumeaux numériques.} Construction d'un jumeau numérique \cite{Nguyen2024DTORAN} pour l'entraînement continu, la prédiction de pannes et le test de mises à jour de politique avant déploiement.
     \item \textbf{Extension multi-catastrophe et multi-site.} Scénarios de catastrophes en cascade et coordination inter-sites via 6G backhauling.
     \item \textbf{Certification formelle du bouclier.} Vérification par model checking (PRISM, NuSMV) ou preuve assistée (Coq, Isabelle/HOL) pour la conformité IEC~61508 / DO-178C.
@@ -167,7 +157,7 @@ Bien que ciblant les WSN de surveillance des catastrophes, les principes méthod
 %%
 \section{Recommandations aux décideurs et aux organismes de normalisation}\label{sec:concl-institutions}
 
-Ces travaux ont des implications concrètes pour plusieurs organismes~: ISO TC 207/SC 7 (extension de ISO~14067 aux protocoles IoT via le LCI), ETSI ISG ENI (réseaux auto-gérés par AI), O-RAN Alliance WG2 (GAPF/CALASH comme rApps, CASTER-ZT comme xApp), et 3GPP SA5 (mécanismes de confiance AI/ML pour le 6G). Pour les gouvernements, la pile contribue directement au Cadre de Sendai \cite{UNDRR2015Sendai} (indicateurs C-2 et C-6) et peut être intégrée sans modification matérielle sur les RIC O-RAN existants.
+Les contributions ont des implications pour plusieurs organismes~: ISO TC 207/SC 7 (extension de ISO~14067 aux protocoles IoT via le LCI), ETSI ISG ENI (réseaux auto-gérés par AI), O-RAN Alliance WG2 (GAPF/CALASH comme rApps, CASTER-ZT comme xApp), et 3GPP SA5 (mécanismes de confiance AI/ML pour le 6G). Pour les gouvernements, la pile contribue directement au Cadre de Sendai \cite{UNDRR2015Sendai} (indicateurs C-2 et C-6) et peut être intégrée sans modification matérielle sur les RIC O-RAN existants.
 
 
 %%
@@ -175,7 +165,7 @@ Ces travaux ont des implications concrètes pour plusieurs organismes~: ISO TC 2
 %%
 \section{Synthèse quantitative des résultats}\label{sec:concl-bilan}
 
-Le Tableau~\ref{tab:bilan-global} récapitule les résultats quantitatifs clés, mettant en perspective l'ampleur des gains par rapport à l'état de l'art et le coût computationnel associé.
+Le Tableau~\ref{tab:bilan-global} récapitule les résultats quantitatifs clés de l'ensemble de la thèse, mettant en perspective l'ampleur des gains par rapport à l'état de l'art et le coût computationnel associé.
 
 \begin{table}[htbp]
 \centering
@@ -202,11 +192,11 @@ Exécutions totales de test & --- & --- & $>$ 23\,800 & --- \\
 }
 \end{table}
 
-Ces résultats montrent que la pile protocolaire proposée réalise des gains significatifs sur \textbf{toutes} les dimensions --- efficacité, durabilité, sécurité, légèreté --- avec un budget computationnel total ($\sim$27K paramètres) comparable à un seul agent RNN des approches MARL existantes. La couverture complète des 12 critères est, à notre connaissance, inédite dans la littérature.
+Ces résultats démontrent que la pile protocolaire proposée réalise des gains significatifs sur \textbf{toutes} les dimensions --- efficacité, durabilité, sécurité, légèreté --- avec un budget computationnel total ($\sim$27K paramètres) comparable à un seul agent RNN des approches MARL existantes. La couverture complète des 12 critères est, à notre connaissance, inédite dans la littérature.
 
 %%
 %%  REMARQUES CONCLUSIVES
 %%
 \section{Remarques conclusives}
 
-Les catastrophes naturelles continueront de frapper avec une intensité et une fréquence croissantes dans un monde affecté par le changement climatique \cite{IPCC2021AR6}. La surveillance en temps réel par les réseaux de capteurs sans fil constitue un maillon essentiel de la chaîne de prévention et de réponse \cite{UNDRR2015Sendai}. Ce que nous espérons avoir démontré ici, c'est que l'intelligence artificielle --- lorsqu'elle est conçue avec parcimonie, conscience environnementale et vérification systématique --- peut constituer un outil fiable pour les environnements les plus critiques. GAPF, CALASH et CASTER-ZT devront être validés sur matériel réel pour confirmer leur viabilité opérationnelle. C'est l'étape décisive que nous appelons de nos vœux pour les prochaines années.
+Les catastrophes naturelles continueront de frapper avec une intensité et une fréquence croissantes dans un monde affecté par le changement climatique \cite{IPCC2021AR6}. La surveillance en temps réel par les réseaux de capteurs sans fil constitue un maillon essentiel de la chaîne de prévention et de réponse \cite{UNDRR2015Sendai}. Cette thèse contribue à rendre ces réseaux de surveillance plus efficaces, plus durables et plus sûrs, en démontrant que l'intelligence artificielle --- lorsqu'elle est conçue avec parcimonie, conscience environnementale et vérification systématique --- peut constituer un outil fiable pour les environnements critiques. Les cadres proposés ici --- GAPF, CALASH et CASTER-ZT --- devront être validés par des déploiements sur matériel réel pour confirmer leur viabilité opérationnelle, une étape que nous espérons voir réalisée dans les prochaines années.

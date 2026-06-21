@@ -291,14 +291,14 @@ a été dûment accepté\ifthenelse{\equal{\monDiplome}{M}}{}{e} par le jury d'e
 \include{4-Sigles_Abrev_REVISED}  % [RÉVISÉ — C2a] Liste des symboles mathématiques ajoutée.
 \ifthenelse{\equal{\AnnexesPresentes}{O}}{\listofappendices}{}
 \mainmatter
-\include{5-Introduction_new}       % Introduction au sujet de recherche.
-\include{6-Revue_litterature_new}  % [RÉVISÉ — C2b] Section métaheuristiques enrichie, formule Heinzelman en display.
-\include{6b-Demarche_new}          % Démarche de l'ensemble du travail de recherche (chapitre de transition)
+\include{5-Introduction}       % Introduction au sujet de recherche.
+\include{6-Revue_litterature_REVISED}  % [RÉVISÉ — C2b] Section métaheuristiques enrichie, formule Heinzelman en display.
+\include{6b-Demarche}          % Démarche de l'ensemble du travail de recherche (chapitre de transition)
 \include{7-Theme1}             % Premier thème (Doctorat) ou "Détails de la Solution" (Maîtrise) / First topic (PhD) or "Details of the Solution" (Master's).
 \include{7-Theme2}             % Second thème (Doctorat) ou "Résultats théoriques et expérimentaux" (Maîtrise) / Second theme (PhD) or "Theoretical and experimental results" (Master's)
 \include{7-Theme3}             % Troisième thème (Doctorat) ou effacez ce fichier si vous êtes à la Maîtrise / Third topic (PhD) or delete this file if you are in the Master's program
-\include{7b-Discussion_new}        % Discussion Générale (chapitre de discussion transversale)
-\include{8-Conclusion_new}  % [RÉVISÉ — C6/C8] Titres de sections révisés, recommandations renforcées.
+\include{7b-Discussion}        % Discussion Générale (chapitre de discussion transversale)
+\include{8-Conclusion_REVISED}  % [RÉVISÉ — C6/C8] Titres de sections révisés, recommandations renforcées.
 %\backmatter
 \ifthenelse{\equal{\Langue}{english}}{
 	\renewcommand\bibname{REFERENCES}
@@ -306,7 +306,7 @@ a été dûment accepté\ifthenelse{\equal{\monDiplome}{M}}{}{e} par le jury d'e
 	\bibliographystyle{IEEEtran}			% Style bibliographique / Bibliography style 
 }{
 	\renewcommand\bibname{RÉFÉRENCES}
-	\bibliography{Document_new_corrected}
+	\bibliography{Document}
 	\bibliographystyle{IEEEtran-francais}    % Style bibliographique / Bibliography style 
 }
 %

@@ -8,18 +8,18 @@
 \noindent\textbf{Statut~:} Soumis.
 
 \vspace{0.3cm}
-\noindent\textit{Ce chapitre pr\'{e}sente le deuxi\`{e}me article de cette th\`{e}se. Il propose CALASH (Carbon-Aware Lifecycle-Autonomous Self-Healing), un cadre int\'{e}grant quatre piliers~: (i)~CADR pour la r\'{e}duction de donn\'{e}es sensible au carbone, (ii)~CARE, un routeur hybride Lyapunov--DQN avec des garanties de budget carbone prouvables, (iii)~SHDR pour la reprise autonome apr\`{e}s catastrophe via une boucle MAPE-K, et (iv)~LSE pour l'\'{e}valuation du cycle de vie conforme \`{a} l'ISO~14040. CALASH op\`{e}re sur une couche physique 6G double bande sub-THz/sub-6\,GHz. Ce travail constitue la deuxi\`{e}me contribution de la th\`{e}se en int\'{e}grant la conscience carbone \`{a} travers tout le cycle de vie du r\'{e}seau de capteurs.}
+\noindent\textit{Ce chapitre présente le deuxième article de cette thèse. Il propose CALASH (Carbon-Aware Lifecycle-Autonomous Self-Healing), un cadre intégrant quatre piliers~: (i)~CADR pour la réduction de données sensible au carbone, (ii)~CARE, un routeur hybride Lyapunov--DQN avec des garanties de budget carbone prouvables, (iii)~SHDR pour la reprise autonome après catastrophe via une boucle MAPE-K, et (iv)~LSE pour l'évaluation du cycle de vie conforme à l'ISO~14040. CALASH opère sur une couche physique 6G double bande sub-THz/sub-6\,GHz. Ce travail constitue la deuxième contribution de la thèse en intégrant la conscience carbone à travers tout le cycle de vie du réseau de capteurs.}
 
 \vspace{0.5cm}
 
 \section{Abstract}
-
 Wireless Sensor Networks (WSNs) deployed in disaster-prone environments must extend network lifetime and maintain reliable data delivery while reducing their full-lifecycle carbon footprint.
 To date, no protocol jointly optimizes Lifecycle Carbon Intensity (LCI)---defined as the embodied, operational, and end-of-life carbon dioxide associated with each useful packet.
 We propose CALASH (Carbon-Aware Lifecycle-Autonomous Self-Healing), a framework integrating four pillars: (i)~Carbon-Aware Data Reduction (CADR), which modulates compressive-sensing ratios with grid carbon intensity; (ii)~Carbon-Aware Routing Engine (CARE), a hybrid Lyapunov--DQN router with provable carbon-budget guarantees; (iii)~Self-Healing Disaster Recovery (SHDR) via an autonomic MAPE-K loop; and (iv)~Lifecycle Sustainability Engine (LSE) embedding ISO~14040-compliant end-of-life costs into routing.
 CALASH operates over a sub-THz/sub-6~GHz dual-band 6G physical layer.
 Extensive simulations validated against real Intel~Lab traces and UK grid carbon data show that CALASH achieves 60\% longer lifetime (1,486 vs.\ 931 rounds), 82.9\% Packet Delivery Ratio, and 33\% lower LCI (8.99 vs.\ 13.42 gCO2eq/pkt) compared to LEACH, outperforming all six traditional baselines with statistical significance.
 An ablation study reveals CADR as the dominant pillar (59\% LCI reduction), while 6G technologies contribute a 10.5\% lifetime gain.
+
 
 \section{Introduction}
 \label{art2:sec:introduction}
@@ -102,6 +102,7 @@ LifeCycle Assessment (LCA), per ISO~14040~\cite{iso14040}/14044~\cite{iso14044},
 Pirson and Bol~\cite{pirson2021embodied} showed that IoT embodied carbon exceeds operational carbon by 3--5 orders of magnitude.
 \textbf{No prior WSN routing protocol incorporates LCA into its routing objective.}
 
+
 %% ===============================================================
 %%  SECTION III: METHODOLOGY
 %% ===============================================================
@@ -178,55 +179,47 @@ Algorithm~\ref{art2:alg:calash} presents the complete per-round operation.
 \caption{CALASH Per-Round Operation}
 \label{art2:alg:calash}
 \begin{algorithmic}[1]
-
-\Require Network $\mathcal{G$, round $t$, config $\theta$}
+\Require Network $\mathcal{G}$, round $t$, config $\theta$
 \Ensure Delivered packets, energy consumed, carbon emitted
-
 \Comment{Phase 0: Self-Healing Monitor}
-\If{$t > t_d$ \textbf{and} recovery\_mode}{
-    Run MAPE-K heartbeat check\;
-    Check if recovery complete ($> 50$ rounds since disaster)\;
-}
-
+\If{$t > t_d$ \textbf{and} recovery\_mode}
+    \State Run MAPE-K heartbeat check
+    \State Check if recovery complete ($> 50$ rounds since disaster)
+\EndIf
 \Comment{Phase 1: Carbon-Modulated CH Election (Setup)}
-$\text{CI}(t) \gets \text{CarbonTraceManager.get\_ci}(t)$\;
-$\text{CI}_{\text{norm}} \gets (\text{CI}(t) - \text{CI}_{\min}) / (\text{CI}_{\max} - \text{CI}_{\min})$\;
-$f_c \gets \max(1 - \beta \cdot \text{CI}_{\text{norm}}, \; 0.1)$\;
-\ForAll{alive node $s_i$ eligible this epoch}{
-    $T_{\text{base}} \gets p / (1 - p \cdot (r \bmod 1/p))$ \Comment{LEACH threshold}
-    $T_i \gets T_{\text{base}} \cdot (E_i / E_0) \cdot f_c$\;
-    \If{$\text{rand}() < T_i$}{Elect $s_i$ as CH}
-}
-Enforce $\geq 5\%$ alive nodes as CHs\;
-Form clusters (nearest-CH assignment)\;
-
+\State $\text{CI}(t) \gets \text{CarbonTraceManager.get\_ci}(t)$
+\State $\text{CI}_{\text{norm}} \gets (\text{CI}(t) - \text{CI}_{\min}) / (\text{CI}_{\max} - \text{CI}_{\min})$
+\State $f_c \gets \max(1 - \beta \cdot \text{CI}_{\text{norm}}, \; 0.1)$
+\ForAll{alive node $s_i$ eligible this epoch}
+    \State $T_{\text{base}} \gets p / (1 - p \cdot (r \bmod 1/p))$ \Comment{LEACH threshold}
+    \State $T_i \gets T_{\text{base}} \cdot (E_i / E_0) \cdot f_c$
+    \If{$\text{rand}() < T_i$} \State Elect $s_i$ as CH \EndIf
+\EndFor
+\State Enforce $\geq 5\%$ alive nodes as CHs
+\State Form clusters (nearest-CH assignment)
 \Comment{Phase 2: CADR -- Adaptive Compression \& Intra-Cluster TX}
-$\rho(t) \gets$ reference-point CADR mapping (Eq.~\ref{art2:eq:rho})\;
-\If{recovery\_mode}{$\rho(t) \gets \rho_{\max}$}
-$m \gets \lceil \rho(t) \cdot n \rceil$ \Comment{compressed signal dimension}
-\ForAll{cluster member $s_j$}{
-    Sense signal, compress to $m$ measurements\;
-    Transmit $m \cdot l_{\text{bit}}$ bits to CH (THz if $d < 30$\,m)\;
-}
-
+\State $\rho(t) \gets$ reference-point CADR mapping (Eq.~\ref{art2:eq:rho})
+\If{recovery\_mode} \State $\rho(t) \gets \rho_{\max}$ \EndIf
+\State $m \gets \lceil \rho(t) \cdot n \rceil$ \Comment{compressed signal dimension}
+\ForAll{cluster member $s_j$}
+    \State Sense signal, compress to $m$ measurements
+    \State Transmit $m \cdot l_{\text{bit}}$ bits to CH (THz if $d < 30$\,m)
+\EndFor
 \Comment{Phase 3: CARE -- Inter-Cluster Routing to BS}
-\ForAll{cluster head $\text{CH}_k$}{
-    Aggregate received data\;
-    \eIf{DQN trained and not recovery\_mode}{
-        route $\gets$ DQN.select\_multi\_hop($\text{CH}_k$, BS)\;
-    }{
-        route $\gets$ Lyapunov.compute\_route($\text{CH}_k$, BS)\;
-    }
-    Transmit along route (sub-6\,GHz inter-cluster)\;
-    Store DQN experience, train if buffer $\geq 256$\;
-}
-
+\ForAll{cluster head $\text{CH}_k$}
+    \State Aggregate received data
+    \If{DQN trained and not recovery\_mode}
+        \State route $\gets$ DQN.select\_multi\_hop($\text{CH}_k$, BS)
+    \Else
+        \State route $\gets$ Lyapunov.compute\_route($\text{CH}_k$, BS)
+    \EndIf
+    \State Transmit along route (sub-6\,GHz inter-cluster)
+    \State Store DQN experience, train if buffer $\geq 256$
+\EndFor
 \Comment{Phase 4: Carbon Accounting \& Queue Update}
-$C_{\text{op}}(t) \gets E_{\text{total}} \cdot J_{\text{kWh}} \cdot \text{CI}(t)$\;
-$Z(t+1) \gets \max\{0, Z(t) + C_{\text{op}}(t) - \bar{c}\}$\;
-
-\Return{packets delivered, $E_{\text{total}}$, $C_{\text{op}}(t)$}
-
+\State $C_{\text{op}}(t) \gets E_{\text{total}} \cdot J_{\text{kWh}} \cdot \text{CI}(t)$
+\State $Z(t+1) \gets \max\{0, Z(t) + C_{\text{op}}(t) - \bar{c}\}$
+\State \Return packets delivered, $E_{\text{total}}$, $C_{\text{op}}(t)$
 \end{algorithmic}
 \end{algorithm}
 
@@ -407,7 +400,7 @@ Eliminating $V$ via $B/V = \bar{D}^* - \bar{D}$ shows $\bar{C} = \bar{c} + (\bar
 %% ===============================================================
 %%  SECTION IV: RESULTS AND DISCUSSION
 %% ===============================================================
-
+\FloatBarrier
 \section{Results and Discussion}
 \label{art2:sec:results}
 
@@ -669,6 +662,8 @@ RIS-DRL      & \ding{51} ($p = 1.8{\times}10^{-6}$) & \ding{51} ($p = 1.8{\times
 \end{tabular}
 \end{table}
 
+
+
 \subsubsection{Evaluation Methodology and Real Data Validation}
 \label{art2:sec:eval_methodology}
 
@@ -745,6 +740,7 @@ ABC-ACO        & $36.82 \pm 0.30$ & $11.2\times$ \\
 \textbf{L2:} The first-order radio model abstracts fading and MAC contention; absolute numbers are optimistic but relative comparisons remain valid.
 \textbf{L3:} The campaign does not yet model cascading secondary hazards~\cite{utsu1995omori}.
 
+\FloatBarrier
 %% ===============================================================
 %%  SECTION V: CONCLUSION
 %% ===============================================================
@@ -766,9 +762,5 @@ Future work:
     \item Cross-validate THz channel estimates via ns-3 co-simulation~\cite{ns3_thz}.
 \end{enumerate}
 
-% Bibliography and biographies now use 12pt via the global \footnotesize override in preamble.
+\FloatBarrier
 
-
-
-\vspace{0.5cm}
-\noindent Les hyperparamètres complets, la preuve du théorème CDL, les résultats détaillés par scénario, les analyses de sensibilité et les profils carbone sont fournis à l'Annexe~\ref{ann:calash-suppl}.

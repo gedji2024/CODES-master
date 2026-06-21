@@ -13,9 +13,14 @@
 %% Supports accented characters in the document (UTF-8).
 
 
-% [RÉVISÉ — C1a] Macro bstctlcite supprimée : elle injectait deux entrées
-% bibliographiques fantômes décalant toutes les références de 2 positions.
-% Cette macro n'est utile que pour la soumission aux revues IEEE, pas pour la thèse.
+\makeatletter
+\def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}}
+\def\@bstctlcite[#1]#2{\@bsphack
+ \@for\@citeb:=#2\do{%
+   \edef\@citeb{\expandafter\@firstofone\@citeb}%
+   \if@filesw\immediate\write\csname #1\endcsname{\string\citation{\@citeb}}\fi}%
+ \@esphack}
+\makeatother
 
 %% LA COMMANDE SUIVANTE ÉTABLIT LE LANGAGE DE LA THÈSE : ÉCRIRE french POUR UNE THÈSE EN FRANÇAIS
 %% THE NEXT COMMAND DETERMINES THE LANGUAGE OF THE THESIS: WRITE english FOR A THESIS IN ENGLISH
@@ -50,7 +55,6 @@
 %%
 %% Autres modules. / Other packages.
 \usepackage{amsmath,color,soulutf8,longtable,colortbl,setspace,xspace,url,pdflscape,cite}
-\usepackage{tabularx}
 %%
 %% Support des acronymes. / Support for acronyms.
 \usepackage[nolist]{acronym}
@@ -177,7 +181,7 @@
 %% There is one document per chapter of the thesis or dissertation.
 
 \begin{document}
-% [RÉVISÉ — C1a] \bstctlcite supprimé — voir commentaire ci-dessus.
+\bstctlcite{IEEEexample:BSTcontrol}
 
 %%
 %% Page de titre du mémoire ou de la thèse.
@@ -230,7 +234,6 @@ a été dûment accepté\ifthenelse{\equal{\monDiplome}{M}}{}{e} par le jury d'e
 \include{2-Remerciements}     % Remerciements / Acknowledments
 \include{3-Resume_sujet}      % Résumé du sujet en français / Abstract in French
 \include{3-Abstract}          % Résumé du sujet en anglais / Abstract in English
-\include{AvantPropos}         % Avant-propos : statut de publication des articles + note revue IEEE TGCN
 
 {\setlength{\parskip}{0pt}
 %%
@@ -288,17 +291,17 @@ a été dûment accepté\ifthenelse{\equal{\monDiplome}{M}}{}{e} par le jury d'e
 %% List of appendices, if needed.
 }
 
-\include{4-Sigles_Abrev_REVISED}  % [RÉVISÉ — C2a] Liste des symboles mathématiques ajoutée.
+\include{4-Sigles_Abrev}       % Liste des sigles et abréviations.
 \ifthenelse{\equal{\AnnexesPresentes}{O}}{\listofappendices}{}
 \mainmatter
-\include{5-Introduction_new}       % Introduction au sujet de recherche.
-\include{6-Revue_litterature_new}  % [RÉVISÉ — C2b] Section métaheuristiques enrichie, formule Heinzelman en display.
-\include{6b-Demarche_new}          % Démarche de l'ensemble du travail de recherche (chapitre de transition)
+\include{5-Introduction}       % Introduction au sujet de recherche.
+\include{6-Revue_litterature}  % Revue de littérature / Literature review
+\include{6b-Demarche}          % Démarche de l'ensemble du travail de recherche (chapitre de transition)
 \include{7-Theme1}             % Premier thème (Doctorat) ou "Détails de la Solution" (Maîtrise) / First topic (PhD) or "Details of the Solution" (Master's).
 \include{7-Theme2}             % Second thème (Doctorat) ou "Résultats théoriques et expérimentaux" (Maîtrise) / Second theme (PhD) or "Theoretical and experimental results" (Master's)
 \include{7-Theme3}             % Troisième thème (Doctorat) ou effacez ce fichier si vous êtes à la Maîtrise / Third topic (PhD) or delete this file if you are in the Master's program
-\include{7b-Discussion_new}        % Discussion Générale (chapitre de discussion transversale)
-\include{8-Conclusion_new}  % [RÉVISÉ — C6/C8] Titres de sections révisés, recommandations renforcées.
+\include{7b-Discussion}        % Discussion Générale (chapitre de discussion transversale)
+\include{8-Conclusion}         % Conclusion.
 %\backmatter
 \ifthenelse{\equal{\Langue}{english}}{
 	\renewcommand\bibname{REFERENCES}
@@ -306,7 +309,7 @@ a été dûment accepté\ifthenelse{\equal{\monDiplome}{M}}{}{e} par le jury d'e
 	\bibliographystyle{IEEEtran}			% Style bibliographique / Bibliography style 
 }{
 	\renewcommand\bibname{RÉFÉRENCES}
-	\bibliography{Document_new_corrected}
+	\bibliography{Document}
 	\bibliographystyle{IEEEtran-francais}    % Style bibliographique / Bibliography style 
 }
 %
