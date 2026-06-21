@@ -49,6 +49,7 @@
 \usepackage{flafter,placeins}
 %%
 %% Autres modules. / Other packages.
+\PassOptionsToPackage{hyphens}{url}  % Coupures dans URLs longues
 \usepackage{amsmath,color,soulutf8,longtable,colortbl,setspace,xspace,url,pdflscape,cite}
 \usepackage{tabularx}
 %%
@@ -70,6 +71,7 @@
 %%
 %% Module qui permet la création des bookmarks dans un fichier PDF. / Package that allows the creation of bookmarks in a PDF file.
 %\usepackage[dvipdfm]{hyperref}
+\usepackage{microtype}  % Justification améliorée, réduit les débordements
 \usepackage{hyperref}
 \usepackage{caption}  % Hyperlien vers la figure plutôt que son titre. / Hyperlink to the figure rather than its title.
 \makeatletter

@@ -109,7 +109,7 @@ Bien que les trois articles utilisent des environnements de simulation distincts
 
 \subsection{Modèle énergétique de premier ordre}
 
-Les trois articles utilisent le modèle énergétique de premier ordre de Heinzelman et al.\ \cite{heinzelman2000leach}, qui constitue le standard de facto dans la communauté WSN. Ce choix est délibéré~: il permet une comparaison directe avec les dizaines de protocoles évalués sous ce modèle dans la littérature, tout en capturant les phénomènes physiques essentiels (dépendance quadratique/quartique en la distance, coût d'amplification, énergie de circuit). Les paramètres sont fixés~: $E_{\text{elec}} = 50$~nJ/bit, $\varepsilon_{\text{fs}} = 10$~pJ/bit/m$^2$, $\varepsilon_{\text{mp}} = 0.0013$~pJ/bit/m$^4$, $d_0 = 87.7$~m.
+Les trois articles utilisent le modèle énergétique de premier ordre de Heinzelman et al.\ \cite{heinzelman2000leach}, qui constitue le standard de facto dans la communauté WSN. Ce choix est délibéré~: il permet une comparaison directe avec les dizaines de protocoles évalués sous ce modèle dans la littérature, tout en capturant les phénomènes physiques essentiels (dépendance quadratique/quartique en la distance, coût d'amplification, énergie de circuit). Les paramètres sont fixés~: $E_{\text{elec}} = 50$~nJ/bit, $\varepsilon_{\text{fs}} = 10$~pJ/bit/m$^2$, $\varepsilon_{\text{mp}} = 0.0013$~pJ/bit/m$^4$, $d_0 = 87.7$~m (cf.\ Annexe~\ref{ann:params} pour l'ensemble des paramètres communs aux trois articles).
 
 \subsection{Modèle de catastrophe}
 
@@ -130,7 +130,7 @@ Trois sources de données réelles ancrent les simulations dans des conditions r
 
 \subsection{Protocoles de référence (\emph{baselines})}
 
-Chaque article est évalué contre un ensemble de protocoles de référence choisis pour représenter différentes familles d'approches~: protocoles classiques (LEACH, EE-LEACH), métaheuristiques (QPSO-FL), MARL (QMIX, QTRAN individuels), Safe RL (CPO), et boucliers binaires. Le choix des références vise à couvrir l'éventail complet des approches existantes tout en restant reproductible --- tous les protocoles de référence sont soit implémentés selon les détails publiés, soit issus de bibliothèques open-source (EPyMARL pour QMIX/QTRAN).
+Chaque article est évalué contre un ensemble de protocoles de référence choisis pour représenter différentes familles d'approches~: protocoles classiques (LEACH, EE-LEACH), métaheuristiques (QPSO-FL), MARL (QMIX, QTRAN individuels), Safe RL (CPO), et boucliers binaires. Le choix des références vise à couvrir l'éventail complet des approches existantes tout en restant reproductible --- tous les protocoles de référence sont soit implémentés selon les détails publiés, soit issus de bibliothèques open-source (EPyMARL pour QMIX/QTRAN). L'Annexe~\ref{ann:baselines} récapitule l'ensemble des protocoles de référence utilisés dans les trois articles avec leur description.
 
 
 %%
@@ -181,7 +181,7 @@ Toutes les métriques sont rapportées avec moyenne $\pm$ écart-type sur les gr
 
 Conformément à la liste de vérification de reproductibilité NeurIPS \cite{Pineau2021Reproducibility}, les éléments suivants sont documentés pour chaque article~:
 \begin{itemize}
-    \item Tous les hyperparamètres d'entraînement (taux d'apprentissage, taille de lot, nombre d'époques, architecture du réseau) --- cf.\ Annexe~\ref{ann:gapf-suppl} pour l'Article~1.
+    \item Tous les hyperparamètres d'entraînement (taux d'apprentissage, taille de lot, nombre d'époques, architecture du réseau) --- cf.\ Annexe~\ref{ann:architectures} pour les trois articles.
     \item Les graines aléatoires utilisées.
     \item Le matériel de simulation (GPU/CPU, mémoire).
     \item Les bibliothèques et versions logicielles (PyTorch, PyTorch Geometric, EPyMARL).
@@ -364,6 +364,7 @@ La formulation du routage comme un problème de Dec-POMDP requiert la définitio
 \renewcommand{\arraystretch}{1.5}
 \caption{Espaces d'état, d'action et de récompense pour les trois articles. $n$~: nombre de n\oe{}uds, $|\mathcal{N}(v)|$~: taille du voisinage du n\oe{}ud $v$.}
 \label{tab:spaces}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{p{1.7cm}p{3.8cm}p{3.8cm}p{3.8cm}}
 \toprule
 \textbf{Attribut} & \textbf{Art.~1 --- GAPF} & \textbf{Art.~2 --- CALASH} & \textbf{Art.~3 --- CASTER-ZT} \\
@@ -414,7 +415,8 @@ La formulation du routage comme un problème de Dec-POMDP requiert la définitio
   $\phantom{r} + \omega_2 (1 - \text{FP})$\newline
   $\phantom{r} + \omega_3 \cdot \text{récup.}$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 Quelques observations s'imposent sur ces espaces~: l'observation de GAPF est \textbf{locale} (voisinage à 1 saut), tandis que le GCN agrège l'information à 2 sauts pour enrichir la représentation. L'observation de CALASH inclut l'intensité carbone $\text{CI}(t)$ et la file carbone virtuelle $Q_j^{\text{carb}}$, qui n'existent pas dans les formulations classiques de routage~: la file carbone est l'innovation clé qui permet les garanties de Lyapunov. L'observation de CASTER-ZT est un \textbf{graphe local} plutôt qu'un vecteur, exploité directement par l'encodeur GraphSAGE --- cette représentation structurée capture les relations de voisinage que les vecteurs aplatis perdraient.
